@@ -12,6 +12,7 @@ from scipy.optimize import curve_fit
 # from scipy.stats import gamma
 #from pympler.tracker import SummaryTracker
 import subprocess
+import pdb
 
 #tracker = SummaryTracker()
 
@@ -20,7 +21,9 @@ class TrapcamAnalyzer:
     	calculate_threshold=False, calculate_final=True):  # <---- instances of this class will specify the directory, most likely using directory = sys.argv[1]
         self.directory = directory
         self.trap = trap
-        self.calculate_threshold = calculate_threshold
+        #print(threshold)
+        #self.calculate_threshold=calculate_threshold
+        self.calculate_threshold = False
         self.calculate_final = calculate_final
         # initialize expectations here; can update the value of each self.variable later
         with open(self.directory+'/all_traps_gaussian_analysis_params.json') as f:
@@ -52,7 +55,7 @@ class TrapcamAnalyzer:
             try:
                 self.ontrap_intrap_threshold = self.analysis_parameters_json[trap]['analysis parameters']["fixed in-trap on-trap threshold"]
             except:
-                use_provisional_value =raw_input('Looks like you have not yet fixed the in-trap/on-trap threshold; use provisional threshold? (y/n)')
+                use_provisional_value =input('Looks like you have not yet fixed the in-trap/on-trap threshold; use provisional threshold? (y/n)')
                 if use_provisional_value:
                     self.ontrap_intrap_threshold = self.analysis_parameters_json[trap]['analysis parameters']["threshold to differentiate in- and on- trap"]
                 else:
@@ -90,16 +93,17 @@ class TrapcamAnalyzer:
         return filelist_trimmed
 
     def load_color_image(self, filename):
-        header = "\xff\xd8"
-        tail = "\xff\xd9"
-        with open(filename, "rb") as image:
-            data = image.read()
-            try:
-                start = data.index(header)
-                end = data.index(tail, start) + 2
-            except ValueError:
-                print ("Can't find JPEG data!")
-                return None
+        #header = "\xff\xd8"
+        #tail = "\xff\xd9"
+       
+        #with open(filename, "rb") as image:
+         #   data = image.read()
+          #  try:
+           #     start = data.index(header)
+            #    end = data.index(tail, start) + 2
+            #except ValueError:
+             #   print ("Can't find JPEG data!")
+              #  return None
         img = cv2.imread(filename)
         return img
 
@@ -107,8 +111,10 @@ class TrapcamAnalyzer:
         print (square_mask_path)
         mask = cv2.imread(square_mask_path)
         mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
-        mask = mask/255 #rescales mask to be 0s and 1s
-        return mask
+        
+        rescaled_mask = np.int8(floor(mask/255)) #rescales mask to be 0s and 1s
+        pdb.set_trace()
+        return rescaled_mask
 
     def fit_ellipse_to_contour(self, contour):
         M = cv2.moments(contour)
@@ -327,6 +333,7 @@ class TrapcamAnalyzer:
         fgmask_notsmoothed = self.eliminate_foreground_pixels_brighter_than_bgimg(fgbg,test_image)
 
         fgmask1, morph_open_iteration_number, morph_ellipse_size = self.smooth_image(fgmask_notsmoothed)
+        pdb.set_trace()
         image, contours, hierarchy = cv2.findContours(fgmask1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         flies_on_trap = [{} for _ in range(30000)]
         flies_in_trap = [{} for _ in range(30000)]
@@ -696,16 +703,18 @@ class TrapcamAnalyzer:
         filename_list = filename_list[0:image_count-1] # <----could be off-by-one
 
         del(full_filename_list)
-
+        
         sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
         masked_image_stack = np.stack([sample_image for _ in range(image_count+1)], axis = 0)
         image_count = 0
         for filename in filename_list:
+            print(filename)
             img = self.load_color_image(filename)
             if img is None:
                 print ('img is None!')
                 continue
             else:
+                
                 masked_image_stack[image_count] = cv2.bitwise_and(img,img,mask = square_mask)
                 image_count +=1
         del(img)

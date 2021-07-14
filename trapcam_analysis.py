@@ -55,7 +55,8 @@ class TrapcamAnalyzer:
             try:
                 self.ontrap_intrap_threshold = self.analysis_parameters_json[trap]['analysis parameters']["fixed in-trap on-trap threshold"]
             except:
-                use_provisional_value =input('Looks like you have not yet fixed the in-trap/on-trap threshold; use provisional threshold? (y/n)')
+####                use_provisional_value =input('Looks like you have not yet fixed the in-trap/on-trap threshold; use provisional threshold? (y/n)')
+                use_provisional_value='y'
                 if use_provisional_value:
                     self.ontrap_intrap_threshold = self.analysis_parameters_json[trap]['analysis parameters']["threshold to differentiate in- and on- trap"]
                 else:

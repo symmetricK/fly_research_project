@@ -140,7 +140,7 @@
             "step through frames": false,
             "mahalanobis squared threshold": 10,
             "threshold to differentiate in- and on- trap": 22.7,
-            "number of frames for bg model training": 25,
+            "number of frames for bg model training": 10,
             "save frames as video": true,
             "analyze_how_many_minutes_prior_to_release":0,
             "camera time advanced by __ sec": -564,

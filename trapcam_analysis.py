@@ -20,6 +20,7 @@ class TrapcamAnalyzer:
     def __init__(self, directory, trap='trap_A', 
     	calculate_threshold=False, calculate_final=True):  # <---- instances of this class will specify the directory, most likely using directory = sys.argv[1]
         self.directory = directory
+        self.USE_FULL_MASK=True
         self.trap = trap
         #print(threshold)
         #self.calculate_threshold=calculate_threshold
@@ -111,10 +112,8 @@ class TrapcamAnalyzer:
     def load_mask(self, square_mask_path):
         print (square_mask_path)
         mask = cv2.imread(square_mask_path)
-        mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
-        
-        rescaled_mask = np.int8(floor(mask/255)) #rescales mask to be 0s and 1s
-        pdb.set_trace()
+        gray_mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
+        rescaled_mask = np.int8(floor(gray_mask/255)) #rescales mask to be 0s and 1s     
         return rescaled_mask
 
     def fit_ellipse_to_contour(self, contour):
@@ -285,7 +284,7 @@ class TrapcamAnalyzer:
     #         return retval, exitloop
 
     def examine_contrast_around_contour_perimeter(self, x, y, gray_test_image,stencil,count): # stencil is 0s and 1s, dtype uint8
-        img,contour_of_stencil,hierarchy = cv2.findContours(stencil, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contour_of_stencil,hierarchy = cv2.findContours(stencil, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (21,21))
         stencil_dilated = cv2.dilate(stencil, kernel, iterations=1)
@@ -314,7 +313,11 @@ class TrapcamAnalyzer:
         cv2.drawContours(fg_masked_by_dilated_contour_thresh, contour_of_stencil,0,(0,255,0),1)
         out = fg_masked_by_dilated_contour_thresh[y-40:y+40, x-40:x+40]
         out2 = np.concatenate((out, fg_masked_copy[y-40:y+40, x-40:x+40]), axis=1)
-        cv2.imwrite('./examples_of_perimeter_contrast_analysis/' + "%04d.jpg" % count, cv2.resize(out2, (1600,800)))
+        try:
+            cv2.imwrite('./examples_of_perimeter_contrast_analysis/' + "%04d.jpg" % count, cv2.resize(out2, (1600,800)))
+        except:
+            pdb.set_trace()
+        
         # cv2.imshow('', cv2.resize(out2, (1600,800)))
         # wait_key_val = cv2.waitKey(0) & 0xFF
         # if wait_key_val == ord('f'):
@@ -334,8 +337,8 @@ class TrapcamAnalyzer:
         fgmask_notsmoothed = self.eliminate_foreground_pixels_brighter_than_bgimg(fgbg,test_image)
 
         fgmask1, morph_open_iteration_number, morph_ellipse_size = self.smooth_image(fgmask_notsmoothed)
-        pdb.set_trace()
-        image, contours, hierarchy = cv2.findContours(fgmask1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        contours, hierarchy = cv2.findContours(fgmask1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         flies_on_trap = [{} for _ in range(30000)]
         flies_in_trap = [{} for _ in range(30000)]
         not_flies     = [{} for _ in range(30000)] # this is massively preallocated but every so often a frame detects a lot of not_flies (e.g. illumination changes)
@@ -352,17 +355,20 @@ class TrapcamAnalyzer:
             # if len(contour) > 5:
             x, y, area, ecc = self.fit_ellipse_to_contour(contour)
             fly = {'x': x, 'y': y, 'area': area, 'eccentricity': ecc}
+            
             if area < self.maximum_on_trap_contour_size and area > self.minimum_in_trap_contour_size:
                 if ecc == 'None':
                     print ('unable to fit ellipse to this contour; too small')
-                if ecc > 0.35:
-                    fly_contours[fly_contours_count]=(contour)
-                    fly_contours_count +=1
                 else:
-                    print ('eccentricity less than 0.35')
+                    if ecc > 0.35:
+                        fly_contours[fly_contours_count]=(contour)
+                        fly_contours_count +=1
+                    else:
+                        print ('eccentricity less than 0.35')
             else:
                 not_flies[not_flies_count] = fly
                 not_flies_count +=1
+           
 
 
         #now that we have a list of fly contours, let's see if they're inside the trap or outside it -- on the basis of contrast and area ranges
@@ -685,12 +691,27 @@ class TrapcamAnalyzer:
                                 'number_of_frames_on_which_background_is_trained':self.train_num}
         with open(output_directory+'/analysis_parameters.json', mode = 'w') as f:
             json.dump(parameter_dictionary,f, indent = 1)
+
+
+    def make_full_mask(self,sample_image):
+        '''
+        returns a mask where the values are 1
+        sample_image is row, col, color
+        mask has dimensions row,col
+        '''
+        [nrows,ncols,colors]=np.shape(sample_image)
+        mask=np.int8(np.zeros((nrows,ncols)))
+        mask[100:-100,100:-100]=1
+        return mask
+
 # --------------------------------------------------------------------------------------------------------
     def run(self):
         timelapse_directory = self.directory +'/trapcam_timelapse/'+self.trap
-        square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
+ 
+
         full_filename_list = self.get_filenames(path = timelapse_directory, contains = "tl", does_not_contain = ['th']) #  full list of image filenames in the folder
         filename_list = ['']*(len(full_filename_list))
+  
         image_count = 0
 
         for filename in full_filename_list:
@@ -703,24 +724,29 @@ class TrapcamAnalyzer:
             image_count += 1
         filename_list = filename_list[0:image_count-1] # <----could be off-by-one
 
-        del(full_filename_list)
-        
         sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
+        if self.USE_FULL_MASK:
+            square_mask=self.make_full_mask(sample_image)
+        else:
+            square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
+
+#        pdb.set_trace()
+        del(full_filename_list)
+
+        
         masked_image_stack = np.stack([sample_image for _ in range(image_count+1)], axis = 0)
         image_count = 0
         for filename in filename_list:
-            print(filename)
             img = self.load_color_image(filename)
             if img is None:
                 print ('img is None!')
                 continue
             else:
-                
                 masked_image_stack[image_count] = cv2.bitwise_and(img,img,mask = square_mask)
                 image_count +=1
         del(img)
 
-
+        
 
         print ('length of masked image stack: '+str(len(masked_image_stack)))
 

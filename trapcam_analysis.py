@@ -459,6 +459,7 @@ class TrapcamAnalyzer:
         standard_out_array_length = len(full_image_stack) -self.train_num -self.buffer_btw_training_and_test
         sample_image_zero =  np.zeros_like(full_image_stack[0]) # <---- just using the first image as an "example" to be sure I preallocate the array with the right data type, dimensions etc
         # annotated_output_stack = np.stack([sample_image_zero for _ in range(standard_out_array_length)], axis = 0)
+    
         time_since_release_list = np.zeros(standard_out_array_length)
         analyzed_filename_stack = ['']*(standard_out_array_length)
         all_flies_over_time = [{} for _ in range(standard_out_array_length)]  # <-----
@@ -623,8 +624,9 @@ class TrapcamAnalyzer:
             #vis = np.zeros((h1+h2, max(w1, w2),3), np.uint8)
             #combine 2 images
 
-            pdb.set_trace()
-            vis[150:150+h1, 30:30+w1,:3] = graph
+#            pdb.set_trace()
+#            vis[150:150+h1, 30:30+w1,:3] = graph
+            vis[50:50+h1, 30:30+w1,:3] = graph
             vis[:h2, 30+w1:30+w1+w2,:3] = display_image_resized
 
             timestr = filename.split('_')[-1].split('.')[0]
@@ -637,6 +639,7 @@ class TrapcamAnalyzer:
 
             idstr = '~%d flies released at %s ' %(self.field_parameters["estimated_number_of_flies_released"], self.field_parameters['time_of_fly_release'])
             cv2.putText(vis, idstr, (35,50), font, 1, (255,255,255),2, cv2.LINE_AA)
+            
             idstr2 = self.trap.split('_')[0]+' ' +self.trap.split('_')[1]+'; %d flies caught' %(self.field_parameters['trap counts'][self.trap])
             cv2.putText(vis,idstr2, (35,90), font, 1, (255,255,255),2, cv2.LINE_AA)
 
@@ -645,8 +648,11 @@ class TrapcamAnalyzer:
 
         sample_video_str = output_dir+'/'+self.trap + '_analyzed_%d_min_post_release' %(self.min_post_r)+'.mp4'
         output_dir_jpgs = output_dir+"/%d.jpg"
-        if self.save_video:
-            subprocess.call(["ffmpeg", "-framerate", "3", "-i", output_dir_jpgs, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "23", sample_video_str])
+        ##
+        ## KH,TW NEED TO FIX 7.19.21 - COMMENTED OUT NOT WORKING
+        ##
+        #if self.save_video:
+            #subprocess.call(["ffmpeg", "-framerate", "3", "-i", output_dir_jpgs, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "23", sample_video_str])
 
         if self.calculate_final == True:
             print ('calculating final')
@@ -655,8 +661,10 @@ class TrapcamAnalyzer:
                                             'not flies over time:'    : not_flies_over_time.tolist(),
                                             'seconds since release:'  : seconds_since_release_over_time.tolist()}}
             with open(self.directory+'/all_traps_final_analysis_output.json') as f:
+
                 growing_json = json.load(f)
             #add current trap dictionary to growing_json
+#            pdb.set_trace()
             growing_json.update(current_trap_dictionary) #CAREFUL; THIS WILL OVERWRITE ANY KEYS THAT ALREADY EXIST IN THE JSON
             with open(self.directory+'/all_traps_final_analysis_output.json', mode = 'w') as f:
                 json.dump(growing_json,f, indent = 1)
@@ -673,6 +681,8 @@ class TrapcamAnalyzer:
             self.format_matplotlib_ax_object(ax_handle = ax)
             time_string = str(time.time()).split('.')[0] # this is not very human-readable, but helps prevent overwriting
             namestr = self.directory+'/arrival_dynamics_figs/'+self.trap+'_flies_over_time_'+time_string+'.svg'
+
+#            pdb.set_trace()
             plt.savefig(namestr, bbox_inches='tight')
             pngnamestr = self.directory+'/arrival_dynamics_figs/'+self.trap+'_flies_over_time_'+time_string+'.png'
             plt.savefig(pngnamestr, bbox_inches='tight')

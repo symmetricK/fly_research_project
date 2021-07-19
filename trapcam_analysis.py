@@ -555,7 +555,9 @@ class TrapcamAnalyzer:
             except:
                 continue
 
-        window_size = 10
+#        window_size = 10
+        window_size = 5
+
         low_pass_flies_on_trap = np.zeros(len(flies_on_trap_over_time)-window_size)
         low_pass_flies_in_trap = np.zeros(len(flies_on_trap_over_time)-window_size)
         for i in range (window_size, len(flies_on_trap_over_time)):
@@ -620,6 +622,8 @@ class TrapcamAnalyzer:
             vis = np.zeros((height, 30+w1+w2,3), np.uint8)
             #vis = np.zeros((h1+h2, max(w1, w2),3), np.uint8)
             #combine 2 images
+
+            pdb.set_trace()
             vis[150:150+h1, 30:30+w1,:3] = graph
             vis[:h2, 30+w1:30+w1+w2,:3] = display_image_resized
 
@@ -702,6 +706,7 @@ class TrapcamAnalyzer:
         [nrows,ncols,colors]=np.shape(sample_image)
         mask=np.int8(np.zeros((nrows,ncols)))
         mask[100:-100,100:-100]=1
+#        mask[200:-200,200:-200]=1
         return mask
 
 # --------------------------------------------------------------------------------------------------------
@@ -723,14 +728,14 @@ class TrapcamAnalyzer:
             filename_list[image_count]= filename
             image_count += 1
         filename_list = filename_list[0:image_count-1] # <----could be off-by-one
-
-        sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
+#        pdb.set_trace()
+#        sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
+        sample_image =  np.zeros_like(self.load_color_image(filename_list[15]))
         if self.USE_FULL_MASK:
             square_mask=self.make_full_mask(sample_image)
         else:
             square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
 
-#        pdb.set_trace()
         del(full_filename_list)
 
         

@@ -682,7 +682,7 @@ class TrapcamAnalyzer:
             time_string = str(time.time()).split('.')[0] # this is not very human-readable, but helps prevent overwriting
             namestr = self.directory+'/arrival_dynamics_figs/'+self.trap+'_flies_over_time_'+time_string+'.svg'
 
-#            pdb.set_trace()
+ #           pdb.set_trace()
             plt.savefig(namestr, bbox_inches='tight')
             pngnamestr = self.directory+'/arrival_dynamics_figs/'+self.trap+'_flies_over_time_'+time_string+'.png'
             plt.savefig(pngnamestr, bbox_inches='tight')

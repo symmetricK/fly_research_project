@@ -503,14 +503,17 @@ class TrapcamAnalyzer:
                 #here, save annotated output image
                 #cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_output_image)
 
-                annotated_out_resized = cv2.resize(annotated_output_image, (1296,972)) #halves image dimensions just for display purposes
-                annotated_out_resized = annotated_out_resized[:,200:-240].copy()
+                ## KH,TW NO NEED TO RESIZE 7.20.21
+
+                #annotated_out_resized = cv2.resize(annotated_output_image, (1296,972)) #halves image dimensions just for display purposes
+                #annotated_out_resized = annotated_out_resized[:,200:-240].copy()
                 # smoothed_foreground_mask_resized = cv2.resize(smoothed_foreground_mask, (1296,972)) #halves image dimensions just for display purposes
                 # smoothed_foreground_mask_resized = smoothed_foreground_mask_resized[:,200:-240].copy()
                 # smoothed_foreground_mask_resized = cv2.cvtColor(smoothed_foreground_mask_resized,cv2.COLOR_GRAY2BGR)
                 # vis = np.concatenate((annotated_out_resized, smoothed_foreground_mask_resized), axis=1)
                 # cv2.imwrite(video_dir + "%04d.jpg" % index, vis)
-                cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_out_resized)
+                #cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_out_resized)                
+                cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_output_image)
 
         all_contrast_metrics = all_contrast_metrics[0:contrast_metric_count-1] #trimming trailing zeros
         all_fly_contour_areas = all_fly_contour_areas[0:fly_contour_area_count-1]# trimming trailing zeros
@@ -576,11 +579,18 @@ class TrapcamAnalyzer:
                 time_since_release = seconds_since_release_over_time[frame_pos]
             except:
                 break
-            display_image_resized = cv2.resize(display_image, (1296,972)) #halves image dimensions just for display purposes
-            display_image_resized = display_image_resized[:,200:-240].copy()
 
+
+#            display_image_resized = cv2.resize(display_image, (1296,972)) #halves image dimensions just for display purposes
+#            display_image_resized = display_image_resized[:,200:-240].copy()
+
+            
+            ## KH,TW TO SEE THE FULL TRAP PIC  7.20.21
+
+            display_image_resized = display_image[:,500:-325].copy()
         #### now plotting the graph of flies over time
-            fig = plt.figure(figsize=(10,9), facecolor="white")
+#            fig = plt.figure(figsize=(10,9), facecolor="white")
+            fig = plt.figure(figsize=(16,16), facecolor="white")
             ax2 = fig.add_subplot(212)
 
             # proposed_contrast_metric = self.fit_data_to_trimodal(all_contrast_metrics,
@@ -617,7 +627,7 @@ class TrapcamAnalyzer:
 
             h1, w1 = graph.shape[:2]
             h2, w2 = display_image_resized.shape[:2]
-
+#            h2, w2 = display_image.shape[:2]
             #create empty matrix
             height = max(h1,h2)
             vis = np.zeros((height, 30+w1+w2,3), np.uint8)
@@ -628,7 +638,7 @@ class TrapcamAnalyzer:
 #            vis[150:150+h1, 30:30+w1,:3] = graph
             vis[50:50+h1, 30:30+w1,:3] = graph
             vis[:h2, 30+w1:30+w1+w2,:3] = display_image_resized
-
+#            vis[:h2, 30+w1:30+w1+w2,:3] = display_image
             timestr = filename.split('_')[-1].split('.')[0]
             seconds = str(int(divmod(time_since_release,60)[1]))
             if len(seconds) == 1:

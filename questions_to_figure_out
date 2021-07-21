@@ -2,8 +2,10 @@
 7.20.21
 
 1. Can we fix the annotated frame and graph .jpg so that it shows whole image frame of trap?
+	:done
 
 2. Why in the first frame does it show 4 flies on trap but only 3 are circled?
+	:Because of image size
 
 3. How does it know to reject the cyan contours? []
 
@@ -12,5 +14,6 @@
 5. Are there cases where in this example it's obviously missing flies? why?
 
 6. Testing, seeing how it runs on the full dataset that we have...
+	:worked
 
 7. GOAL - example figure from raw data...

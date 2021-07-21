@@ -151,7 +151,7 @@ class TrapcamAnalyzer:
         frame_time_string = name.split('.')[-2].split('_')[-1]
         frame_hour = int(frame_time_string[0:2])
         frame_min = int(frame_time_string[2:4])
-        frame_sec = int(frame_time_string[4:6])
+        frame_sec = int(frame_time_string[4:6]
         frame_seconds_timestamp = (frame_hour)*3600 + (frame_min)*60 + (frame_sec)
         frame_seconds = frame_seconds_timestamp - self.camera_offset
         release_time_seconds = int(self.release_time.split(':')[0])*3600 +int(self.release_time.split(':')[1])*60 + int(self.release_time.split(':')[2])
@@ -160,7 +160,7 @@ class TrapcamAnalyzer:
 
     def show_image_with_circles_drawn_around_putative_flies(self, color_image, flies_on_trap, flies_in_trap, not_flies):
         font = cv2.FONT_HERSHEY_SIMPLEX
-
+        pdb.set_trace()
         for fly in flies_on_trap:
             if fly['perimeter contrast boolean']:
                 color = [0,0,0]
@@ -211,6 +211,7 @@ class TrapcamAnalyzer:
 
     def eliminate_foreground_pixels_brighter_than_bgimg(self, fgbg, test_image):
         fgmask_not_smoothed = fgbg.apply(test_image, None, 0)# the 0 specifies that no learning is occurring
+#        pdb.set_trace()
         bgimg = fgbg.getBackgroundImage()
         gray_bgimg = cv2.cvtColor(bgimg, cv2.COLOR_RGB2GRAY)
         gray_test_image = cv2.cvtColor(test_image, cv2.COLOR_RGB2GRAY)
@@ -313,6 +314,7 @@ class TrapcamAnalyzer:
         cv2.drawContours(fg_masked_by_dilated_contour_thresh, contour_of_stencil,0,(0,255,0),1)
         out = fg_masked_by_dilated_contour_thresh[y-40:y+40, x-40:x+40]
         out2 = np.concatenate((out, fg_masked_copy[y-40:y+40, x-40:x+40]), axis=1)
+#        pdb.set_trace()
         try:
             cv2.imwrite('./examples_of_perimeter_contrast_analysis/' + "%04d.jpg" % count, cv2.resize(out2, (1600,800)))
         except:
@@ -332,6 +334,10 @@ class TrapcamAnalyzer:
         return retval, exitloop
 
     def testing_step_of_backsub_MOG2(self, index, fgbg, test_image, time_since_release):
+        '''
+        Crucial function that is getting countours for every image, determining fly/not fly, trap/not trap
+        '''
+
 
         #fgmask_notsmoothed = fgbg.apply(test_image, None, 0) # the 0 specifies that no learning is occurring   <--- this yields a 2d matrix of 0s and 255s as the foreground mask
         fgmask_notsmoothed = self.eliminate_foreground_pixels_brighter_than_bgimg(fgbg,test_image)
@@ -351,6 +357,7 @@ class TrapcamAnalyzer:
         flies_in_trap_count=0
         not_flies_count=0
         fly_contours_count=0
+        
         for contour in contours:
             # if len(contour) > 5:
             x, y, area, ecc = self.fit_ellipse_to_contour(contour)
@@ -373,6 +380,7 @@ class TrapcamAnalyzer:
 
         #now that we have a list of fly contours, let's see if they're inside the trap or outside it -- on the basis of contrast and area ranges
         #also, let's take this opportunity to get rid of any "flies" that are brighter than the background image. It would in theory make sense to do this earlier, but I think the mahalanobis distance might be an absolute value
+        
         bgimg = fgbg.getBackgroundImage()
         gray_bgimg = cv2.cvtColor(bgimg, cv2.COLOR_RGB2GRAY)
         gray_test_image = cv2.cvtColor(test_image, cv2.COLOR_RGB2GRAY)
@@ -455,6 +463,7 @@ class TrapcamAnalyzer:
                                                     full_image_stack,
                                                     filename_stack,
                                                     video_dir):
+        
         fgbg = cv2.createBackgroundSubtractorMOG2(history =self.train_num, varThreshold = self.mahalanobis_squared_thresh, detectShadows = False)
         standard_out_array_length = len(full_image_stack) -self.train_num -self.buffer_btw_training_and_test
         sample_image_zero =  np.zeros_like(full_image_stack[0]) # <---- just using the first image as an "example" to be sure I preallocate the array with the right data type, dimensions etc
@@ -727,6 +736,7 @@ class TrapcamAnalyzer:
         mask=np.int8(np.zeros((nrows,ncols)))
         mask[100:-100,100:-100]=1
 #        mask[200:-200,200:-200]=1
+        
         return mask
 
 # --------------------------------------------------------------------------------------------------------
@@ -769,6 +779,8 @@ class TrapcamAnalyzer:
             else:
                 masked_image_stack[image_count] = cv2.bitwise_and(img,img,mask = square_mask)
                 image_count +=1
+
+        #pdb.set_trace()
         del(img)
 
         

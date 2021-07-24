@@ -151,7 +151,7 @@ class TrapcamAnalyzer:
         frame_time_string = name.split('.')[-2].split('_')[-1]
         frame_hour = int(frame_time_string[0:2])
         frame_min = int(frame_time_string[2:4])
-        frame_sec = int(frame_time_string[4:6]
+        frame_sec = int(frame_time_string[4:6])
         frame_seconds_timestamp = (frame_hour)*3600 + (frame_min)*60 + (frame_sec)
         frame_seconds = frame_seconds_timestamp - self.camera_offset
         release_time_seconds = int(self.release_time.split(':')[0])*3600 +int(self.release_time.split(':')[1])*60 + int(self.release_time.split(':')[2])
@@ -160,7 +160,7 @@ class TrapcamAnalyzer:
 
     def show_image_with_circles_drawn_around_putative_flies(self, color_image, flies_on_trap, flies_in_trap, not_flies):
         font = cv2.FONT_HERSHEY_SIMPLEX
-        pdb.set_trace()
+#        pdb.set_trace()
         for fly in flies_on_trap:
             if fly['perimeter contrast boolean']:
                 color = [0,0,0]
@@ -185,6 +185,56 @@ class TrapcamAnalyzer:
             cv2.circle(color_image, (not_fly['x'], not_fly['y']), 50, [178,255,102], 5)
             cv2.putText(color_image, str(not_fly['area']),(not_fly['x']+50, not_fly['y']-50), font, 1, [178,255,102],2, cv2.LINE_AA)
 
+    
+    def show_image_with_circles_drawn_around_all_flies(self,color_image, all_flies, not_flies):
+        '''written by KH and TW to show all flies on image, including rejected flies'''
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        for fly in all_flies[0:17]:#just for confirmation 
+            color = [0,0,153]
+            if fly['type']=='reject_contrast_metric':
+                flag=list(fly.values())[5]
+                cv2.circle(color_image, (fly['x'], fly['y']), 50, [0,0,255], 5)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [0,0,255],2, cv2.LINE_AA)
+                print(flag)
+            elif fly['type']=='reject_perimeter_contrast':
+                flag=list(fly.values())[5]
+                cv2.circle(color_image, (fly['x'], fly['y']), 50, [0,0,0], 5)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [0,0,0],2, cv2.LINE_AA)
+                print(flag)
+            elif fly['type']=='reject_low_area_on_trap':
+                cv2.circle(color_image, (fly['x'], fly['y']), 50, [0,255,0], 5)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [0,255,0],2, cv2.LINE_AA)
+                flag=list(fly.values())[5]
+                print(flag)
+            elif fly['type']=='reject_high_area_in_trap':
+                cv2.circle(color_image, (fly['x'], fly['y']), 50, [0,255,255], 5)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [0,255,255],2, cv2.LINE_AA)
+                flag=list(fly.values())[5]
+                print(flag)
+            elif fly['type']=='on_trap':
+                flag=list(fly.values())[5]
+                cv2.circle(color_image, (fly['x'], fly['y']), 50, [255,255,0], 5)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [255,255,0],2, cv2.LINE_AA)
+                print(flag)
+            else:#'in_trap'
+                flag=list(fly.values())[5] 
+                cv2.circle(color_image, (fly['x'], fly['y']), 50, [255,0,255], 5)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [255,0,255],2, cv2.LINE_AA)               
+                print(flag)
+        for not_fly in not_flies:
+            print("no")
+            cv2.circle(color_image, (not_fly['x'], not_fly['y']), 50, [178,127,102], 5)
+            cv2.putText(color_image, str(not_fly['area']),(not_fly['x']+50, not_fly['y']-50), font, 1, [178,127,102],2, cv2.LINE_AA)
+#        pdb.set_trace()
+
+
+
     def plot_2d_scatter(self,
                             all_contrast_metrics,
                             all_fly_contour_areas,
@@ -194,6 +244,7 @@ class TrapcamAnalyzer:
 
         plt.scatter(all_contrast_metrics, all_fly_contour_areas, color = 'black', s =1)
         plt.scatter(x = current_frame_contrast_metrics, y = current_frame_fly_contour_areas, color = [1.0,0.35,0], s = 40, edgecolors = ['black'])
+#        pdb.set_trace()
         # plt.axhline(y = self.minimum_on_trap_contour_size, color = 'black', lw =2, xmin=(self.ontrap_intrap_threshold - 5.)/(45-5.) , xmax =1.0)
         # plt.axhline(y = self.maximum_on_trap_contour_size, color = 'black', lw =2, xmin=(self.ontrap_intrap_threshold - 5.)/(45-5.) , xmax =1.0)
         # plt.axhline(y = self.minimum_in_trap_contour_size, color = [0.6,0,0.6], lw =2, xmin=0, xmax =(self.ontrap_intrap_threshold - 5.)/(45-5.))
@@ -347,6 +398,7 @@ class TrapcamAnalyzer:
         contours, hierarchy = cv2.findContours(fgmask1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         flies_on_trap = [{} for _ in range(30000)]
         flies_in_trap = [{} for _ in range(30000)]
+        all_flies  =    [{} for _ in range(30000)]
         not_flies     = [{} for _ in range(30000)] # this is massively preallocated but every so often a frame detects a lot of not_flies (e.g. illumination changes)
         fly_contours  = [[] for _ in range(30000)] # < -------- bummer that I need to pre-allocate this as such a chunky thing (was in range 200, moved up to 800)
         frame_contrast_metrics = np.zeros(30000)
@@ -356,7 +408,10 @@ class TrapcamAnalyzer:
         flies_on_trap_count=0
         flies_in_trap_count=0
         not_flies_count=0
+        all_fly_count=0
         fly_contours_count=0
+        rejected_flies_count=0
+
         
         for contour in contours:
             # if len(contour) > 5:
@@ -373,10 +428,11 @@ class TrapcamAnalyzer:
                     else:
                         print ('eccentricity less than 0.35')
             else:
+               
                 not_flies[not_flies_count] = fly
                 not_flies_count +=1
            
-
+#        pdb.set_trace()
 
         #now that we have a list of fly contours, let's see if they're inside the trap or outside it -- on the basis of contrast and area ranges
         #also, let's take this opportunity to get rid of any "flies" that are brighter than the background image. It would in theory make sense to do this earlier, but I think the mahalanobis distance might be an absolute value
@@ -417,9 +473,19 @@ class TrapcamAnalyzer:
             fly = {'x': x, 'y': y, 'area': area,'contrast metric': contrast_metric, 'perimeter contrast boolean': perimeter_contrast_boolean}
 
             if contrast_metric < self.minimum_contrast_metric:
+                #fly rejected
+                fly['type']='reject_contrast_metric'
+                all_flies[all_fly_count]=fly
+                all_fly_count += 1
                 continue
+            
             if not perimeter_contrast_boolean:
+                #fly rejected 
+                fly['type']='reject_perimeter_contrast'
+                all_flies[all_fly_count]=fly
+                all_fly_count += 1
                 continue
+
 
             ##################################################################
             # if contrast_metric > self.ontrap_intrap_threshold:
@@ -435,13 +501,33 @@ class TrapcamAnalyzer:
             # ###### trying out a linear relationship between contrast_metric and area as the differentiator between in_trap and on_trap flies:
             if area > self.linear_relationship_slope*contrast_metric +self.linear_relationship_offset: #if above this line, the slope and y-offset of which were empirically eyeballed based on 2019_06_11 trap_G
                 if area > self.minimum_on_trap_contour_size:
+                    
                     flies_on_trap[flies_on_trap_count]= fly
-                    flies_on_trap_count +=1
 
-            if area < self.linear_relationship_slope*contrast_metric +self.linear_relationship_offset: #if below this same line, the slope and y-offset of which were empirically eyeballed based on 2019_06_11 trap_G
+                    flies_on_trap_count +=1
+                    fly['type']='on_trap'
+                    all_flies[all_fly_count]=fly
+                    all_fly_count += 1 
+
+                else:
+                    fly['type']='reject_low_area_on_trap'
+                    all_flies[all_fly_count]=fly
+                    all_fly_count += 1
+
+            if area <= self.linear_relationship_slope*contrast_metric +self.linear_relationship_offset: #if below this same line, the slope and y-offset of which were empirically eyeballed based on 2019_06_11 trap_G
                 if area < self.maximum_in_trap_contour_size:
+                   
                     flies_in_trap[flies_in_trap_count]= fly
                     flies_in_trap_count +=1
+                    fly['type']='in_trap'
+                    all_flies[all_fly_count]=fly
+                    all_fly_count += 1 
+#                
+                else:
+                    fly['type']='reject_high_area_in_trap'
+
+                    all_flies[all_fly_count]=fly
+                    all_fly_count += 1
 
             frame_contrast_metrics[int(contrast_metric_count)]=contrast_metric # I use this list to see if there is sufficient bimodality in contrast metrics that the location of its local minimum could be used to automatically select a threshold for classifying in-trap vs. on-trap flies
             contrast_metric_count += 1
@@ -451,12 +537,16 @@ class TrapcamAnalyzer:
         # now trimming trailing empty dictionaries
         flies_on_trap = flies_on_trap[0:flies_on_trap_count]
         flies_in_trap = flies_in_trap[0:flies_in_trap_count]
+
         ##############################################################################################
         test_image_copy = test_image.copy()
-        self.show_image_with_circles_drawn_around_putative_flies(test_image_copy, flies_on_trap,flies_in_trap, not_flies)
+#        pdb.set_trace()
+#        self.show_image_with_circles_drawn_around_putative_flies(test_image_copy, flies_on_trap,flies_in_trap, not_flies)
+        self.show_image_with_circles_drawn_around_all_flies(test_image_copy, all_flies, not_flies)
         dict_to_add_to_all_flies_over_time = {'seconds since release':time_since_release, 'flies on trap': flies_on_trap, 'flies in trap': flies_in_trap, 'not_flies': not_flies}
         frame_contrast_metrics = frame_contrast_metrics[0:contrast_metric_count]
         frame_fly_contour_areas = frame_fly_contour_areas[0:fly_contour_area_count]
+#        pdb.set_trace()
         return test_image_copy, time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, difference_img_all_contours #fg_masked_by_contour#difference_img #fgmask1  #fgmask_notsmoothed
 
     def find_contours_using_pretrained_backsub_MOG2(self,

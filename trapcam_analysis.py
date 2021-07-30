@@ -107,13 +107,15 @@ class TrapcamAnalyzer:
              #   print ("Can't find JPEG data!")
               #  return None
         img = cv2.imread(filename)
+        img=img[:,400:2350] #to focus on a specific area
         return img
 
     def load_mask(self, square_mask_path):
         print (square_mask_path)
         mask = cv2.imread(square_mask_path)
         gray_mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
-        rescaled_mask = np.int8(floor(gray_mask/255)) #rescales mask to be 0s and 1s     
+        rescaled_mask = np.int8(floor(gray_mask/255)) #rescales mask to be 0s and 1s
+        rescled_mask=rescaled_mask[:,400:2350] #to focus on a specific area
         return rescaled_mask
 
     def fit_ellipse_to_contour(self, contour):
@@ -199,11 +201,31 @@ class TrapcamAnalyzer:
                 cv2.rectangle(fg_mask, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,255], 5)
                 in_trap_count+=1               
         if on_trap_count!=0:
-            cv2.putText(fg_mask,"on trap(circle): "+str(on_trap_count),(600,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)  
+            cv2.putText(fg_mask,"on trap(circle): "+str(on_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)  
         if in_trap_count!=0:
-            cv2.putText(fg_mask,"in trap(rectangle): "+str(in_trap_count),(600,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
-        cv2.putText(fg_mask,"total: "+str(on_trap_count+in_trap_count),(600,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(127, 127, 127),2)
-#        pdb.set_trace()
+            cv2.putText(fg_mask,"in trap(rectangle): "+str(in_trap_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
+        cv2.putText(fg_mask,"total: "+str(on_trap_count+in_trap_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(127, 127, 127),2)
+
+
+    def show_image_with_marks_drawn_around_in_trap_on_trap_flies(self,color_image,all_flies):
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        on_trap_count=0
+        in_trap_count=0  
+        for fly in all_flies:
+            color = [0,0,153]
+            if fly['type']=='on_trap':
+                #flag=list(fly.values())[5]
+                cv2.circle(color_image, (fly['x'], fly['y']), 50, [255,255,0], 5)
+                on_trap_count+=1 
+            elif fly['type']=='in_trap':
+                #flag=list(fly.values())[5] 
+                cv2.rectangle(color_image, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,255], 5)
+                in_trap_count+=1               
+        if on_trap_count!=0:
+            cv2.putText(color_image,"on trap(circle): "+str(on_trap_count),(600,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)  
+        if in_trap_count!=0:
+            cv2.putText(color_image,"in trap(rectangle): "+str(in_trap_count),(600,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
+        cv2.putText(color_image,"total: "+str(on_trap_count+in_trap_count),(600,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(127, 127, 127),2)
 
 
 
@@ -256,7 +278,7 @@ class TrapcamAnalyzer:
                 #print(flag)
             else:#'in_trap'
                 #flag=list(fly.values())[5] 
-                cv2.circle(color_image, (fly['x'], fly['y']), 50, [255,0,255], 5)
+                cv2.rectangle(color_image, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,255], 5)
                 cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
                 cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [255,0,255],2, cv2.LINE_AA)
                 in_trap_count+=1               
@@ -268,21 +290,21 @@ class TrapcamAnalyzer:
             #print("not")
 
         if rejected_by_contrast_metric_count!=0:
-            cv2.putText(color_image,"rejected by contrast metric: "+str(rejected_by_contrast_metric_count),(600,1540),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 0, 255),2)
+            cv2.putText(color_image,"rejected by contrast metric: "+str(rejected_by_contrast_metric_count),(150,1540),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 0, 255),2)
         if rejected_by_perimeter_contrast_count!=0:
-            cv2.putText(color_image,"rejected by perimeter contrast: "+str(rejected_by_perimeter_contrast_count),(600,1580),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 0, 0),2)
+            cv2.putText(color_image,"rejected by perimeter contrast: "+str(rejected_by_perimeter_contrast_count),(150,1580),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 0, 0),2)
         if rejected_by_low_area_on_trap_count!=0:
-            cv2.putText(color_image,"rejected by low area on trap: "+str(rejected_by_low_area_on_trap_count),(600,1620),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 255, 0),2)
+            cv2.putText(color_image,"rejected by low area on trap: "+str(rejected_by_low_area_on_trap_count),(150,1620),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 255, 0),2)
         if rejected_by_high_area_in_trap_count!=0:
-            cv2.putText(color_image,"rejected by high area in trap: "+str(rejected_by_high_area_in_trap_count),(600,1660),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 255, 255),2)
+            cv2.putText(color_image,"rejected by high area in trap: "+str(rejected_by_high_area_in_trap_count),(150,1660),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 255, 255),2)
         if on_trap_count!=0:
-            cv2.putText(color_image,"on trap: "+str(on_trap_count),(600,1700),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)  
+            cv2.putText(color_image,"on trap(circle): "+str(on_trap_count),(150,1700),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)  
         if in_trap_count!=0:
-            cv2.putText(color_image,"in trap: "+str(in_trap_count),(600,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
+            cv2.putText(color_image,"in trap(rectangle): "+str(in_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
         if not_fly_count!=0:
-            cv2.putText(color_image,"not fly: "+str(not_fly_count),(600,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2)
+            cv2.putText(color_image,"not fly: "+str(not_fly_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2)
         cv2.putText(color_image,"total: "+str(rejected_by_contrast_metric_count+rejected_by_perimeter_contrast_count+rejected_by_low_area_on_trap_count+
-            rejected_by_high_area_in_trap_count+on_trap_count+in_trap_count+not_fly_count),(600,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(127, 127, 127),2)
+            rejected_by_high_area_in_trap_count+on_trap_count+in_trap_count+not_fly_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(127, 127, 127),2)
 #        pdb.set_trace()
 
 
@@ -416,10 +438,10 @@ class TrapcamAnalyzer:
         cv2.drawContours(fg_masked_by_dilated_contour_thresh, contour_of_stencil,0,(0,255,0),1)
         out = fg_masked_by_dilated_contour_thresh[y-40:y+40, x-40:x+40]
         out2 = np.concatenate((out, fg_masked_copy[y-40:y+40, x-40:x+40]), axis=1)
-        try:
-            cv2.imwrite('./examples_of_perimeter_contrast_analysis/' + "%04d.jpg" % count, cv2.resize(out2, (1600,800)))
-        except:
-            pdb.set_trace()
+#        try:
+        cv2.imwrite('./examples_of_perimeter_contrast_analysis/' + "%04d.jpg" % count, cv2.resize(out2, (1600,800)))
+#        except:
+#            pdb.set_trace()
         
         # cv2.imshow('', cv2.resize(out2, (1600,800)))
         # wait_key_val = cv2.waitKey(0) & 0xFF
@@ -598,9 +620,10 @@ class TrapcamAnalyzer:
         all_flies=all_flies[0:all_fly_count]
         ##############################################################################################
         test_image_copy = test_image.copy()
-#        pdb.set_trace()
+#        test_image_copy2 = test_image_copy
 #        self.show_image_with_circles_drawn_around_putative_flies(test_image_copy, flies_on_trap,flies_in_trap, not_flies)
         self.show_image_with_circles_drawn_around_all_flies(test_image_copy, all_flies, not_flies)
+#        self.show_image_with_marks_drawn_around_in_trap_on_trap_flies(test_image_copy,all_flies)
         self.show_fgmask_with_marks_drawn_around_in_trap_on_trap_flies(fgmask1,all_flies)
         dict_to_add_to_all_flies_over_time = {'seconds since release':time_since_release, 'flies on trap': flies_on_trap, 'flies in trap': flies_in_trap, 'not_flies': not_flies}
         frame_contrast_metrics = frame_contrast_metrics[0:contrast_metric_count]
@@ -608,7 +631,8 @@ class TrapcamAnalyzer:
 #        return test_image_copy, time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, difference_img_all_contours #fg_masked_by_contour#difference_img #fgmask1  #fgmask_notsmoothed
 
         ## KH ADDED FGMASK1 AS RETURN VALUE 7.27.21
-        return fgmask1,test_image_copy, time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, difference_img_all_contours
+        return fgmask1,test_image_copy,time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, difference_img_all_contours
+
     def find_contours_using_pretrained_backsub_MOG2(self,
                                                     full_image_stack,
                                                     filename_stack,
@@ -644,7 +668,7 @@ class TrapcamAnalyzer:
                 except:
                     break
                 ## KH ADDED ANNOTATED_FGMASK1 7.27.21
-                annotated_fgmask1,annotated_output_image, time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, frame_contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, smoothed_foreground_mask  = self.testing_step_of_backsub_MOG2(index, fgbg, test_image, self.get_time_since_release_from_filename(name = test_filename))
+                annotated_fgmask1,annotated_output_image,time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, frame_contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, smoothed_foreground_mask  = self.testing_step_of_backsub_MOG2(index, fgbg, test_image, self.get_time_since_release_from_filename(name = test_filename))
                 time_since_release_list [index -self.train_num] = time_since_release
                 analyzed_filename_stack [index -self.train_num] = test_filename
                 all_flies_over_time     [index -self.train_num] = dict_to_add_to_all_flies_over_time
@@ -660,10 +684,11 @@ class TrapcamAnalyzer:
                 contrast_metric_list_of_lists.append(frame_contrast_metrics)
                 fly_contour_area_list_of_lists.append(frame_fly_contour_areas)
 
+
                 #here, save annotated output image
                 #cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_output_image)
 
-                ## KH,TW NO NEED TO RESIZE 7.20.21
+                ### KH,TW NO NEED TO RESIZE 7.20.21
 
                 #annotated_out_resized = cv2.resize(annotated_output_image, (1296,972)) #halves image dimensions just for display purposes
                 #annotated_out_resized = annotated_out_resized[:,200:-240].copy()
@@ -676,9 +701,27 @@ class TrapcamAnalyzer:
                 cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_output_image)
                 ### KH, TO MAKE FGMASK WITH CIRCLES 7.27.21
                 cv2.imwrite(video_dir + "%04d.jpg" % (index+100), annotated_fgmask1)
+#                cv2.imwrite(video_dir + "%04d.jpg" % (index+200), annotated_output_image2)
+
+                img1=cv2.imread(video_dir + "%04d.jpg" % index) #original image
+                img2=cv2.imread(video_dir + "%04d.jpg" % index) #color image w/ all detections
+                img3=cv2.imread(video_dir + "%04d.jpg" % (index+100)) #foreground mask w/ in_trap, on_trap detections
+                img4=cv2.imread(video_dir + "%04d.jpg" % (index+100)) #color image w/ in_trap, on_trap detections
+
+                concat_img1=cv2.vconcat([img1,img2])
+                concat_img2=cv2.vconcat([img3,img4])
+                concat_img3=cv2.hconcat([concat_img1,concat_img2]) #4 figures to 1 figure
+                cv2.imwrite(video_dir + "%04d.jpg" % (index+500), concat_img3)
+
+
+#                pdb.set_trace()
         all_contrast_metrics = all_contrast_metrics[0:contrast_metric_count-1] #trimming trailing zeros
         all_fly_contour_areas = all_fly_contour_areas[0:fly_contour_area_count-1]# trimming trailing zeros
         return all_flies_over_time, time_since_release_list, analyzed_filename_stack, all_contrast_metrics, all_fly_contour_areas, contrast_metric_list_of_lists, fly_contour_area_list_of_lists, morph_open_iteration_number, morph_ellipse_size
+
+
+
+
 
     def format_matplotlib_ax_object(self, ax_handle):
         ax_handle.spines['right'].set_visible(False)
@@ -748,7 +791,8 @@ class TrapcamAnalyzer:
             
             ## KH,TW TO SEE THE FULL TRAP PIC  7.20.21
 
-            display_image_resized = display_image[:,500:-325].copy()
+#            display_image_resized = display_image[:,500:-325].copy()
+            display_image_resized = display_image.copy()
         #### now plotting the graph of flies over time
 #            fig = plt.figure(figsize=(10,9), facecolor="white")
             fig = plt.figure(figsize=(16,16), facecolor="white")

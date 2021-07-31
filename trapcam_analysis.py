@@ -704,20 +704,21 @@ class TrapcamAnalyzer:
                 #cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_out_resized)
 
                 ### KH, TO MAKE 1 figure from 4 figures 7.30.21
-                cv2.imwrite(video_dir + "%04d.jpg" % index, original_image) # Actually not original, but to create 1 figure from 4 figures
-                cv2.imwrite(video_dir + "%04d.jpg" % (index+100), annotated_output_image) #color_image w/ all detections
-                cv2.imwrite(video_dir + "%04d.jpg" % (index+200), annotated_fgmask1) # foreground mask w/ in_trap, on_trap detections
-                cv2.imwrite(video_dir + "%04d.jpg" % (index+300), annotated_output_image2) # color image w/ in_trap, on_trap detections
+                cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_output_image) #color_image w/ all detections
+                cv2.imwrite(video_dir + "%04d.jpg" % (index+1000), annotated_fgmask1) # foreground mask w/ in_trap, on_trap detections
+                cv2.imwrite(video_dir + "%04d.jpg" % (index+2000), annotated_output_image2) # color image w/ in_trap, on_trap detections
+                cv2.imwrite(video_dir + "%04d.jpg" % (index+3000), original_image) # Actually not original, but to create 1 figure from 4 figures
 
-                img1=cv2.imread(video_dir + "%04d.jpg" % index) #original image
-                img2=cv2.imread(video_dir + "%04d.jpg" % (index+100)) #color image w/ all detections
-                img3=cv2.imread(video_dir + "%04d.jpg" % (index+200)) #foreground mask w/ in_trap, on_trap detections
-                img4=cv2.imread(video_dir + "%04d.jpg" % (index+300)) #color image w/ in_trap, on_trap detections
+
+                img2=cv2.imread(video_dir + "%04d.jpg" % index) #color image w/ all detections
+                img3=cv2.imread(video_dir + "%04d.jpg" % (index+1000)) #foreground mask w/ in_trap, on_trap detections
+                img4=cv2.imread(video_dir + "%04d.jpg" % (index+2000)) #color image w/ in_trap, on_trap detections
+                img1=cv2.imread(video_dir + "%04d.jpg" % (index+3000)) #original image
 
                 concat_img1=cv2.vconcat([img1,img2])
                 concat_img2=cv2.vconcat([img3,img4])
                 concat_img3=cv2.hconcat([concat_img1,concat_img2]) #4 figures to 1 figure
-                cv2.imwrite(video_dir + "%04d.jpg" % (index+500), concat_img3)
+                cv2.imwrite(video_dir + "%04d.jpg" % (index+5000), concat_img3)
 
 
 #                pdb.set_trace()
@@ -778,10 +779,12 @@ class TrapcamAnalyzer:
             low_pass_flies_on_trap[i-window_size] = (np.mean(flies_on_trap_over_time[i-window_size:i]))
             low_pass_flies_in_trap[i-window_size] = (np.mean(flies_in_trap_over_time[i-window_size:i]))
 
+
         annotated_frame_filenames = self.get_filenames(path = video_dir, contains = ".jpg", does_not_contain = [])
         print ('now reading in annotated frames and merging them with other graphics')
         for frame_pos, name in enumerate(annotated_frame_filenames):
             display_image = cv2.imread(name)
+
             plt.close('all') # < ---- dealing with the memory issues of having too many windows open at once
             try:
                 filename = analyzed_filename_stack[frame_pos]

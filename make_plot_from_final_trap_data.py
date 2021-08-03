@@ -10,8 +10,6 @@ on_trap_list=[]
 in_trap_list=[]
 sec_since_release_list=[]
 
-f.close()
-
 #ask user input
 trap=input("Enter a trap letter to analyze: ")
 
@@ -23,6 +21,8 @@ for i in data['trap_'+trap]:
 			in_trap_list.append(k)
 		elif i=="seconds since release:":
 			sec_since_release_list.append(k)
+
+f.close()
 
 def make_accumulation_list(list):
 	acc_list=[]

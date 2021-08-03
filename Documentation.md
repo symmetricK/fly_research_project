@@ -27,16 +27,17 @@ See (4figures.jpg)
 
 
 # make_plot_from_final_trap_data.py
-- reading json file 
+- reading json file
+	- f=open(source)
+	- data=json.load(f)
+	- some code(In this case, make three lists)
+	- f.close()
 - makeing list
 - creating subplots
 
 ### reading json file
 
-- f=open(source)
-- data=json.load(f)
-- some code(In this case, make three lists)
-- f.close()
+
 
 ### making list
 - difine function to make accumulation list

@@ -204,7 +204,7 @@ class TrapcamAnalyzer:
         if on_trap_count!=0:
             cv2.putText(fg_mask,"on trap(circle): "+str(on_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 255),2)  
         if in_trap_count!=0:
-            cv2.putText(fg_mask,"in trap(rectangle): "+str(in_trap_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 255),2)
+            cv2.putText(fg_mask,"in trap(square): "+str(in_trap_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 255),2)
         cv2.putText(fg_mask,"total: "+str(on_trap_count+in_trap_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 255),2)
 
 
@@ -225,7 +225,7 @@ class TrapcamAnalyzer:
         if on_trap_count!=0:
             cv2.putText(color_image,"on trap(circle): "+str(on_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)  
         if in_trap_count!=0:
-            cv2.putText(color_image,"in trap(rectangle): "+str(in_trap_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
+            cv2.putText(color_image,"in trap(square): "+str(in_trap_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
         cv2.putText(color_image,"total: "+str(on_trap_count+in_trap_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 0, 255),2)
 
 
@@ -301,7 +301,7 @@ class TrapcamAnalyzer:
         if on_trap_count!=0:
             cv2.putText(color_image,"on trap(circle): "+str(on_trap_count),(150,1700),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)  
         if in_trap_count!=0:
-            cv2.putText(color_image,"in trap(rectangle): "+str(in_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
+            cv2.putText(color_image,"in trap(square): "+str(in_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
         if not_fly_count!=0:
             cv2.putText(color_image,"not fly: "+str(not_fly_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2)
         cv2.putText(color_image,"total: "+str(rejected_by_contrast_metric_count+rejected_by_perimeter_contrast_count+rejected_by_low_area_on_trap_count+

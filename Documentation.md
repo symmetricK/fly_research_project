@@ -20,3 +20,7 @@ See (original_frame.jpg)
 ![original_frame.jpg](/image_samples/original_frame.jpg)<br>
 See (4figures.jpg)
 ![4figures.jpg](/image_samples/4figures.jpg)<br>
+
+
+See (flies_time_plot.jpg)
+![flies_time_plot.jpg](/image_samples/flies_time_plot.jpg)<br>

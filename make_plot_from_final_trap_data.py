@@ -12,9 +12,10 @@ sec_since_release_list=[]
 
 
 #ask user input
+trap=input("Enter a trap letter to analyze: ")
 
-for i in data['trap_G']:
-	for k in data['trap_G'][i]:
+for i in data['trap_'+trap]:
+	for k in data['trap_'+trap][i]:
 		if i=="flies on trap over time:":
 			on_trap_list.append(k)
 		elif i=="flies in trap over time:":
@@ -42,7 +43,7 @@ y1 = np.cos(2 * np.pi * x1) * np.exp(-x1)
 y2 = np.cos(2 * np.pi * x2)
 
 fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(15,15))
-fig.suptitle('Plot of Flies Data per Frame',size=30)
+fig.suptitle('Plots of Fly Data per Frame',size=30)
 
 
 
@@ -59,3 +60,4 @@ ax2.set_xlabel('seconds since released',size=24)
 ax2.set_ylabel('total number of flies',size=24)
 ax2.legend(loc="upper left",fontsize=24)
 
+plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2017_10_26/flies_time.jpg')

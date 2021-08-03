@@ -1,10 +1,13 @@
-## I am going to make a list
-- Text here
-- Text here
+# trapcam_analysis.py
+- Based on Kate's code, adjusted the code for our experiment
 
-More text
-- 
--
+## 
+
+
+# run_trapcam_analysis.py
+- to avoid inputting many times while updating files, modified some statements
+- these have to be fixed when we try actual experiment
+
 
 See (before_change.jpg)<br>
 ![before_change.jpg](/image_samples/before_change.jpg)<br>

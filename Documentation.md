@@ -1,12 +1,14 @@
-# trapcam_analysis.py
-- Based on Kate's code, adjusted the code for our experiment
-
-## 
-
-
 # run_trapcam_analysis.py
 - to avoid inputting many times while updating files, modified some statements
 - these have to be fixed when we try actual experiment
+
+# trapcam_analysis.py
+- Based on Kate's code, adjusted the code for our experiment
+
+## test
+- test
+	- test
+		- test
 
 
 See (before_change.jpg)<br>

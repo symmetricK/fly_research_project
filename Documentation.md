@@ -4,18 +4,18 @@
 
 See (xxx.jpg)<br>
 
-See [kate.jpg](/home/flyranch/field_data_and_analysis_scripts/2017_10_26/trap_dummy_videos/original_1627071155_mahal10_trainnum10/annotated_frames/0010.jpg)<br>
+See ![before_change.jpg](/image_samples/before_change.jpg)<br>
 More text
 - 
 -
 
 
-See ![teat.jpg](/home/flyranch/field_data_and_analysis_scripts/2017_10_26/trap_dummy_videos/1628022280_mahal10_trainnum10/annotated_frames/0010.jpg)<br>
+See ![all_detections.jpg](/image_samples/all_detections.jpg)<br>
 
-See ![teat1.jpg](/home/flyranch/field_data_and_analysis_scripts/2017_10_26/trap_dummy_videos/1628022280_mahal10_trainnum10/annotated_frames/1010.jpg)<br>
+See ![fgmask_in_on_detections.jpg](/image_samples/fgmask_in_on_detections.jpg)<br>
 
-See ![teat2.jpg](/home/flyranch/field_data_and_analysis_scripts/2017_10_26/trap_dummy_videos/1628022280_mahal10_trainnum10/annotated_frames/2010.jpg)<br>
+See ![in_on_detections.jpg](/image_samples/in_on_detections.jpg)<br>
 
-See ![teat3.jpg](/home/flyranch/field_data_and_analysis_scripts/2017_10_26/trap_dummy_videos/1628022280_mahal10_trainnum10/annotated_frames/3010.jpg)<br>
+See ![original_frame.jpg](/image_samples/original_frame.jpg)<br>
 
-See ![teat4.jpg](/image_samples/4figures.jpg)<br>
+See ![4figures.jpg](/image_samples/4figures.jpg)<br>

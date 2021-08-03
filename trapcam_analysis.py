@@ -107,7 +107,7 @@ class TrapcamAnalyzer:
              #   print ("Can't find JPEG data!")
               #  return None
         img = cv2.imread(filename)
-#        pdb.set_trace()
+
         img=img[:,400:2350] #to focus on a specific area
         return img
 
@@ -306,7 +306,7 @@ class TrapcamAnalyzer:
             cv2.putText(color_image,"not fly: "+str(not_fly_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2)
         cv2.putText(color_image,"total: "+str(rejected_by_contrast_metric_count+rejected_by_perimeter_contrast_count+rejected_by_low_area_on_trap_count+
             rejected_by_high_area_in_trap_count+on_trap_count+in_trap_count+not_fly_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 0, 255),2)
-#        pdb.set_trace()
+
 
 
 
@@ -319,7 +319,7 @@ class TrapcamAnalyzer:
 
         plt.scatter(all_contrast_metrics, all_fly_contour_areas, color = 'black', s =1)
         plt.scatter(x = current_frame_contrast_metrics, y = current_frame_fly_contour_areas, color = [1.0,0.35,0], s = 40, edgecolors = ['black'])
-#        pdb.set_trace()
+
         # plt.axhline(y = self.minimum_on_trap_contour_size, color = 'black', lw =2, xmin=(self.ontrap_intrap_threshold - 5.)/(45-5.) , xmax =1.0)
         # plt.axhline(y = self.maximum_on_trap_contour_size, color = 'black', lw =2, xmin=(self.ontrap_intrap_threshold - 5.)/(45-5.) , xmax =1.0)
         # plt.axhline(y = self.minimum_in_trap_contour_size, color = [0.6,0,0.6], lw =2, xmin=0, xmax =(self.ontrap_intrap_threshold - 5.)/(45-5.))
@@ -622,12 +622,23 @@ class TrapcamAnalyzer:
         ##############################################################################################
         test_image_copy = test_image.copy()
 
-#        pdb.set_trace()
+
         test_image_copy2 = test_image_copy.copy()
 #        self.show_image_with_circles_drawn_around_putative_flies(test_image_copy, flies_on_trap,flies_in_trap, not_flies)
         self.show_image_with_circles_drawn_around_all_flies(test_image_copy, all_flies, not_flies)
         self.show_image_with_marks_drawn_around_in_trap_on_trap_flies(test_image_copy2,all_flies)
         self.show_fgmask_with_marks_drawn_around_in_trap_on_trap_flies(fgmask1,all_flies)
+
+        # write json file to store all fly data
+#        pdb.set_trace()
+
+#        all_flies_dict={'trap_dummy':all_flies}
+#        flyString=json.dumps(all_flies_dict)
+#       jsonFile=open("/home/flyranch/field_data_and_analysis_scripts/2017_10_26/all_flies_data.json","w")
+
+#        jsonFile.write(flyString)
+#       jsonFile.close()
+
 
         dict_to_add_to_all_flies_over_time = {'seconds since release':time_since_release, 'flies on trap': flies_on_trap, 'flies in trap': flies_in_trap, 'not_flies': not_flies}
         frame_contrast_metrics = frame_contrast_metrics[0:contrast_metric_count]
@@ -720,8 +731,6 @@ class TrapcamAnalyzer:
                 concat_img3=cv2.hconcat([concat_img1,concat_img2]) #4 figures to 1 figure
                 cv2.imwrite(video_dir + "%04d.jpg" % (index+5000), concat_img3)
 
-
-#                pdb.set_trace()
         all_contrast_metrics = all_contrast_metrics[0:contrast_metric_count-1] #trimming trailing zeros
         all_fly_contour_areas = all_fly_contour_areas[0:fly_contour_area_count-1]# trimming trailing zeros
         return all_flies_over_time, time_since_release_list, analyzed_filename_stack, all_contrast_metrics, all_fly_contour_areas, contrast_metric_list_of_lists, fly_contour_area_list_of_lists, morph_open_iteration_number, morph_ellipse_size
@@ -848,7 +857,6 @@ class TrapcamAnalyzer:
             #vis = np.zeros((h1+h2, max(w1, w2),3), np.uint8)
             #combine 2 images
 
-#            pdb.set_trace()
 #            vis[150:150+h1, 30:30+w1,:3] = graph
             vis[50:50+h1, 30:30+w1,:3] = graph
             vis[:h2, 30+w1:30+w1+w2,:3] = display_image_resized
@@ -888,7 +896,7 @@ class TrapcamAnalyzer:
 
                 growing_json = json.load(f)
             #add current trap dictionary to growing_json
-#            pdb.set_trace()
+
             growing_json.update(current_trap_dictionary) #CAREFUL; THIS WILL OVERWRITE ANY KEYS THAT ALREADY EXIST IN THE JSON
             with open(self.directory+'/all_traps_final_analysis_output.json', mode = 'w') as f:
                 json.dump(growing_json,f, indent = 1)
@@ -906,7 +914,6 @@ class TrapcamAnalyzer:
             time_string = str(time.time()).split('.')[0] # this is not very human-readable, but helps prevent overwriting
             namestr = self.directory+'/arrival_dynamics_figs/'+self.trap+'_flies_over_time_'+time_string+'.svg'
 
- #           pdb.set_trace()
             plt.savefig(namestr, bbox_inches='tight')
             pngnamestr = self.directory+'/arrival_dynamics_figs/'+self.trap+'_flies_over_time_'+time_string+'.png'
             plt.savefig(pngnamestr, bbox_inches='tight')
@@ -944,6 +951,7 @@ class TrapcamAnalyzer:
         
         return mask
 
+
 # --------------------------------------------------------------------------------------------------------
     def run(self):
         timelapse_directory = self.directory +'/trapcam_timelapse/'+self.trap
@@ -963,7 +971,7 @@ class TrapcamAnalyzer:
             filename_list[image_count]= filename
             image_count += 1
         filename_list = filename_list[0:image_count-1] # <----could be off-by-one
-#        pdb.set_trace()
+
 #        sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
         sample_image =  np.zeros_like(self.load_color_image(filename_list[15]))
         if self.USE_FULL_MASK:
@@ -985,7 +993,7 @@ class TrapcamAnalyzer:
                 masked_image_stack[image_count] = cv2.bitwise_and(img,img,mask = square_mask)
                 image_count +=1
 
-        #pdb.set_trace()
+
         del(img)
 
         

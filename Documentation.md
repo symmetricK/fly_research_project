@@ -27,7 +27,7 @@ See (4figures.jpg)
 
 
 # make_plot_from_final_trap_data.py
-- reading json file
+- reading json file (In this case, all_traps_final_analysis_output.json) 
 	- f=open(source)
 	- data=json.load(f)
 	- some code(In this case, make three lists)

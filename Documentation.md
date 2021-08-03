@@ -33,21 +33,13 @@ See (4figures.jpg)
 	- some code(In this case, make three lists)
 	- f.close()
 - makeing list
+	- difine function to make accumulation list
+	- apply the function to the three lists
 - creating subplots
+	- fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(15,15))
+	- plt.savefig(direction)
 
-### reading json file
-
-
-
-### making list
-- difine function to make accumulation list
-- apply the function to the three lists
-
-### creating subplots
-- fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(15,15))
-- plt.savefig(direction)
-
-Here is output
+### Here is output
 
 See (flies_time_plot.jpg)
 ![flies_time_plot.jpg](/image_samples/flies_time_plot.jpg)<br>

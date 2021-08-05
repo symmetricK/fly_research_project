@@ -104,11 +104,11 @@ class TrapcamAnalyzer:
            #     start = data.index(header)
             #    end = data.index(tail, start) + 2
             #except ValueError:
-             #   print ("Can't find JPEG data!")
+             #   print ("Can't find JPEG data!") 
               #  return None
         img = cv2.imread(filename)
-
         img=img[:,400:2350] #to focus on a specific area
+
         return img
 
     def load_mask(self, square_mask_path):
@@ -116,7 +116,7 @@ class TrapcamAnalyzer:
         mask = cv2.imread(square_mask_path)
         gray_mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
         rescaled_mask = np.int8(floor(gray_mask/255)) #rescales mask to be 0s and 1s
-        rescled_mask=rescaled_mask[:,400:2350] #to focus on a specific area
+        rescaled_mask=rescaled_mask[:,400:2350] #to focus on a specific area
         return rescaled_mask
 
     def fit_ellipse_to_contour(self, contour):
@@ -485,6 +485,7 @@ class TrapcamAnalyzer:
         rejected_flies_count=0
         fly_test_count=0
 
+
         for contour in contours:
             # if len(contour) > 5:
             x, y, area, ecc = self.fit_ellipse_to_contour(contour)
@@ -630,19 +631,47 @@ class TrapcamAnalyzer:
         self.show_fgmask_with_marks_drawn_around_in_trap_on_trap_flies(fgmask1,all_flies)
 
         # write json file to store all fly data
-#        pdb.set_trace()
 
-#        all_flies_dict={'trap_dummy':all_flies}
-#        flyString=json.dumps(all_flies_dict)
-#       jsonFile=open("/home/flyranch/field_data_and_analysis_scripts/2017_10_26/all_flies_data.json","w")
+        fileName="/home/flyranch/field_data_and_analysis_scripts/2017_10_26/all_flies_data.json"
 
-#        jsonFile.write(flyString)
+        all_flies_dict={'trap_dummy':all_flies}
+        
+#       with open(fileName, "r+") as f:
+#           data=json.load(f)
+#           data.appen(all_flies_dict)
+#           a.seek(0)
+#           json.dump(data,f)
+
+
+#       with open(fileName,"r+") as file:
+#           data = json.load(file)
+#           data.update(all_flies_dict)
+#           file.seek(0)
+#           json.dump(data, file)
+#       with open(fileName,"w") as f:
+#           fileName.append
+
+
+
+
+#       flyString=json.dumps(all_flies_dict)
+#       jsonFile=open(fileName,"w")
+
+
+
+#       jsonFile.write(flyString)
+
+
+#       jsonData=json.load(jsonFile)
+#       jsonData.update(all_flies_dict)
 #       jsonFile.close()
+
 
 
         dict_to_add_to_all_flies_over_time = {'seconds since release':time_since_release, 'flies on trap': flies_on_trap, 'flies in trap': flies_in_trap, 'not_flies': not_flies}
         frame_contrast_metrics = frame_contrast_metrics[0:contrast_metric_count]
         frame_fly_contour_areas = frame_fly_contour_areas[0:fly_contour_area_count]
+
 #        return test_image_copy, time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, difference_img_all_contours #fg_masked_by_contour#difference_img #fgmask1  #fgmask_notsmoothed
 
         ## KH, ADDED FGMASK1,TEST_IMAGE,TEST_IMAGE_COPY2 AS RETURN VALUE 7.30.21
@@ -687,6 +716,8 @@ class TrapcamAnalyzer:
                 time_since_release_list [index -self.train_num] = time_since_release
                 analyzed_filename_stack [index -self.train_num] = test_filename
                 all_flies_over_time     [index -self.train_num] = dict_to_add_to_all_flies_over_time
+
+
 
                 contrast_metric_count += frame_contrast_metric_count
                 all_contrast_metrics[last_frame_contrast_metric_count:contrast_metric_count] = frame_contrast_metrics

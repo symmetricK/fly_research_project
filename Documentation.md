@@ -4,11 +4,47 @@
 
 # trapcam_analysis.py
 - Based on Kate's code, adjusted the code for our experiment
-
-## test
-- test
+- to debug, used pdb.set_trace()
+## def __init__(self, directory,trap='trap_A',calculate_threshold=False,calculate_final=True):
+- added self.USE_FULL_MASK=True
 	- test
 		- test
+
+## def load_color_image(self,filename):
+- added img=img[:,400:2350] # to focus on a specific area
+	- might be needed to adjust for our experiment
+
+## def load_mask(self, square_mask_path):
+- test
+
+## def show_image_with_circles_drawn_around_putative_flies(self, color_image, flies_on_trap, flies_in_trap, not_flies):
+- to get more specific information from output images, created other 3 functions
+	- def show_fgmask_with_marks_drawn_around_in_trap_on_trap_flies(self,fg_mask,all_flies):
+	- def show_image_with_marks_drawn_around_in_trap_on_trap_flies(self,color_image,all_flies):
+	- def show_image_with_circles_drawn_around_all_flies(self,color_image, all_flies, not_flies):
+		- cv2.circle(fg_mask, (fly['x'], fly['y']), 50, [255,255,255], 5)
+			- to draw circle on the image
+		- cv2.rectangle(fg_mask, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,255,255], 5)
+			- to draw rectangle on the image
+		- cv2.putText(fg_mask,"on trap(circle): "+str(on_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 255),2)
+			- to write text on the image
+			- font can be changed
+		- color info might be modified for our experiment 
+		- by using for loop and if conditions(fly['type']), actions are decided
+		- cv2.drawMarker(color_image, (fly['x'], fly['y']),[127,127,127],cv2.MARKER_DIAMOND, 125,6)
+			- to draw diamond on the image
+			- triandle, star, cross, etc. can be drawn 
+		- text locations might be changed for our experiment
+
+### Test
+- cv2.bitwise_and(img1, img2, mask=mask)
+	- imgs has to be the same size
+	- mask decides the region which we want to extract from imgs
+
+
+
+
+
 
 
 See (before_change.jpg)<br>
@@ -46,5 +82,5 @@ See (4figures.jpg)
 
 ### Here is output
 
-See (flies_time_plot.jpg)
-![flies_time_plot.jpg](/image_samples/flies_time_plot.jpg)<br>
+See (flies_time.jpg)
+![flies_time.jpg](/image_samples/flies_time.jpg)<br>

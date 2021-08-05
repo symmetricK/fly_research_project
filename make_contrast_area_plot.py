@@ -14,8 +14,8 @@ contrast_list=[]
 #ask user input
 trap=input("Enter a trap letter to analyze: ")
 
-for i in data['trap_'+trap]:
-	data_list.append(i)
+#for i in data['trap_'+trap]:
+#	data_list.append(i)
 
 pdb.set_trace()
 

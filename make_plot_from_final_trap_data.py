@@ -47,14 +47,14 @@ fig.suptitle('Plots of Fly Data per Frame',size=30)
 
 
 
-ax1.plot(sec_since_release_list, on_trap_list, '-o',Markersize=10,color="r",label="on trap")
-ax1.plot(sec_since_release_list, in_trap_list, '-s',Markersize=10,color="b",label="in trap")
+ax1.plot(sec_since_release_list, on_trap_list, '-o',Markersize=6,color="r",label="on trap")
+ax1.plot(sec_since_release_list, in_trap_list, '-s',Markersize=6,color="b",label="in trap")
 #ax1.set_xlabel('seconds_since_released')
 ax1.set_ylabel('number of flies in frame',size=24)
 ax1.legend(loc="upper left",fontsize=24)
 
-ax2.plot(sec_since_release_list, on_trap_acc_list, '-o',Markersize=10,color="r",label="on trap")
-ax2.plot(sec_since_release_list, in_trap_acc_list, '-s',Markersize=10,color="b",label="in trap")
+ax2.plot(sec_since_release_list, on_trap_acc_list, '-o',Markersize=6,color="r",label="on trap")
+ax2.plot(sec_since_release_list, in_trap_acc_list, '-s',Markersize=6,color="b",label="in trap")
 ax2.set_xlabel('seconds since released',size=24)
 ax2.set_ylabel('total number of flies',size=24)
 ax2.legend(loc="upper left",fontsize=24)

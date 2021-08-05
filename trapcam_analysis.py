@@ -95,17 +95,17 @@ class TrapcamAnalyzer:
         return filelist_trimmed
 
     def load_color_image(self, filename):
-        #header = "\xff\xd8"
-        #tail = "\xff\xd9"
+#        header = "\xff\xd8"
+#        tail = "\xff\xd9"
        
-        #with open(filename, "rb") as image:
-         #   data = image.read()
-          #  try:
-           #     start = data.index(header)
-            #    end = data.index(tail, start) + 2
-            #except ValueError:
-             #   print ("Can't find JPEG data!") 
-              #  return None
+#        with open(filename, "rb") as image:
+#            data = image.read()
+#            try:
+#                start = data.index(header)
+#                end = data.index(tail, start) + 2
+#            except ValueError:
+#                print ("Can't find JPEG data!") 
+#                return None
         img = cv2.imread(filename)
         img=img[:,400:2350] #to focus on a specific area
 
@@ -686,7 +686,6 @@ class TrapcamAnalyzer:
         standard_out_array_length = len(full_image_stack) -self.train_num -self.buffer_btw_training_and_test
         sample_image_zero =  np.zeros_like(full_image_stack[0]) # <---- just using the first image as an "example" to be sure I preallocate the array with the right data type, dimensions etc
         # annotated_output_stack = np.stack([sample_image_zero for _ in range(standard_out_array_length)], axis = 0)
-    
         time_since_release_list = np.zeros(standard_out_array_length)
         analyzed_filename_stack = ['']*(standard_out_array_length)
         all_flies_over_time = [{} for _ in range(standard_out_array_length)]  # <-----
@@ -975,6 +974,7 @@ class TrapcamAnalyzer:
         sample_image is row, col, color
         mask has dimensions row,col
         '''
+#        pdb.set_trace()
         [nrows,ncols,colors]=np.shape(sample_image)
         mask=np.int8(np.zeros((nrows,ncols)))
         mask[100:-100,100:-100]=1
@@ -990,21 +990,23 @@ class TrapcamAnalyzer:
 
         full_filename_list = self.get_filenames(path = timelapse_directory, contains = "tl", does_not_contain = ['th']) #  full list of image filenames in the folder
         filename_list = ['']*(len(full_filename_list))
-  
+  #        pdb.set_trace()  
         image_count = 0
 
         for filename in full_filename_list:
             time_since_release = self.get_time_since_release_from_filename(name = filename)
+#            pdb.set_trace()
             if time_since_release < -60* self.min_prior_to_r:
                 continue
             if time_since_release > 60* self.min_post_r:
                 break
             filename_list[image_count]= filename
             image_count += 1
+#        pdb.set_trace()
         filename_list = filename_list[0:image_count-1] # <----could be off-by-one
-
-#        sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
-        sample_image =  np.zeros_like(self.load_color_image(filename_list[15]))
+#        pdb.set_trace()
+        sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
+#        sample_image =  np.zeros_like(self.load_color_image(filename_list[15]))
         if self.USE_FULL_MASK:
             square_mask=self.make_full_mask(sample_image)
         else:

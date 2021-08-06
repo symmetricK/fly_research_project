@@ -107,7 +107,7 @@ class TrapcamAnalyzer:
 #                print ("Can't find JPEG data!") 
 #                return None
         img = cv2.imread(filename)
-        img=img[:,400:2350] #to focus on a specific area
+#        img=img[:,400:2350] #to focus on a specific area
 
         return img
 
@@ -116,8 +116,10 @@ class TrapcamAnalyzer:
         mask = cv2.imread(square_mask_path)
         gray_mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
         rescaled_mask = np.int8(floor(gray_mask/255)) #rescales mask to be 0s and 1s
-        rescaled_mask=rescaled_mask[:,400:2350] #to focus on a specific area
+#        rescaled_mask=rescaled_mask[:,400:2350] #to focus on a specific area
         return rescaled_mask
+
+
 
     def fit_ellipse_to_contour(self, contour):
         M = cv2.moments(contour)
@@ -743,23 +745,31 @@ class TrapcamAnalyzer:
                 # vis = np.concatenate((annotated_out_resized, smoothed_foreground_mask_resized), axis=1)
                 # cv2.imwrite(video_dir + "%04d.jpg" % index, vis)
                 #cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_out_resized)
-
+#                pdb.set_trace()
                 ### KH, TO MAKE 1 figure from 4 figures 7.30.21
-                cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_output_image) #color_image w/ all detections
-                cv2.imwrite(video_dir + "%04d.jpg" % (index+1000), annotated_fgmask1) # foreground mask w/ in_trap, on_trap detections
-                cv2.imwrite(video_dir + "%04d.jpg" % (index+2000), annotated_output_image2) # color image w/ in_trap, on_trap detections
-                cv2.imwrite(video_dir + "%04d.jpg" % (index+3000), original_image) # Actually not original, but to create 1 figure from 4 figures
+#                cv2.imwrite(video_dir + "%04d.jpg" % index, annotated_output_image) #color_image w/ all detections
+#                pdb.set_trace()
 
+                time_for_filename_color_all=int('11'+test_filename[-19:-11]+test_filename[-10:-4])
+                time_for_filename_mask_inon=int('22'+test_filename[-19:-11]+test_filename[-10:-4]) 
+                time_for_filename_color_inon=int('33'+test_filename[-19:-11]+test_filename[-10:-4]) 
+                time_for_filename_original=int('44'+test_filename[-19:-11]+test_filename[-10:-4]) 
+                time_for_filename_four_figures=int('55'+test_filename[-19:-11]+test_filename[-10:-4]) 
 
-                img2=cv2.imread(video_dir + "%04d.jpg" % index) #color image w/ all detections
-                img3=cv2.imread(video_dir + "%04d.jpg" % (index+1000)) #foreground mask w/ in_trap, on_trap detections
-                img4=cv2.imread(video_dir + "%04d.jpg" % (index+2000)) #color image w/ in_trap, on_trap detections
-                img1=cv2.imread(video_dir + "%04d.jpg" % (index+3000)) #original image
+                cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_color_all, annotated_output_image) #color_image w/ all detections
+                cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_mask_inon, annotated_fgmask1) # foreground mask w/ in_trap, on_trap detections
+                cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_color_inon, annotated_output_image2) # color image w/ in_trap, on_trap detections
+                cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_original, original_image) # Actually not original, but to create 1 figure from 4 figures
+
+                img2=cv2.imread(video_dir + "%04d.jpg" % time_for_filename_color_all) #color image w/ all detections
+                img3=cv2.imread(video_dir + "%04d.jpg" % time_for_filename_mask_inon) #foreground mask w/ in_trap, on_trap detections
+                img4=cv2.imread(video_dir + "%04d.jpg" % time_for_filename_color_inon) #color image w/ in_trap, on_trap detections
+                img1=cv2.imread(video_dir + "%04d.jpg" % time_for_filename_original) #original image
 
                 concat_img1=cv2.vconcat([img1,img2])
                 concat_img2=cv2.vconcat([img3,img4])
                 concat_img3=cv2.hconcat([concat_img1,concat_img2]) #4 figures to 1 figure
-                cv2.imwrite(video_dir + "%04d.jpg" % (index+5000), concat_img3)
+                cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_four_figures, concat_img3)
 
         all_contrast_metrics = all_contrast_metrics[0:contrast_metric_count-1] #trimming trailing zeros
         all_fly_contour_areas = all_fly_contour_areas[0:fly_contour_area_count-1]# trimming trailing zeros
@@ -1005,13 +1015,13 @@ class TrapcamAnalyzer:
 #        pdb.set_trace()
         filename_list = filename_list[0:image_count-1] # <----could be off-by-one
 #        pdb.set_trace()
-        sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
+        sample_image =  np.zeros_like(self.load_color_image(filename_list[100]))
 #        sample_image =  np.zeros_like(self.load_color_image(filename_list[15]))
+#        pdb.set_trace()
         if self.USE_FULL_MASK:
             square_mask=self.make_full_mask(sample_image)
         else:
             square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
-
         del(full_filename_list)
 
         

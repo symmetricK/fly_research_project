@@ -13,7 +13,7 @@ while True:
     analyze_trap_list = []
 ###    letter = input("Enter a trap letter to analyze: ")
     letter="G"
-###    letter="dummy"
+### letter="test_dummy"
 ##    letter="test"
 #    letter="exp2_dummy_dummy"
     analyze_trap_list.append('trap_'+letter)

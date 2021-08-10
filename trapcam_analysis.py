@@ -20,7 +20,7 @@ class TrapcamAnalyzer:
     def __init__(self, directory, trap='trap_A', 
     	calculate_threshold=False, calculate_final=True):  # <---- instances of this class will specify the directory, most likely using directory = sys.argv[1]
         self.directory = directory
-        self.USE_FULL_MASK=True
+        self.USE_FULL_MASK=False
         self.trap = trap
         #print(threshold)
         #self.calculate_threshold=calculate_threshold
@@ -113,10 +113,15 @@ class TrapcamAnalyzer:
 
     def load_mask(self, square_mask_path):
         print (square_mask_path)
+
         mask = cv2.imread(square_mask_path)
         gray_mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
-        rescaled_mask = np.int8(floor(gray_mask/255)) #rescales mask to be 0s and 1s
+        rescaled_mask = (gray_mask/255) #rescales mask to be 0s and 1s
+        rescaled_mask = np.int8(floor(gray_mask/255)) 
+
 #        rescaled_mask=rescaled_mask[:,400:2350] #to focus on a specific area
+#        rescaled_mask=np.int8(mask)
+#        pdb.set_trace()
         return rescaled_mask
 
 
@@ -987,8 +992,8 @@ class TrapcamAnalyzer:
 #        pdb.set_trace()
         [nrows,ncols,colors]=np.shape(sample_image)
         mask=np.int8(np.zeros((nrows,ncols)))
-        mask[100:-100,100:-100]=1
-#        mask[200:-200,200:-200]=1
+#        mask[100:-100,100:-100]=1
+        mask[200:-200,200:-200]=1
         
         return mask
 
@@ -1033,6 +1038,8 @@ class TrapcamAnalyzer:
                 print ('img is None!')
                 continue
             else:
+#                pdb.set_trace()
+
                 masked_image_stack[image_count] = cv2.bitwise_and(img,img,mask = square_mask)
                 image_count +=1
 

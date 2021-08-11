@@ -117,14 +117,15 @@ class TrapcamAnalyzer:
 
         mask = cv2.imread(square_mask_path)
         gray_mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
-        rescaled_mask = (gray_mask/255) #rescales mask to be 0s and 1s
+#        rescaled_mask = (gray_mask/255) #rescales mask to be 0s and 1s
 #        ret, test_mask = cv2.threshold(gray_mask, 10, 255, cv2.THRESH_BINARY)
-#        rescaled_mask = np.int8(floor(gray_mask/255)) 
+#        rescaled_mask = np.int8(ceil(gray_mask/255)) 
 #        rescaled_mask8=np.arange(rescaled_mask,dtype=np.uint8)
 #        rescaled_mask=rescaled_mask[:,400:2350] #to focus on a specific area
+
 #        pdb.set_trace()
-#        return rescaled_mask
-        return mask
+        return gray_mask
+
 
 
 
@@ -711,7 +712,6 @@ class TrapcamAnalyzer:
         fly_contour_area_list_of_lists=[]
         for index, training_image in enumerate(full_image_stack):
             fgbg.apply(training_image, None, -1) # TRAINING STEP.
-            pdb.set_trace()
             if index > self.train_num-1: # when current index is less than train_num, the model hasn't been trained on the specified number of frames. After this point, the declaration of history = train_num should make the model "forget" earlier frames so it works as a sliding window
                 test_index = index+self.buffer_btw_training_and_test
                 try:

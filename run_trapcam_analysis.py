@@ -5,14 +5,14 @@ import trapcam_analysis as t
 
 ###dir = input("Enter the experiment directory you'd like to analyze (e.g. '2017_10_26'): ")
 # dir = sys.argv[1]
-dir='2017_10_26'
+dir='2021lab'
 
 
 print ('')
 while True:
     analyze_trap_list = []
-###    letter = input("Enter a trap letter to analyze: ")
-    letter="G"
+    letter = input("Enter a trap letter to analyze: ")
+###    letter="G"
 ### letter="test_dummy"
 ##    letter="test"
 #    letter="exp2_dummy_dummy"

@@ -91,7 +91,7 @@ class TrapcamAnalyzer:
                     #filelist.append( os.path.join(path, filename) )
                     filelist[filename_count] = str(os.path.join(path,filename))
                     filename_count +=1
-        filelist_trimmed = filelist[0:filename_count-1]
+        filelist_trimmed = filelist[0:filename_count]
         return filelist_trimmed
 
     def load_color_image(self, filename):
@@ -169,6 +169,7 @@ class TrapcamAnalyzer:
         frame_seconds = frame_seconds_timestamp - self.camera_offset
         release_time_seconds = int(self.release_time.split(':')[0])*3600 +int(self.release_time.split(':')[1])*60 + int(self.release_time.split(':')[2])
         time_elapsed = frame_seconds - release_time_seconds
+#        pdb.set_trace()
         return time_elapsed
 
     def show_image_with_circles_drawn_around_putative_flies(self, color_image, flies_on_trap, flies_in_trap, not_flies):
@@ -446,11 +447,11 @@ class TrapcamAnalyzer:
             retval = False
 
         #############comment out this block once you're done troubleshooting
-        cv2.drawContours(fg_masked_by_dilated_contour_thresh, contour_of_stencil,0,(0,255,0),1)
-        out = fg_masked_by_dilated_contour_thresh[y-40:y+40, x-40:x+40]
-        out2 = np.concatenate((out, fg_masked_copy[y-40:y+40, x-40:x+40]), axis=1)
+        #cv2.drawContours(fg_masked_by_dilated_contour_thresh, contour_of_stencil,0,(0,255,0),1)
+        #out = fg_masked_by_dilated_contour_thresh[y-40:y+40, x-40:x+40]
+        #out2 = np.concatenate((out, fg_masked_copy[y-40:y+40, x-40:x+40]), axis=1)
 #        try:
-        cv2.imwrite('./examples_of_perimeter_contrast_analysis/' + "%04d.jpg" % count, cv2.resize(out2, (1600,800)))
+        #cv2.imwrite('./examples_of_perimeter_contrast_analysis/' + "%04d.jpg" % count, cv2.resize(out2, (1600,800)))
 #        except:
 #            pdb.set_trace()
         
@@ -642,7 +643,7 @@ class TrapcamAnalyzer:
 
         # write json file to store all fly data
 
-        fileName="/home/flyranch/field_data_and_analysis_scripts/2017_10_26/all_flies_data.json"
+        fileName="/home/flyranch/field_data_and_analysis_scripts/2021lab/all_flies_data.json"
 
         all_flies_dict={'trap_dummy':all_flies}
         
@@ -1019,21 +1020,24 @@ class TrapcamAnalyzer:
                 break
             filename_list[image_count]= filename
             image_count += 1
-#        pdb.set_trace()
         filename_list = filename_list[0:image_count-1] # <----could be off-by-one
-#        pdb.set_trace()
-        sample_image =  np.zeros_like(self.load_color_image(filename_list[50]))
+        sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
 #        sample_image =  np.zeros_like(self.load_color_image(filename_list[15]))
 #        pdb.set_trace()
-        if self.USE_FULL_MASK:
-            square_mask=self.make_full_mask(sample_image)
-        else:
-            square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
+#        if self.USE_FULL_MASK:
+#            square_mask=self.make_full_mask(sample_image)
+#        else:
+        square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
+
         del(full_filename_list)
 
-        
+#        pdb.set_trace()
+        print('1')
+#        pdb.set_trace()
         masked_image_stack = np.stack([sample_image for _ in range(image_count+1)], axis = 0)
+        print('2')
         image_count = 0
+        print('3')
         for filename in filename_list:
             img = self.load_color_image(filename)
             if img is None:
@@ -1044,6 +1048,7 @@ class TrapcamAnalyzer:
 
                 masked_image_stack[image_count] = cv2.bitwise_and(img,img,mask = square_mask)
                 image_count +=1
+                print("bitwise_and")
 
 
         del(img)

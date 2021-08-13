@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pdb
 
-f=open('/home/flyranch/field_data_and_analysis_scripts/2017_10_26/all_traps_final_analysis_output.json')
+f=open('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_output.json')
 data=json.load(f)
 
 on_trap_list=[]
@@ -59,4 +59,4 @@ ax2.set_xlabel('seconds since released',size=24)
 ax2.set_ylabel('total number of flies',size=24)
 ax2.legend(loc="upper left",fontsize=24)
 
-plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2017_10_26/flies_time.jpg')
+plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/trap_'+trap+'_videos/flies_time.jpg')

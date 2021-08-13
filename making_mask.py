@@ -26,10 +26,18 @@ data=[]
 
 img=cv2.imread(files[0])
 [nrows,ncols,colors]=np.shape(img)
-mask=np.int8(np.ones((nrows,ncols)))
+mask=np.int8(np.zeros((nrows,ncols)))
 
+print("Decide the region of mask you want to focus on,")
+
+x0=input("x0:")
+x1=input("x1:")
+y0=input("y0:")
+y1=input("y1:")
+#pdb.set_trace()
+mask[int(y0):int(y1),int(x0):int(x1)]=1
 filename=img_dir+"/mask.jpg"
 
-print("created mask.jpg")
+print("mask.jpg created")
 #cv2.imwrite(filename,int_med)
 cv2.imwrite(filename,mask)

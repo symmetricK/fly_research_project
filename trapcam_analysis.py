@@ -169,7 +169,6 @@ class TrapcamAnalyzer:
         frame_seconds = frame_seconds_timestamp - self.camera_offset
         release_time_seconds = int(self.release_time.split(':')[0])*3600 +int(self.release_time.split(':')[1])*60 + int(self.release_time.split(':')[2])
         time_elapsed = frame_seconds - release_time_seconds
-#        pdb.set_trace()
         return time_elapsed
 
     def show_image_with_circles_drawn_around_putative_flies(self, color_image, flies_on_trap, flies_in_trap, not_flies):
@@ -227,17 +226,17 @@ class TrapcamAnalyzer:
             color = [0,0,153]
             if fly['type']=='on_trap':
                 #flag=list(fly.values())[5]
-                cv2.circle(color_image, (fly['x'], fly['y']), 50, [255,255,0], 5)
+                cv2.circle(color_image, (fly['x'], fly['y']), 50, [0,0,255], 5)
                 on_trap_count+=1 
             elif fly['type']=='in_trap':
                 #flag=list(fly.values())[5] 
-                cv2.rectangle(color_image, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,255], 5)
+                cv2.rectangle(color_image, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,0], 5)
                 in_trap_count+=1               
         if on_trap_count!=0:
-            cv2.putText(color_image,"on trap(circle): "+str(on_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)  
+            cv2.putText(color_image,"on trap(circle): "+str(on_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)  
         if in_trap_count!=0:
-            cv2.putText(color_image,"in trap(square): "+str(in_trap_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
-        cv2.putText(color_image,"total: "+str(on_trap_count+in_trap_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 0, 255),2)
+            cv2.putText(color_image,"in trap(square): "+str(in_trap_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2)
+        cv2.putText(color_image,"total: "+str(on_trap_count+in_trap_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)
 
 
 
@@ -262,9 +261,9 @@ class TrapcamAnalyzer:
                 #print(flag)
             elif fly['type']=='reject_perimeter_contrast':
                 #flag=list(fly.values())[5]
-                cv2.drawMarker(color_image, (fly['x'], fly['y']),[0,0,0],cv2.MARKER_DIAMOND, 125,6)
+                cv2.drawMarker(color_image, (fly['x'], fly['y']),[255,255,255],cv2.MARKER_DIAMOND, 125,6)
                 cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [0,0,0],2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [255,255,255],2, cv2.LINE_AA)
                 rejected_by_perimeter_contrast_count+=1 
                 #print(flag)
             elif fly['type']=='reject_low_area_on_trap':
@@ -283,40 +282,40 @@ class TrapcamAnalyzer:
                 #print(flag)
             elif fly['type']=='on_trap':
                 #flag=list(fly.values())[5]
-                cv2.circle(color_image, (fly['x'], fly['y']), 50, [255,255,0], 5)
+                cv2.circle(color_image, (fly['x'], fly['y']), 50, [0,0,255], 5)
                 cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [255,255,0],2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [0,0,255],2, cv2.LINE_AA)
                 on_trap_count+=1 
                 #print(flag)
             else:#'in_trap'
                 #flag=list(fly.values())[5] 
-                cv2.rectangle(color_image, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,255], 5)
+                cv2.rectangle(color_image, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,0], 5)
                 cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [255,0,255],2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [255,0,0],2, cv2.LINE_AA)
                 in_trap_count+=1               
                 #print(flag)
         for not_fly in not_flies:
-            cv2.drawMarker(color_image, (not_fly['x'], not_fly['y']),[255,0,0],cv2.MARKER_DIAMOND, 125,6)
-            cv2.putText(color_image, str(not_fly['area']),(not_fly['x']+50, not_fly['y']-50), font, 1, [255,0,0],2, cv2.LINE_AA)
+            cv2.drawMarker(color_image, (not_fly['x'], not_fly['y']),[255,0,255],cv2.MARKER_DIAMOND, 125,6)
+            cv2.putText(color_image, str(not_fly['area']),(not_fly['x']+50, not_fly['y']-50), font, 1, [255,0,255],2, cv2.LINE_AA)
             not_fly_count+=1 
             #print("not")
 
         if rejected_by_contrast_metric_count!=0:
             cv2.putText(color_image,"rejected by contrast metric: "+str(rejected_by_contrast_metric_count),(150,1540),cv2.FONT_HERSHEY_SIMPLEX,1,(127, 127, 127),2)
         if rejected_by_perimeter_contrast_count!=0:
-            cv2.putText(color_image,"rejected by perimeter contrast: "+str(rejected_by_perimeter_contrast_count),(150,1580),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 0, 0),2)
+            cv2.putText(color_image,"rejected by perimeter contrast: "+str(rejected_by_perimeter_contrast_count),(150,1580),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 255),2)
         if rejected_by_low_area_on_trap_count!=0:
             cv2.putText(color_image,"rejected by low area on trap: "+str(rejected_by_low_area_on_trap_count),(150,1620),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 255, 0),2)
         if rejected_by_high_area_in_trap_count!=0:
             cv2.putText(color_image,"rejected by high area in trap: "+str(rejected_by_high_area_in_trap_count),(150,1660),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 255, 255),2)
         if on_trap_count!=0:
-            cv2.putText(color_image,"on trap(circle): "+str(on_trap_count),(150,1700),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)  
+            cv2.putText(color_image,"on trap(circle): "+str(on_trap_count),(150,1700),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)  
         if in_trap_count!=0:
-            cv2.putText(color_image,"in trap(square): "+str(in_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
+            cv2.putText(color_image,"in trap(square): "+str(in_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2)
         if not_fly_count!=0:
-            cv2.putText(color_image,"not fly: "+str(not_fly_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2)
+            cv2.putText(color_image,"not fly: "+str(not_fly_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
         cv2.putText(color_image,"total: "+str(rejected_by_contrast_metric_count+rejected_by_perimeter_contrast_count+rejected_by_low_area_on_trap_count+
-            rejected_by_high_area_in_trap_count+on_trap_count+in_trap_count+not_fly_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 0, 255),2)
+            rejected_by_high_area_in_trap_count+on_trap_count+in_trap_count+not_fly_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)
 
 
 
@@ -986,29 +985,27 @@ class TrapcamAnalyzer:
             json.dump(parameter_dictionary,f, indent = 1)
 
 
-    def make_full_mask(self,sample_image):
-        '''
-        returns a mask where the values are 1
-        sample_image is row, col, color
-        mask has dimensions row,col
-        '''
+#    def make_full_mask(self,sample_image):
+#        '''
+#        returns a mask where the values are 1came
+#        sample_image is row, col, color
+#        mask has dimensions row,col
+#        '''
 #        pdb.set_trace()
-        [nrows,ncols,colors]=np.shape(sample_image)
-        mask=np.int8(np.zeros((nrows,ncols)))
+#        [nrows,ncols,colors]=np.shape(sample_image)
+#        mask=np.int8(np.zeros((nrows,ncols)))
 #        mask[100:-100,100:-100]=1
-        mask[200:-200,200:-200]=1
-        
-        return mask
+#        mask[200:-200,200:-200]=1        
+#        return mask
 
 
 # --------------------------------------------------------------------------------------------------------
     def run(self):
         timelapse_directory = self.directory +'/trapcam_timelapse/'+self.trap
- 
+        square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
 
         full_filename_list = self.get_filenames(path = timelapse_directory, contains = "tl", does_not_contain = ['th']) #  full list of image filenames in the folder
-        filename_list = ['']*(len(full_filename_list))
-  #        pdb.set_trace()  
+        filename_list = ['']*(len(full_filename_list))  
         image_count = 0
 
         for filename in full_filename_list:
@@ -1027,7 +1024,7 @@ class TrapcamAnalyzer:
 #        if self.USE_FULL_MASK:
 #            square_mask=self.make_full_mask(sample_image)
 #        else:
-        square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
+#        square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
 
         del(full_filename_list)
 
@@ -1035,6 +1032,8 @@ class TrapcamAnalyzer:
         print('1')
 #        pdb.set_trace()
         masked_image_stack = np.stack([sample_image for _ in range(image_count+1)], axis = 0)
+#        nrow, ncol, colors=np.shape(sample_image)
+#        masked_image_stack= np.ndarray(shape=((image_count+1),nrow,ncol,colors))
         print('2')
         image_count = 0
         print('3')
@@ -1048,7 +1047,7 @@ class TrapcamAnalyzer:
 
                 masked_image_stack[image_count] = cv2.bitwise_and(img,img,mask = square_mask)
                 image_count +=1
-                print("bitwise_and")
+                print("working w/: "+filename)
 
 
         del(img)

@@ -920,7 +920,7 @@ class TrapcamAnalyzer:
             cv2.putText(vis, idstr, (35,50), font, 1, (255,255,255),2, cv2.LINE_AA)
             
             idstr2 = self.trap.split('_')[0]+' ' +self.trap.split('_')[1]+'; %d flies caught' %(self.field_parameters['trap counts'][self.trap])
-            cv2.putText(vis,idstr2, (35,90), font, 1, (255,255,255),2, cv2.LINE_AA)
+            cv2.putText(vis,idstr2, (35,90), font, 1, (255,0,0),2, cv2.LINE_AA)
 
             #now saving into stack
             cv2.imwrite(output_dir + "/%d.jpg" % frame_pos, vis)
@@ -944,6 +944,8 @@ class TrapcamAnalyzer:
                 growing_json = json.load(f)
             #add current trap dictionary to growing_json
 
+
+            #growing_json.append(current_trap_dictionary)
             growing_json.update(current_trap_dictionary) #CAREFUL; THIS WILL OVERWRITE ANY KEYS THAT ALREADY EXIST IN THE JSON
             with open(self.directory+'/all_traps_final_analysis_output.json', mode = 'w') as f:
                 json.dump(growing_json,f, indent = 1)
@@ -1010,14 +1012,15 @@ class TrapcamAnalyzer:
 
         for filename in full_filename_list:
             time_since_release = self.get_time_since_release_from_filename(name = filename)
-#            pdb.set_trace()
             if time_since_release < -60* self.min_prior_to_r:
                 continue
             if time_since_release > 60* self.min_post_r:
                 break
             filename_list[image_count]= filename
             image_count += 1
-        filename_list = filename_list[0:image_count-1] # <----could be off-by-one
+#        filename_list = filename_list[0:image_count-1] # <----could be off-by-one
+        filename_list = filename_list[0:image_count] 
+#        pdb.set_trace()
         sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
 #        sample_image =  np.zeros_like(self.load_color_image(filename_list[15]))
 #        pdb.set_trace()
@@ -1029,28 +1032,29 @@ class TrapcamAnalyzer:
         del(full_filename_list)
 
 #        pdb.set_trace()
-        print('1')
-#        pdb.set_trace()
+        print('creating masked image stack')
         masked_image_stack = np.stack([sample_image for _ in range(image_count+1)], axis = 0)
 #        nrow, ncol, colors=np.shape(sample_image)
 #        masked_image_stack= np.ndarray(shape=((image_count+1),nrow,ncol,colors))
-        print('2')
+#        pdb.set_trace()
+        print('done')
         image_count = 0
-        print('3')
+#        masked_image_stack_list=[]
         for filename in filename_list:
             img = self.load_color_image(filename)
             if img is None:
                 print ('img is None!')
                 continue
             else:
-#                pdb.set_trace()
-
                 masked_image_stack[image_count] = cv2.bitwise_and(img,img,mask = square_mask)
+#                masked_image=cv2.bitwise_and(img,img,mask = square_mask)
+#                masked_image_stack_list.append(masked_image)
                 image_count +=1
                 print("working w/: "+filename)
-
-
         del(img)
+#        pdb.set_trace()
+#        print('convert masked_image_stack_list to masked_image_stack_array')
+#        masked_image_stack_array=np.stack(masked_image_stack_list,axis=0)
 
         
 

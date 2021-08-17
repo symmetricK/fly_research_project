@@ -245,7 +245,7 @@
     },
     
 
-     "trap_test_dummy": {
+     "trap_exp4_1": {
         "analysis parameters": {
             "minimum_in_trap_contour_size": 20,
             "maximum_in_trap_contour_size": 200,
@@ -269,7 +269,7 @@
             "number of frames for bg model training": 25,
             "save frames as video": true,
             "analyze_how_many_minutes_prior_to_release":0,
-            "camera time advanced by __ sec": -564,
+            "camera time advanced by __ sec": 0,
             "analyze_how_many_minutes_post_release": 50
         },
         "analysis_results": [],

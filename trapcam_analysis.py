@@ -1031,13 +1031,13 @@ class TrapcamAnalyzer:
 
         del(full_filename_list)
 
-#        pdb.set_trace()
+        pdb.set_trace()
         print('creating masked image stack')
         masked_image_stack = np.stack([sample_image for _ in range(image_count+1)], axis = 0)
 #        nrow, ncol, colors=np.shape(sample_image)
 #        masked_image_stack= np.ndarray(shape=((image_count+1),nrow,ncol,colors))
 #        pdb.set_trace()
-        print('done')
+        print('created')
         image_count = 0
 #        masked_image_stack_list=[]
         for filename in filename_list:

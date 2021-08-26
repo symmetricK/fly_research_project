@@ -1005,7 +1005,6 @@ class TrapcamAnalyzer:
     def run(self):
         timelapse_directory = self.directory +'/trapcam_timelapse/'+self.trap
         square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
-
         full_filename_list = self.get_filenames(path = timelapse_directory, contains = "tl", does_not_contain = ['th']) #  full list of image filenames in the folder
         filename_list = ['']*(len(full_filename_list))  
         image_count = 0
@@ -1019,8 +1018,11 @@ class TrapcamAnalyzer:
             filename_list[image_count]= filename
             image_count += 1
 #        filename_list = filename_list[0:image_count-1] # <----could be off-by-one
-        filename_list = filename_list[0:image_count] 
-#        pdb.set_trace()
+        filename_list = filename_list[0:image_count]
+        del(full_filename_list)
+
+#        selected_image=self.load_color_image(filename_list[40])
+#        sample_image=np.zeros_like(selected_image)
         sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
 #        sample_image =  np.zeros_like(self.load_color_image(filename_list[15]))
 #        pdb.set_trace()
@@ -1029,27 +1031,39 @@ class TrapcamAnalyzer:
 #        else:
 #        square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
 
-        del(full_filename_list)
+#        del(full_filename_list)
 
-        pdb.set_trace()
+        nrow, ncol, colors=np.shape(sample_image)
+#        if image_count>0:
+#            nrow, ncol, colors=np.shape(sample_image)
+#            stack_imgs=[np.zeros(shape=(nrow,ncol,colors), dtype=np.int8) for _ in range(image_count)]
+#            tst_array=np.stack(stack_imgs,axis=0)
+#        stack_imgs=[np.zeros(shape=(nrow,ncol,colors), dtype=np.int8) for _ in range(image_count)]
+
+#        pdb.set_trace()
         print('creating masked image stack')
-        masked_image_stack = np.stack([sample_image for _ in range(image_count+1)], axis = 0)
+#        masked_image_stack = np.stack([sample_image for _ in range(image_count)], axis = 0)
+#        masked_image=[sample_image for _ in range(image_count)]
+#        masked_image_stack=np.stack(masked_image,axis=0)
 #        nrow, ncol, colors=np.shape(sample_image)
 #        masked_image_stack= np.ndarray(shape=((image_count+1),nrow,ncol,colors))
+
+        masked_image_stack=np.zeros((image_count,nrow, ncol, colors),dtype=np.uint8)
 #        pdb.set_trace()
         print('created')
-        image_count = 0
+        image_num = 0
 #        masked_image_stack_list=[]
+
         for filename in filename_list:
             img = self.load_color_image(filename)
             if img is None:
                 print ('img is None!')
                 continue
             else:
-                masked_image_stack[image_count] = cv2.bitwise_and(img,img,mask = square_mask)
+                masked_image_stack[image_num] = cv2.bitwise_and(img,img,mask = square_mask)
 #                masked_image=cv2.bitwise_and(img,img,mask = square_mask)
 #                masked_image_stack_list.append(masked_image)
-                image_count +=1
+                image_num +=1
                 print("working w/: "+filename)
         del(img)
 #        pdb.set_trace()

@@ -171,6 +171,11 @@ class TrapcamAnalyzer:
         time_elapsed = frame_seconds - release_time_seconds
         return time_elapsed
 
+    def get_timestamp(self, name = ''):
+        frame_time_string = name.split('.')[-2].split('_')[-1]
+        frame_timestamp = int(frame_time_string[0:2]+frame_time_string[2:4]+frame_time_string[4:6])
+        return frame_timestamp
+
     def show_image_with_circles_drawn_around_putative_flies(self, color_image, flies_on_trap, flies_in_trap, not_flies):
         font = cv2.FONT_HERSHEY_SIMPLEX
         for fly in flies_on_trap:
@@ -467,7 +472,7 @@ class TrapcamAnalyzer:
         exitloop = False
         return retval, exitloop
 
-    def testing_step_of_backsub_MOG2(self, index, fgbg, test_image, time_since_release):
+    def testing_step_of_backsub_MOG2(self, index, fgbg, test_image, time_since_release, actual_timestamp):
         '''
         Crucial function that is getting countours for every image, determining fly/not fly, trap/not trap
         '''
@@ -640,45 +645,7 @@ class TrapcamAnalyzer:
         self.show_image_with_marks_drawn_around_in_trap_on_trap_flies(test_image_copy2,all_flies)
         self.show_fgmask_with_marks_drawn_around_in_trap_on_trap_flies(fgmask1,all_flies)
 
-        # write json file to store all fly data
-
-        fileName="/home/flyranch/field_data_and_analysis_scripts/2021lab/all_flies_data.json"
-
-        all_flies_dict={'trap_dummy':all_flies}
-        
-#       with open(fileName, "r+") as f:
-#           data=json.load(f)
-#           data.appen(all_flies_dict)
-#           a.seek(0)
-#           json.dump(data,f)
-
-
-#       with open(fileName,"r+") as file:
-#           data = json.load(file)
-#           data.update(all_flies_dict)
-#           file.seek(0)
-#           json.dump(data, file)
-#       with open(fileName,"w") as f:
-#           fileName.append
-
-
-
-
-#       flyString=json.dumps(all_flies_dict)
-#       jsonFile=open(fileName,"w")
-
-
-
-#       jsonFile.write(flyString)
-
-
-#       jsonData=json.load(jsonFile)
-#       jsonData.update(all_flies_dict)
-#       jsonFile.close()
-
-
-
-        dict_to_add_to_all_flies_over_time = {'seconds since release':time_since_release, 'flies on trap': flies_on_trap, 'flies in trap': flies_in_trap, 'not_flies': not_flies}
+        dict_to_add_to_all_flies_over_time = {'actual time':actual_timestamp,'seconds since release':time_since_release, 'flies on trap': flies_on_trap, 'flies in trap': flies_in_trap, 'not_flies': not_flies}
         frame_contrast_metrics = frame_contrast_metrics[0:contrast_metric_count]
         frame_fly_contour_areas = frame_fly_contour_areas[0:fly_contour_area_count]
 
@@ -720,7 +687,7 @@ class TrapcamAnalyzer:
                 except:
                     break
                 ## KH ADDED ANNOTATED_FGMASK1 7.27.21
-                original_image, annotated_fgmask1,annotated_output_image, annotated_output_image2, time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, frame_contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, smoothed_foreground_mask  = self.testing_step_of_backsub_MOG2(index, fgbg, test_image, self.get_time_since_release_from_filename(name = test_filename))
+                original_image, annotated_fgmask1,annotated_output_image, annotated_output_image2, time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, frame_contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, smoothed_foreground_mask= self.testing_step_of_backsub_MOG2(index, fgbg, test_image, self.get_time_since_release_from_filename(name = test_filename),self.get_timestamp(name = test_filename))
                 time_since_release_list [index -self.train_num] = time_since_release
                 analyzed_filename_stack [index -self.train_num] = test_filename
                 all_flies_over_time     [index -self.train_num] = dict_to_add_to_all_flies_over_time
@@ -783,9 +750,6 @@ class TrapcamAnalyzer:
         return all_flies_over_time, time_since_release_list, analyzed_filename_stack, all_contrast_metrics, all_fly_contour_areas, contrast_metric_list_of_lists, fly_contour_area_list_of_lists, morph_open_iteration_number, morph_ellipse_size
 
 
-
-
-
     def format_matplotlib_ax_object(self, ax_handle):
         ax_handle.spines['right'].set_visible(False)
         ax_handle.spines['top'].set_visible(False)
@@ -809,20 +773,22 @@ class TrapcamAnalyzer:
         font = cv2.FONT_HERSHEY_SIMPLEX
 
         number_ive_empirically_determined =2
-        all_flies_over_time       =  all_flies_over_time     [0:-1*number_ive_empirically_determined]
+#        all_flies_over_time       =  all_flies_over_time     [0:-1*number_ive_empirically_determined]
         #time_since_release_list   =  time_since_release_list [0:-1*number_ive_empirically_determined]
-        analyzed_filename_stack   =  analyzed_filename_stack [0:-1*number_ive_empirically_determined] # these 4 lines are obviously shameful
+#        analyzed_filename_stack   =  analyzed_filename_stack [0:-1*number_ive_empirically_determined] # these 4 lines are obviously shameful
 
         flies_on_trap_over_time = np.zeros(len(all_flies_over_time))
         flies_in_trap_over_time = np.zeros(len(all_flies_over_time))
         not_flies_over_time = np.zeros(len(all_flies_over_time))
         seconds_since_release_over_time = np.zeros(len(all_flies_over_time))
+        actual_timestamp_over_time = np.zeros(len(all_flies_over_time))
         for index, i in enumerate(all_flies_over_time):
             try:
                 flies_on_trap_over_time[index]=(len(i['flies on trap']))
                 flies_in_trap_over_time[index]=(len(i['flies in trap']))
                 not_flies_over_time[index]=(len(i['not_flies']))
                 seconds_since_release_over_time[index]=(i['seconds since release'])
+                actual_timestamp_over_time[index]=(i['actual time'])
             except:
                 continue
 
@@ -938,14 +904,11 @@ class TrapcamAnalyzer:
             current_trap_dictionary = {self.trap:{'flies on trap over time:': flies_on_trap_over_time.tolist(),
                                             'flies in trap over time:': flies_in_trap_over_time.tolist(),
                                             'not flies over time:'    : not_flies_over_time.tolist(),
-                                            'seconds since release:'  : seconds_since_release_over_time.tolist()}}
+                                            'seconds since release:'  : seconds_since_release_over_time.tolist(),
+                                            'actual timestamp:' : actual_timestamp_over_time.tolist()}}
             with open(self.directory+'/all_traps_final_analysis_output.json') as f:
-
                 growing_json = json.load(f)
             #add current trap dictionary to growing_json
-
-
-            #growing_json.append(current_trap_dictionary)
             growing_json.update(current_trap_dictionary) #CAREFUL; THIS WILL OVERWRITE ANY KEYS THAT ALREADY EXIST IN THE JSON
             with open(self.directory+'/all_traps_final_analysis_output.json', mode = 'w') as f:
                 json.dump(growing_json,f, indent = 1)
@@ -1009,7 +972,9 @@ class TrapcamAnalyzer:
         filename_list = ['']*(len(full_filename_list))  
         image_count = 0
 
+
         for filename in full_filename_list:
+            time_stamp=self.get_timestamp(name = filename)
             time_since_release = self.get_time_since_release_from_filename(name = filename)
             if time_since_release < -60* self.min_prior_to_r:
                 continue

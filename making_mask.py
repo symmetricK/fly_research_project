@@ -7,7 +7,7 @@ import shutil
 import pdb
 
 
-image_dir = input("Enter the experiment directory you'd like to make a mask: ")
+image_dir = input("Enter a experiment directory you'd like to make a mask: ")
 img_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/trap_"+image_dir
 data_path=os.path.join(img_dir,'*g')
 files=glob.glob(data_path)

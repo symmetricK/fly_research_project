@@ -6,6 +6,8 @@ import pdb
 f=open('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_output.json')
 data=json.load(f)
 
+#create lists
+
 on_trap_list=[]
 in_trap_list=[]
 sec_since_release_list=[]
@@ -30,6 +32,7 @@ for i in data['trap_'+trap]:
 				actual_timestamp_list.append(str_time)
 
 f.close()
+
 def make_accumulation_list(list):
 	acc_list=[]
 	for i in range(len(list)):
@@ -40,6 +43,7 @@ def make_accumulation_list(list):
 on_trap_acc_list=make_accumulation_list(on_trap_list)
 in_trap_acc_list=make_accumulation_list(in_trap_list)
 
+# make combined list
 combined_in_on_trap_list=[x+y for (x,y) in zip(on_trap_list,in_trap_list)]
 combined_acc_in_on_trap_list=[x+y for (x,y) in zip(on_trap_acc_list,in_trap_acc_list)]
 
@@ -64,29 +68,44 @@ on_trap_max_list=[]
 in_trap_max_list=[]
 combined_max_list=[]
 
+
+#ask user input
 minutes=input("Enter how many minutes you would like to analyze for: ")
 m=-((int(minutes)*30))
 
-for i in range(len(actual_timestamp_list)):
-#for i in range(len(actual_timestamp_list)+m,len(actual_timestamp_list)):
-	if np.max(on_trap_list)==on_trap_list[i]:
+#shortened list to focus on max after starting
+
+shortened_actual_timestamp_list=actual_timestamp_list[m:len(actual_timestamp_list)]
+shortened_on_trap_list=on_trap_list[m:len(on_trap_list)]
+shortened_in_trap_list=in_trap_list[m:len(in_trap_list)]
+shortened_combined_in_on_trap_list=combined_in_on_trap_list[m:len(combined_in_on_trap_list)]
+
+
+for i in range(len(shortened_actual_timestamp_list)):
+	if np.max(shortened_on_trap_list)==shortened_on_trap_list[i]:
 		if len(on_trap_max_list)==0:
-			ax1.plot(actual_timestamp_list[i],on_trap_list[i],'o',markersize=10,color="r",label="on trap max")
+			ax1.plot(shortened_actual_timestamp_list[i],shortened_on_trap_list[i],'o',markersize=10,color="r",label="on trap max")
+			print('frame '+shortened_actual_timestamp_list[i][0:2]+shortened_actual_timestamp_list[i][3:5]+shortened_actual_timestamp_list[i][6:8]+' has the most flies on trap: '+str(int(shortened_on_trap_list[i])))
 		else:
-			ax1.plot(actual_timestamp_list[i],on_trap_list[i],'o',markersize=10,color="r")			
-		on_trap_max_list.append(actual_timestamp_list[i])
-	if np.max(in_trap_list)==in_trap_list[i]:
+			ax1.plot(shortened_actual_timestamp_list[i],shortened_on_trap_list[i],'o',markersize=10,color="r")
+			print('frame '+shortened_actual_timestamp_list[i][0:2]+shortened_actual_timestamp_list[i][3:5]+shortened_actual_timestamp_list[i][6:8]+' has the most flies on trap: '+str(int(shortened_on_trap_list[i])))		
+		on_trap_max_list.append(shortened_actual_timestamp_list[i])	
+	if np.max(shortened_in_trap_list)==shortened_in_trap_list[i]:
 		if len(in_trap_max_list)==0:
-			ax1.plot(actual_timestamp_list[i],in_trap_list[i],'s',markersize=10,color="b",label="in trap max")
+			ax1.plot(shortened_actual_timestamp_list[i],shortened_in_trap_list[i],'s',markersize=10,color="b",label="in trap max")
+			print('frame '+shortened_actual_timestamp_list[i][0:2]+shortened_actual_timestamp_list[i][3:5]+shortened_actual_timestamp_list[i][6:8]+' has the most flies in trap: '+str(int(shortened_in_trap_list[i])))
 		else:
-			ax1.plot(actual_timestamp_list[i],in_trap_list[i],'s',markersize=10,color="b")
-		in_trap_max_list.append(actual_timestamp_list[i])
-	if np.max(combined_in_on_trap_list)==combined_in_on_trap_list[i]:
+			ax1.plot(shortened_actual_timestamp_list[i],shortened_in_trap_list[i],'s',markersize=10,color="b")
+			print('frame '+shortened_actual_timestamp_list[i][0:2]+shortened_actual_timestamp_list[i][3:5]+shortened_actual_timestamp_list[i][6:8]+' has the most flies in trap: '+str(int(shortened_in_trap_list[i])))
+		in_trap_max_list.append(shortened_actual_timestamp_list[i])
+	if np.max(shortened_combined_in_on_trap_list)==shortened_combined_in_on_trap_list[i]:
 		if len(combined_max_list)==0:
-			ax1.plot(actual_timestamp_list[i],combined_in_on_trap_list[i],'^',markersize=10,color="c",label="combined max")
+			ax1.plot(shortened_actual_timestamp_list[i],shortened_combined_in_on_trap_list[i],'^',markersize=10,color="c",label="combined max")
+			print('frame '+shortened_actual_timestamp_list[i][0:2]+shortened_actual_timestamp_list[i][3:5]+shortened_actual_timestamp_list[i][6:8]+' has the most flies in total: '+str(int(shortened_combined_in_on_trap_list[i])))
 		else:
-			ax1.plot(actual_timestamp_list[i],combined_in_on_trap_list[i],'^',markersize=10,color="c")			
-		combined_max_list.append(actual_timestamp_list[i])
+			ax1.plot(shortened_actual_timestamp_list[i],shortened_combined_in_on_trap_list[i],'^',markersize=10,color="c")
+			print('frame '+shortened_actual_timestamp_list[i][0:2]+shortened_actual_timestamp_list[i][3:5]+shortened_actual_timestamp_list[i][6:8]+' has the most flies in total: '+str(int(shortened_combined_in_on_trap_list[i])))			
+		combined_max_list.append(shortened_actual_timestamp_list[i])
 #ax1.plot(np.max(on_trap_list),'p',Markersize=6,color="r")
 #ax1.set_xlabel('seconds_since_released')
 

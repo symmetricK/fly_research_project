@@ -906,12 +906,39 @@ class TrapcamAnalyzer:
                                             'not flies over time:'    : not_flies_over_time.tolist(),
                                             'seconds since release:'  : seconds_since_release_over_time.tolist(),
                                             'actual timestamp:' : actual_timestamp_over_time.tolist()}}
-            with open(self.directory+'/all_traps_final_analysis_output.json') as f:
-                growing_json = json.load(f)
+
+
+            print('creating a directory if not exists...')
+            path=self.directory+'/all_traps_final_analysis_json_files/'+self.trap
+            if not os.path.exists(path):
+                os.makedirs(path)
+
+            print('creating a json file if not exists...')
+
+            json_filename='/'+self.trap+'_'+str(int(actual_timestamp_over_time[0]))+'_'+str(int(actual_timestamp_over_time[-1]))+'.json'
+
+            json_path=path+json_filename
+            if not os.path.exists(json_path):
+                with open(json_path,'w') as json_file:
+                    json.dump(current_trap_dictionary,json_file,indent=1)
+
+                                            
+#            with open(self.directory+'/all_traps_final_analysis_output.json') as f:
+#                growing_json = json.load(f)
+
+
+
             #add current trap dictionary to growing_json
-            growing_json.update(current_trap_dictionary) #CAREFUL; THIS WILL OVERWRITE ANY KEYS THAT ALREADY EXIST IN THE JSON
-            with open(self.directory+'/all_traps_final_analysis_output.json', mode = 'w') as f:
-                json.dump(growing_json,f, indent = 1)
+#            if self.trap in growing_json.keys():
+#                combined_trap_dictinary={**growing_json,**current_trap_dictionary} # about time since release would be wrong. if crushing issue is solved, it would be removed.
+#                growing_json.update(combined_trap_dictinary)
+#                print(self.trap+" already exists in growing_json")
+#            if self.trap not in growing_json.keys():
+#                growing_json.update(current_trap_dictionary) #CAREFUL; THIS WILL OVERWRITE ANY KEYS THAT ALREADY EXIST IN THE JSON
+#                print(self.trap+" does not exist in growing_json")
+#            with open(self.directory+'/all_traps_final_analysis_output.json', mode = 'w') as f:
+#                json.dump(growing_json,f, indent = 1)
+
 
             fig = plt.figure(figsize=(10,5), facecolor="white")
             ax = fig.add_subplot(111)
@@ -974,7 +1001,6 @@ class TrapcamAnalyzer:
 
 
         for filename in full_filename_list:
-            time_stamp=self.get_timestamp(name = filename)
             time_since_release = self.get_time_since_release_from_filename(name = filename)
             if time_since_release < -60* self.min_prior_to_r:
                 continue

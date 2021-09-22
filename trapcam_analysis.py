@@ -915,7 +915,13 @@ class TrapcamAnalyzer:
 
             print('creating a json file if not exists...')
 
-            json_filename='/'+self.trap+'_'+str(int(actual_timestamp_over_time[0]))+'_'+str(int(actual_timestamp_over_time[-1]))+'.json'
+
+            if (len(str(int(actual_timestamp_over_time[0])))==5 and len(str(int(actual_timestamp_over_time[-1])))==5):
+                json_filename='/'+self.trap+'_'+'0'+str(int(actual_timestamp_over_time[0]))+'_'+'0'+str(int(actual_timestamp_over_time[-1]))+'.json'
+            elif (len(str(int(actual_timestamp_over_time[0])))==5 and len(str(int(actual_timestamp_over_time[-1])))==6):
+                json_filename='/'+self.trap+'_'+'0'+str(int(actual_timestamp_over_time[0]))+'_'+str(int(actual_timestamp_over_time[-1]))+'.json'
+            else:
+                json_filename='/'+self.trap+'_'+str(int(actual_timestamp_over_time[0]))+'_'+str(int(actual_timestamp_over_time[-1]))+'.json'
 
             json_path=path+json_filename
             if not os.path.exists(json_path):

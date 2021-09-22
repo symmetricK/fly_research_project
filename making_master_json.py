@@ -2,7 +2,8 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 import pdb
-
+import os
+import glob
 
 def remove_trapname(dict1,key):
 	'''remove trap_name to merge two dicts'''
@@ -10,84 +11,51 @@ def remove_trapname(dict1,key):
 	return dict2
 
 
-def merge_dict(dict3, dict4):
-	''' Merge dictionaries and keep values of common keys in list'''
+def merge_dict(dict3,dict4):
+	''' Merge dictionaries and keep values of common keys in list
+		Remove duplicate values
+		'''
+
 	dict5 = {**dict3, **dict4}
+
 	for key, value in dict5.items():
 		if key in dict3 and key in dict4:
 			dict5[key] = [value , dict3[key]]
 
+
 	duplicate_index_list=[]
 	for key, value in dict5.items():
 		if key=='actual timestamp:':
+			#try:
 			for i in value[0]:
 				for j in value[1]:
 					if j==i:
-						duplicate_index_list.append(value[0].index(i))			
+						duplicate_index_list.append(value[0].index(i))
+#			except:
+#				pdb.set_trace()
 
-	start=duplicate_index_list[0]
-	end=duplicate_index_list.pop()
-	
-
-	for value in dict5.values():
-		del value[0][start:end+1]
+	if len(duplicate_index_list) > 0:
+		start=duplicate_index_list[0]
+		end=duplicate_index_list[-1]
+		for value in dict5.values():
+			del value[0][start:end+1]
 
 	dict6={}
+	
+#	try:
+	for key,value in dict5.items():
 
-	for key in dict5.keys():
-		if key=='actual timestamp:':
-			for key,value in dict5.items():
-				if value[0][0]>value[1][0]:
-					value=value[1]+value[0]
-					
-				elif value[0][0]<value[1][0]:
-					value=value[0]+value[1]
-				dict6[key]=value
-
-#	dict7={'actual timestamp:':list1,
-#	'flies on trap over time:':list2,
-#	'flies in trap over time:':list3,
-#	'not flies over time:':list4,
-#	'seconds since release:':list5}
-
-
-#	list1=dict5['actual timestamp:']
-#	list2=dict5['flies on trap over time:']
-#	list3=dict5['flies in trap over time:']
-#	list4=dict5['not flies over time:']
-#	list5=dict5['seconds since release:']
-#	list6=[]
-#	for i in list1[0]:
-#		for j in list1[1]:
-#			if j==i:
-#				list6.append(list1[0].index(i))
-#	start=list6[0]
-#	end=list6.pop()
-#	del list1[0][start:end+1]
-#	del list2[0][start:end+1]
-#	del list3[0][start:end+1]
-#	del list4[0][start:end+1]
-#	del list5[0][start:end+1]
-#	if list1[0][0]>list1[1][0]:
-#		list1=list1[1]+list1[0]
-#		list2=list2[1]+list2[0]
-#		list3=list3[1]+list3[0]
-#		list4=list4[1]+list4[0]
-#		list5=list5[1]+list5[0]
-#	elif list1[0][0]<list1[1][0]:
-#		list1=list1[0]+list1[1]
-#		list2=list2[0]+list2[1]
-#		list3=list3[0]+list3[1]
-#		list4=list4[0]+list4[1]
-#		list5=list5[0]+list5[1]
-
-#	dict6={'actual timestamp:':list1,
-#	'flies on trap over time:':list2,
-#	'flies in trap over time:':list3,
-#	'not flies over time:':list4,
-#	'seconds since release:':list5
-#	}
-
+		if (len(dict5['actual timestamp:'][0])==0):
+			value=value[1]
+		elif (len(dict5['actual timestamp:'][1])==0):
+			value=value[0]
+		else:
+			if dict5['actual timestamp:'][0][0]>dict5['actual timestamp:'][1][0]:
+				value=value[1]+value[0]
+			elif dict5['actual timestamp:'][0][0]<dict5['actual timestamp:'][1][0]:
+				value=value[0]+value[1]
+		dict6[key]=value
+	dict5={}
 	return dict6
 
 
@@ -95,52 +63,60 @@ trap=input("Enter a trap letter you'd like to make a mask: ")
 
 directory='/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_json_files/trap_'+trap
 
-with open(directory+'/trap_exp3_1_94313_95300.json') as f:
-	data1 = json.load(f)
+
+all_json_dicts=[]
+#for json_file in os.listdir(directory):
+#    full_filename="%s/%s" % (directory,json_file)
+#    with open(full_filename,'r') as f:
+#        dic=json.load(f)
+#        all_json_dicts.append(dic)
+
+#f.close()
+
+
+file_list=sorted(glob.glob(directory+('/*json')))
+
+for file_name in file_list:
+    with open(file_name,'r') as f:
+        dic=json.load(f)
+        all_json_dicts.append(dic)
+
 f.close()
-dataa=remove_trapname(data1,'trap_'+trap)
-
-
-with open(directory+'/trap_exp3_1_95232_95630.json') as f:
-	data2 = json.load(f)
-f.close()
-datab=remove_trapname(data2,'trap_'+trap)
-
-
-with open(directory+'/trap_exp3_1_95302_100500.json') as f:
-	data3 = json.load(f)
-f.close()
-datac=remove_trapname(data3,'trap_'+trap)
-
-
-with open(directory+'/trap_exp3_1_100101_100959.json') as f:
-	data4 = json.load(f)
-f.close()
-datad=remove_trapname(data4,'trap_'+trap)
-
-
-with open(directory+'/trap_exp3_1_101001_101059.json') as f:
-	data5 = json.load(f)
-f.close()
-datae=remove_trapname(data5,'trap_'+trap)
-
-
-with open(directory+'/trap_exp3_1_101101_102000.json') as f:
-	data6 = json.load(f)
-f.close()
-dataf=remove_trapname(data6,'trap_'+trap)
-
-
-with open(directory+'/trap_exp3_1_102002_102641.json') as f:
-	data7 = json.load(f)
-f.close()
-datag=remove_trapname(data7,'trap_'+trap)
-
-
-#master_dict=mergeDict(data3,mergeDict(data2,mergeDict(data,data1)))
 
 
 
-pdb.set_trace()
+all_json_dicts_list=[]
+for json_dict in all_json_dicts:
+	json_dict_removed=remove_trapname(json_dict,'trap_'+trap)
+	all_json_dicts_list.append(json_dict_removed)
 
-print(data)
+
+m_j_list=[]
+initial_json_dict={}
+temp_json_dict={}
+merged_json={}
+count=0
+for file in all_json_dicts_list:
+	if count==0:
+		initial_json_dict=file
+	elif count==1:
+		temp_json_dict=file
+		merged_json=merge_dict(initial_json_dict,temp_json_dict)
+	else:
+		temp_json_dict=file
+		merged_json=merge_dict(merged_json,temp_json_dict)
+	count+=1
+	m_j_list.append(merged_json)
+
+print('creating master json file...')
+
+master_json={'trap_'+trap:merged_json}
+
+json_filename='/master_trap_'+trap+'.json'
+
+json_path=directory+json_filename
+if not os.path.exists(json_path):
+    with open(json_path,'w') as json_file:
+        json.dump(master_json,json_file,indent=1)
+
+

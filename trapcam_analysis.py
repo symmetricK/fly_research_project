@@ -1072,7 +1072,7 @@ class TrapcamAnalyzer:
         print ('length of masked image stack: '+str(len(masked_image_stack)))
 
         timestamp = str(int(time.time())) +'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
-        annotated_frame_dir = self.directory+'/'+self.trap+'_videos/'+timestamp+'/annotated_frames/'
+        annotated_frame_dir = self.directory+'/all_traps_analyzed_videos/'+self.trap+'_videos/'+timestamp+'/annotated_frames/'
         subprocess.call(['mkdir', '-p', annotated_frame_dir])
 
         all_flies_over_time, time_since_release_list, analyzed_filename_stack, all_contrast_metrics, all_fly_contour_areas, contrast_metric_list_of_lists, fly_contour_area_list_of_lists, morph_open_iteration_number, morph_ellipse_size =self.find_contours_using_pretrained_backsub_MOG2(full_image_stack = masked_image_stack,
@@ -1087,7 +1087,7 @@ class TrapcamAnalyzer:
         with open(self.directory+'/all_contrast_metrics/'+self.trap+'.json', mode = 'w') as f:
             json.dump(contrast_metric_dictionary,f, indent = 1)
 
-        annotated_frames_plus_graphs_dir = self.directory+'/'+self.trap+'_videos/'+timestamp+'/annotated_frames_plus_graphs'
+        annotated_frames_plus_graphs_dir = self.directory+'/all_traps_analyzed_videos/'+self.trap+'_videos/'+timestamp+'/annotated_frames_plus_graphs'
         subprocess.call(['mkdir', annotated_frames_plus_graphs_dir])
 
         output_directory = self.step_through_annotated_output_stack(all_flies_over_time,

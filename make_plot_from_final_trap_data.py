@@ -84,7 +84,9 @@ y1 = np.cos(2 * np.pi * x1) * np.exp(-x1)
 y2 = np.cos(2 * np.pi * x2)
 
 fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(20,20))
-fig.suptitle('Plots of Fly Data per Frame: trap_'+trap ,size=30)
+#fig.suptitle('Plots of Fly Data per Frame: trap_'+trap+ '\n Released Time: '+released_time,size=30)
+fig.suptitle('Plots of Fly Data per Frame: trap_'+trap,size=30)
+
 
 #ax1.plot(sec_since_release_list, on_trap_list, '-o',Markersize=6,color="r",label="on trap")
 #ax1.plot(sec_since_release_list, in_trap_list, '-s',Markersize=6,color="b",label="in trap")
@@ -214,4 +216,4 @@ ax2.set_ylabel('total number of flies',size=24)
 ax2.legend(loc="upper left",fontsize=14)
 
 
-plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/trap_'+trap+'_videos/flies_time.jpg')
+plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_plots_figures/trap_'+trap+'_plots.jpg')

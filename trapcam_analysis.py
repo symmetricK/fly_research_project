@@ -1021,7 +1021,7 @@ class TrapcamAnalyzer:
 #        selected_image=self.load_color_image(filename_list[40])
 #        sample_image=np.zeros_like(selected_image)
         sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
-#        sample_image =  np.zeros_like(self.load_color_image(filename_list[15]))
+#        sample_image =  np.zeros_like(self.load_color_image(filename_list[10]))
 #        pdb.set_trace()
 #        if self.USE_FULL_MASK:
 #            square_mask=self.make_full_mask(sample_image)

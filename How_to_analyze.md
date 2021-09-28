@@ -81,4 +81,4 @@ field_data_and_analysis_scripts
 2. Create "mask.jpg" by runnnig making_mask.py
   ..* Enter an experiment directory you would like to make a mask (e.g. exp3_1)
   ..* Enter the region of mask you want to focus on (e.g. x0:350, x1:-350, y0:100, y1:-10)
-![alt text]
+![alt text]https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/run_making_mask.png

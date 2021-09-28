@@ -1,1 +1,80 @@
-test
+Here, I note how to deal with some python scripts to analyze frames from our experiments. 
+------
+
+### This is Directory & File Structures
+
+```bash
+field_data_and_analysis_scripts
+├── 2021lab
+│   ├── trap_G_videos
+│   ├── trap_dummy_videos
+│   ├── trapcam_timelapse
+│       ├── trap_exp3_1
+│           ├── mask.jpg
+│           ├── tl_0009_0001_20210812_094213.jpg
+│           ├── tl_0009_0001_20210812_094215.jpg
+│           ├── ...
+│       ├── trap_exp3_2
+│       ├── trap_exp4_1
+│       ├── ...
+│   ├── arrival_dynamic_figs
+│   ├── all_traps_plots_figures
+│       ├── trap_exp3_1_plots.jpg
+│       ├── trap_exp3_2_plots.jpg
+│       ├── trap_exp4_1_plots.jpg
+│       ├── ...
+│   ├── all_traps_final_analysis_json_files
+│       ├── trap_exp3_1
+│           ├── master_trap_exp3_1.json
+│           ├── trap_exp3_1_094313_094959.json
+│           ├── trap_exp3_1_095001_095959.json
+│           ├── ...
+│       ├── trap_exp3_2
+│       ├── trap_exp4_1
+│       ├── ...
+│   ├── all_traps_analyzed_videos
+│       ├── trap_exp3_1_videos
+│           ├── 1632512844_mahal10_trainnum29
+│               ├── annotated_frames
+│                   ├── 1120210812095101.jpg
+│                   ├── 1120210812095103.jpg
+│                   ├── ...
+│                   ├── 2220210812095101.jpg
+│                   ├── 2220210812095103.jpg
+│                   ├── ...
+│                   ├── 3320210812095101.jpg
+│                   ├── 3320210812095103.jpg
+│                   ├── ...
+│                   ├── 4420210812095101.jpg
+│                   ├── 4420210812095103.jpg
+│                   ├── ...
+│                   ├── 5520210812095101.jpg
+│                   ├── 5520210812095103.jpg
+│                   ├── ...
+│               ├── annotated_frames_plus_graphs
+│           ├── 1632513198_mahal10_trainnum29
+│           ├── 1632513531_mahal10_trainnum29
+│           ├── ...
+│       ├── trap_exp3_2_videos
+│       ├── trap_exp4_1_videos
+│       ├── ...
+│   ├── all_contrast_metrics
+│   ├── trap_layout_parameters.json
+│   ├── field_parameters.json
+│   ├── all_traps_gaussian_analysis_params.json
+│   ├── all_traps_final_analysis_output.json
+│   ├── all_flies_data.json
+├── image_samples
+├── __pycache__
+├── Documentation.md
+├── How_to_analyze.md
+├── make_contrast_area_plot.py
+├── make_plot_from_final_trap_data.py
+├── making_mask.py
+├── making_master_json.py
+├── README.md
+├── run_trapcam_analysis.py
+├── trapcam_analysis.py
+```
+
+

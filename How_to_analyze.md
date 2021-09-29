@@ -87,6 +87,7 @@ field_data_and_analysis_scripts
     - change "time_of_fly_release" parameter to the time you actually released during the experiment (e.g. "09:50:00")
     - add trap name which you would like to analyze into "trap counts" parameter (e.g. "trap counts":{"trap_exp3_1":777})
       - you can set any number of trap counts @@@
+      - 
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/release_time.png)
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/trap_counts.png)
     

@@ -84,10 +84,22 @@ field_data_and_analysis_scripts
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/run_making_mask.png)
 3. Add and adjust parameters on some json files
   - "field_parameters.json"
-    - change "time_of_fly_release" parameter to the time you actually released during the experiment (e.g. "09:50:00")
-    - add trap name which you would like to analyze into "trap counts" parameter (e.g. "trap counts":{"trap_exp3_1":777})
-      - you can set any number of trap counts @@@
+    - Change "time_of_fly_release" parameter to the time you actually released during the experiment (e.g. "09:50:00")
+    - Add trap name which you would like to analyze into "trap counts" parameter (e.g. "trap counts":{"trap_exp3_1":777})
+      - You can set any number of trap counts @@@
                                                           
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/release_time.png)
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/trap_counts.png)
+
+  - "all_traps_gaussian_analysis_params.json"
+    - Add trap name and parameters you wouid like to analyze
+    - For now, to analyze trap data, you can just modify 2 parameters
+      - "camera time advanced by __ sec":
+        - At "time_of_fly_release:09:50:00", if you set 0, you will get data from "09:50:00"
+        - At "time_of_fly_release:09:50:00", if you set -600, you will get data from "09:40:00"
+        - At "time_of_fly_release:09:50:00", if you set 1200, you will get data from "10:10:00"
+        - Running "run_trapcam_analysis.py" with changing this parameter, you will get different time frame data 
+      - "analyze_how_many_minutes_post_release":
+        - If you set 10, you will get 10 minutes data
+ ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/param.png)
     

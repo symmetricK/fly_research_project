@@ -1,4 +1,6 @@
-#### t
+#### Author: Kei Horikawa
+#### Date: 09/30/2021
+#### Documentatona.md
 
 
 Here, I note how to deal with some python scripts to analyze frames from our experiments. 

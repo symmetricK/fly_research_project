@@ -104,4 +104,8 @@ field_data_and_analysis_scripts
       - "analyze_how_many_minutes_post_release":
         - If you set 10, you will get 10 minutes data
  ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/param.png)
+ 
+4. Run "run_trapcam_analysis.py"
+  - Enter a trap letter to analyze (e.g. exp3_1)
+  - 
     

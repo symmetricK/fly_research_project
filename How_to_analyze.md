@@ -108,6 +108,12 @@ field_data_and_analysis_scripts
 4. Run "run_trapcam_analysis.py"
   - Enter a trap letter to analyze (e.g. exp3_1)
 
- ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/run_trapcam.png)
+![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/run_trapcam.png)
   - Repeat step 3 (change parameters) and this step to analyze the whole trap data
 5. Make master json file from subdivided json files
+  - After step 4, you can see some subdivided json files in "all_traps_final_analysis_json_files" directory
+![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/before_master.png)
+  - By running "making_master_json.py" (e.g. exp3_1), you will get a master json file which has the whole trap data in "all_traps_final_analysis_json_files" directory
+
+![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/running_master.png)
+![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/after_master.png)

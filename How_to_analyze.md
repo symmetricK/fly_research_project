@@ -81,6 +81,7 @@ field_data_and_analysis_scripts
 2. Create "mask.jpg" by runnnig making_mask.py
   - Enter an experiment directory you would like to make a mask (e.g. exp3_1)
   - Enter the region of mask you want to focus on (e.g. x0:350, x1:-350, y0:100, y1:-10)
+  - You may need to try this procedure a couple of times to set an appropriate mask region 
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/run_making_mask.png)
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/Inkedtl_0009_0272_20210812_095117%5B6761%5D_LI.jpg)
 3. Add and adjust parameters on some json files

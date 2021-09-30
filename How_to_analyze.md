@@ -125,3 +125,5 @@ field_data_and_analysis_scripts
     - Enter if you want to cut last three minutes data (y or n) (e.g. y)
     - After running "make_plot_from_final_trap_data.py", you can see which frame(time) has the most flies 
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/after_running_make_a_plot.png)
+    - And you can get the plot figure which you wanted to see in "all_traps_plots_figures" directory
+![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/plot_sample.png)

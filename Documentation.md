@@ -140,7 +140,4 @@ field_data_and_analysis_scripts
 - You can find the plot figure in "all_traps_plots_figures" directory
 - You can find a master json fle as the whole trap data in "all_traps_final_analysis_json_files" directory
 ##### "all_traps_analyzed_videos" directory
-│   ├── all_traps_analyzed_videos
-│       ├── trap_exp3_1_videos
-│           ├── 1632512844_mahal10_trainnum29
-│               ├── annotated_frames
+all_traps_analyzed_videos──trap_exp3_1_videos──1632512844_mahal10_trainnum29──annotated_frames

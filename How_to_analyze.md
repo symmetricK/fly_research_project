@@ -110,4 +110,4 @@ field_data_and_analysis_scripts
 
  ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/run_trapcam.png)
   - Repeat step 3 (change parameters) and this step to analyze the whole trap data
-5. Make master json file 
+5. Make master json file from subdivided json files

@@ -76,7 +76,7 @@ field_data_and_analysis_scripts
 ├── run_trapcam_analysis.py
 ├── trapcam_analysis.py
 ```
-
+### How to use python scripts and json files 
 1. Save a video file into "trapcam_timelapse" as "trap_$$$" (e.g. trap_exp3_1) 
 2. Create "mask.jpg" by runnnig making_mask.py
   - Enter an experiment directory you would like to make a mask (e.g. exp3_1)

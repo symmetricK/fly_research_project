@@ -117,3 +117,11 @@ field_data_and_analysis_scripts
 
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/running_master.png)
 ![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/after_master.png)
+
+6. Create a plot corresponding to the trap you want to alalyze
+  - Run "make_plot_from_final_trap_data.py"
+    - Enter a trap letter you want to analyze (e.g. exp3_1)
+    - Enter released time (same as "time_of_fly_release" parameter) (e.g. 095000)
+    - Enter if you want to cut last three minutes data (y or n) (e.g. y)
+    - After running "make_plot_from_final_trap_data.py", you can see which frame(time) has the most flies 
+![alt text](https://raw.githubusercontent.com/symmetricK/fly_research_project/master/image_samples/after_running_make_a_plot.png)

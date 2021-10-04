@@ -37,7 +37,20 @@ y1=input("y1:")
 #pdb.set_trace()
 mask[int(y0):int(y1),int(x0):int(x1)]=1
 filename=img_dir+"/mask.jpg"
+cv2.imwrite(filename,mask)
 
 print("mask.jpg created")
-#cv2.imwrite(filename,int_med)
-cv2.imwrite(filename,mask)
+
+
+img2=cv2.imread(files[1])
+
+img2[0:int(y0),:]=1
+img2[int(y1):nrows,:]=1
+img2[:,0:int(x0)]=1
+img2[:,int(x1):ncols]=1
+
+
+filename2=img_dir+"/mask_check.jpg"
+cv2.imwrite(filename2,img2)
+
+print("please, check mask_check.jpg in trap_"+image_dir+" folder in trapcam_timelapse directory")

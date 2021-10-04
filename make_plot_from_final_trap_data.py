@@ -153,7 +153,7 @@ max_list=on_trap_max_list+in_trap_max_list+combined_max_list
 for i in max_list:
 	for j in actual_timestamp_list:
 		if i==j:
-			ax1.annotate('max',xy=(actual_timestamp_list[actual_timestamp_list.index(j)],np.max(combined_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
+			ax1.annotate('max',xy=(actual_timestamp_list[actual_timestamp_list.index(j)],np.max(combined_in_on_trap_list)-10),bbox=dict(boxstyle="round",fc="0.8"))
 			ax1.axvline(actual_timestamp_list[actual_timestamp_list.index(j)],ymax=np.max(combined_in_on_trap_list),ls='--')
 
 

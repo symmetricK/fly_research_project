@@ -4,6 +4,7 @@ import numpy as np
 import pdb
 import os
 import glob
+import sys
 
 def remove_trapname(dict1,key):
 	'''remove trap_name to merge two dicts'''
@@ -118,5 +119,13 @@ json_path=directory+json_filename
 if not os.path.exists(json_path):
     with open(json_path,'w') as json_file:
         json.dump(master_json,json_file,indent=1)
+else:
+	y_n=input("master json file has alredy exists. Do you want to overwrite it? (y or n): ")
+	if y_n=="y":
+		print('master json file was overwritten')
+		with open(json_path,'w') as json_file:
+			json.dump(master_json,json_file,indent=1)
+	if y_n=="n":
+		sys.exit()
 
 

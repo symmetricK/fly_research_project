@@ -1070,8 +1070,10 @@ class TrapcamAnalyzer:
         
 
         print ('length of masked image stack: '+str(len(masked_image_stack)))
+#        pdb.set_trace()
 
-        timestamp = str(int(time.time())) +'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
+#        timestamp = str(int(time.time())) +'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
+        timestamp=filename_list[30][51:66]+'_'+filename_list[-1][60:66]+'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
         annotated_frame_dir = self.directory+'/all_traps_analyzed_videos/'+self.trap+'_videos/'+timestamp+'/annotated_frames/'
         subprocess.call(['mkdir', '-p', annotated_frame_dir])
 

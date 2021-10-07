@@ -76,7 +76,7 @@ not_fly_acc_list=make_accumulation_list(not_fly_list)
 combined_in_on_trap_list=[x+y for (x,y) in zip(on_trap_list,in_trap_list)]
 combined_acc_in_on_trap_list=[x+y for (x,y) in zip(on_trap_acc_list,in_trap_acc_list)]
 
-
+n_fly=input("You want to see not fly data on the plot? (y or n): ")
 x1 = np.linspace(0.0, 5.0)
 x2 = np.linspace(0.0, 2.0)
 
@@ -93,6 +93,8 @@ fig.suptitle('Plots of Fly Data per Frame: trap_'+trap,size=30)
 ax1.plot(actual_timestamp_list, on_trap_list, '-',markersize=6,color="r",label="on trap")
 ax1.plot(actual_timestamp_list, in_trap_list, '-',markersize=6,color="b",label="in trap")
 ax1.plot(actual_timestamp_list, combined_in_on_trap_list, '-',markersize=6,color="c",label="combined")
+if n_fly=="y":
+	ax1.plot(actual_timestamp_list, not_fly_list, '-',markersize=6,color="m",label="not fly")
 
 max_list=[]
 on_trap_max_list=[]
@@ -206,6 +208,8 @@ ax2.axvline(sec_since_release_list[-1-90],ymax=np.max(combined_acc_in_on_trap_li
 ax2.plot(sec_since_release_list, on_trap_acc_list, '-',markersize=6,color="r",label="on trap")
 ax2.plot(sec_since_release_list, in_trap_acc_list, '-',markersize=6,color="b",label="in trap")
 ax2.plot(sec_since_release_list, combined_acc_in_on_trap_list, '-',markersize=6,color="c",label="combined")
+if n_fly=="y":
+	ax2.plot(actual_timestamp_list, not_fly_acc_list, '-',markersize=6,color="m",label="not fly")
 
 xtick_list_dup_removed.extend(sec_max_list)
 
@@ -215,5 +219,7 @@ ax2.set_xlabel('seconds since released',size=24)
 ax2.set_ylabel('total number of flies',size=24)
 ax2.legend(loc="upper left",fontsize=14)
 
-
-plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_plots_figures/trap_'+trap+'_plots.jpg')
+if n_fly=="y":
+	plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_plots_figures/trap_'+trap+'_with_not_fly_plots.jpg')
+if n_fly=="n":
+	plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_plots_figures/trap_'+trap+'_plots.jpg')

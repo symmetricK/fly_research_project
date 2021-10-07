@@ -85,7 +85,10 @@ y2 = np.cos(2 * np.pi * x2)
 
 fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(20,20))
 #fig.suptitle('Plots of Fly Data per Frame: trap_'+trap+ '\n Released Time: '+released_time,size=30)
-fig.suptitle('Plots of Fly Data per Frame: trap_'+trap,size=30)
+if n_fly=="y":
+	fig.suptitle('Plots of Fly Data per Frame with Not Fly Data: trap_'+trap,size=30)
+if n_fly=="n":
+	fig.suptitle('Plots of Fly Data per Frame: trap_'+trap,size=30)
 
 
 #ax1.plot(sec_since_release_list, on_trap_list, '-o',Markersize=6,color="r",label="on trap")

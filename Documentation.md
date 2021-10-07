@@ -26,8 +26,11 @@ field_data_and_analysis_scripts
 │   ├── arrival_dynamic_figs
 │   ├── all_traps_plots_figures
 │       ├── trap_exp3_1_plots.jpg
+│       ├── trap_exp3_1_with_not_fly_plots.jpg
 │       ├── trap_exp3_2_plots.jpg
+│       ├── trap_exp3_2_with_not_fly_plots.jpg
 │       ├── trap_exp4_1_plots.jpg
+│       ├── trap_exp4_1_with_not_fly_plots.jpg
 │       ├── ...
 │   ├── all_traps_final_analysis_json_files
 │       ├── trap_exp3_1
@@ -75,7 +78,7 @@ field_data_and_analysis_scripts
 ├── Documentation.md
 ├── How_to_analyze.md
 ├── make_contrast_area_plot.py
-├── make_plot_from_final_trap_data.py
+├── make_plot_from_master_json_data.py
 ├── making_mask.py
 ├── making_master_json.py
 ├── README.md

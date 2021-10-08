@@ -85,7 +85,6 @@ for file_name in file_list:
 f.close()
 
 
-
 all_json_dicts_list=[]
 for json_dict in all_json_dicts:
 	json_dict_removed=remove_trapname(json_dict,'trap_'+trap)
@@ -111,7 +110,10 @@ for file in all_json_dicts_list:
 
 print('creating master json file...')
 
-master_json={'trap_'+trap:merged_json}
+if len(all_json_dicts)==1:
+	master_json=all_json_dicts[0]
+else:
+	master_json={'trap_'+trap:merged_json}
 
 json_filename='/master_trap_'+trap+'.json'
 

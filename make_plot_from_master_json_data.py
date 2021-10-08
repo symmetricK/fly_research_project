@@ -161,15 +161,20 @@ for i in max_list:
 			ax1.annotate('max',xy=(actual_timestamp_list[actual_timestamp_list.index(j)],np.max(combined_in_on_trap_list)-10),bbox=dict(boxstyle="round",fc="0.8"))
 			ax1.axvline(actual_timestamp_list[actual_timestamp_list.index(j)],ymax=np.max(combined_in_on_trap_list),ls='--')
 
+if cut=='y':
+	max_list.extend((actual_timestamp_list[0],actual_timestamp_list[m],actual_timestamp_list[-1],actual_timestamp_list[-1-90]))
+elif cut=='n':
+	max_list.extend((actual_timestamp_list[0],actual_timestamp_list[m],actual_timestamp_list[-1]))
 
-max_list.extend((actual_timestamp_list[0],actual_timestamp_list[m],actual_timestamp_list[-1],actual_timestamp_list[-1-90]))
 max_list=list(set(max_list))
 
 
 ax1.annotate('released',xy=(actual_timestamp_list[m],np.max(combined_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
 ax1.axvline(actual_timestamp_list[m],ymax=np.max(combined_in_on_trap_list),ls='--')
-ax1.annotate('end',xy=(actual_timestamp_list[-1-90],np.max(combined_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
-ax1.axvline(actual_timestamp_list[-1-90],ymax=np.max(combined_in_on_trap_list),ls='--')
+
+if cut=='y':
+	ax1.annotate('end',xy=(actual_timestamp_list[-1-90],np.max(combined_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
+	ax1.axvline(actual_timestamp_list[-1-90],ymax=np.max(combined_in_on_trap_list),ls='--')
 
 ax1.set_xticks(max_list)
 ax1.set_xticklabels(max_list,rotation=45,size=10)
@@ -195,7 +200,8 @@ sec_max_list=[]
 max_list.remove(actual_timestamp_list[0])
 max_list.remove(actual_timestamp_list[m])
 max_list.remove(actual_timestamp_list[-1])
-max_list.remove(actual_timestamp_list[-1-90])
+if cut=='y':
+	max_list.remove(actual_timestamp_list[-1-90])
 for i in max_list:
 	sec_max_list.append(sec_since_release_list[actual_timestamp_list.index(i)])
 
@@ -205,14 +211,16 @@ for i in sec_max_list:
 
 ax2.annotate('released',xy=(sec_since_release_list[m],np.max(combined_acc_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
 ax2.axvline(sec_since_release_list[m],ymax=np.max(combined_acc_in_on_trap_list,),ls='--')
-ax2.annotate('end',xy=(sec_since_release_list[-1-90],np.max(combined_acc_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
-ax2.axvline(sec_since_release_list[-1-90],ymax=np.max(combined_acc_in_on_trap_list),ls='--')
+
+if cut=='y':
+	ax2.annotate('end',xy=(sec_since_release_list[-1-90],np.max(combined_acc_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
+	ax2.axvline(sec_since_release_list[-1-90],ymax=np.max(combined_acc_in_on_trap_list),ls='--')
 
 ax2.plot(sec_since_release_list, on_trap_acc_list, '-',markersize=6,color="r",label="on trap")
 ax2.plot(sec_since_release_list, in_trap_acc_list, '-',markersize=6,color="b",label="in trap")
 ax2.plot(sec_since_release_list, combined_acc_in_on_trap_list, '-',markersize=6,color="c",label="combined")
 if n_fly=="y":
-	ax2.plot(actual_timestamp_list, not_fly_acc_list, '-',markersize=6,color="m",label="not fly")
+	ax2.plot(sec_since_release_list, not_fly_acc_list, '-',markersize=6,color="m",label="not fly")
 
 xtick_list_dup_removed.extend(sec_max_list)
 

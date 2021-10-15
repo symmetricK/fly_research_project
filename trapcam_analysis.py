@@ -901,7 +901,7 @@ class TrapcamAnalyzer:
 
         if self.calculate_final == True:
             print ('calculating final')
-            pdb.set_trace()
+#            pdb.set_trace()
             current_trap_dictionary = {self.trap:{'flies on trap over time:': flies_on_trap_over_time.tolist(),
                                             'flies in trap over time:': flies_in_trap_over_time.tolist(),
                                             'not flies over time:'    : not_flies_over_time.tolist(),

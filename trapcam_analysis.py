@@ -658,7 +658,8 @@ class TrapcamAnalyzer:
                                                     full_image_stack,
                                                     filename_stack,
                                                     video_dir):
-        
+
+
         fgbg = cv2.createBackgroundSubtractorMOG2(history =self.train_num, varThreshold = self.mahalanobis_squared_thresh, detectShadows = False)
         standard_out_array_length = len(full_image_stack) -self.train_num -self.buffer_btw_training_and_test
         sample_image_zero =  np.zeros_like(full_image_stack[0]) # <---- just using the first image as an "example" to be sure I preallocate the array with the right data type, dimensions etc
@@ -677,7 +678,24 @@ class TrapcamAnalyzer:
 
         contrast_metric_list_of_lists=[]
         fly_contour_area_list_of_lists=[]
+
+
         for index, training_image in enumerate(full_image_stack):
+            if index%250==0:
+                print('thank you for your patience!')
+            if index%5==0:
+                print('.')
+            elif index%5==1:
+                print('..')
+            elif index%5==2:
+                print('...')
+            elif index%5==3:
+                print('....')
+            elif index%5==4:
+                print('.....'+str(index))
+
+
+
             fgbg.apply(training_image, None, -1) # TRAINING STEP.
             if index > self.train_num-1: # when current index is less than train_num, the model hasn't been trained on the specified number of frames. After this point, the declaration of history = train_num should make the model "forget" earlier frames so it works as a sliding window
                 test_index = index+self.buffer_btw_training_and_test
@@ -1023,7 +1041,6 @@ class TrapcamAnalyzer:
 #        sample_image=np.zeros_like(selected_image)
         sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
 #        sample_image =  np.zeros_like(self.load_color_image(filename_list[10]))
-#        pdb.set_trace()
 #        if self.USE_FULL_MASK:
 #            square_mask=self.make_full_mask(sample_image)
 #        else:
@@ -1038,7 +1055,6 @@ class TrapcamAnalyzer:
 #            tst_array=np.stack(stack_imgs,axis=0)
 #        stack_imgs=[np.zeros(shape=(nrow,ncol,colors), dtype=np.int8) for _ in range(image_count)]
 
-#        pdb.set_trace()
         print('creating masked image stack')
 #        masked_image_stack = np.stack([sample_image for _ in range(image_count)], axis = 0)
 #        masked_image=[sample_image for _ in range(image_count)]
@@ -1047,7 +1063,7 @@ class TrapcamAnalyzer:
 #        masked_image_stack= np.ndarray(shape=((image_count+1),nrow,ncol,colors))
 
         masked_image_stack=np.zeros((image_count,nrow, ncol, colors),dtype=np.uint8)
-#        pdb.set_trace()
+
         print('created')
         image_num = 0
 #        masked_image_stack_list=[]
@@ -1071,10 +1087,9 @@ class TrapcamAnalyzer:
         
 
         print ('length of masked image stack: '+str(len(masked_image_stack)))
-#        pdb.set_trace()
 
 #        timestamp = str(int(time.time())) +'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
-        timestamp=filename_list[30][51:66]+'_'+filename_list[-1][60:66]+'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
+        timestamp=filename_list[30][-19:-4]+'_'+filename_list[-1][-10:-4]+'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
         annotated_frame_dir = self.directory+'/all_traps_analyzed_videos/'+self.trap+'_videos/'+timestamp+'/annotated_frames/'
         subprocess.call(['mkdir', '-p', annotated_frame_dir])
 

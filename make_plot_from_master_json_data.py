@@ -105,8 +105,12 @@ in_trap_max_list=[]
 combined_max_list=[]
 
 for time in actual_timestamp_list:
+#	pdb.set_trace()
 	if time==released_time:
 		m=actual_timestamp_list.index(time)
+
+### since 131959,132000 
+
 	elif str(int(time[0:2]+time[3:5]+time[6:8])+1)[0:2]+':'+str(int(time[0:2]+time[3:5]+time[6:8])+1)[2:4]+':'+str(int(time[0:2]+time[3:5]+time[6:8])+1)[4:6]==released_time:
 		m=actual_timestamp_list.index(time)
 

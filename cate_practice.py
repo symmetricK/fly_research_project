@@ -4,7 +4,6 @@ import numpy as np
 import pdb
 import sys
 
-
 #ask user input
 trap=input("Enter a trap letter to analyze: ")
 
@@ -38,11 +37,12 @@ for i in data['trap_'+trap]:
 			if len(str(int(k)))==5:
 				str_time='0'+str(int(k))[0:1]+':'+str(int(k))[1:3]+':'+str(int(k))[3:5]
 				actual_timestamp_list.append(str_time)
-			elif len(str(int(k)))==6:
-				str_time=str(int(k))[0:2]+':'+str(int(k))[2:4]+':'+str(int(k))[4:6]
-				actual_timestamp_list.append(str_time)
+		elif len(str(int(k)))==6:
+			str_time=str(int(k))[0:2]+':'+str(int(k))[2:4]+':'+str(int(k))[4:6]
+			actual_timestamp_list.append(str_time)
 
 f.close()
+
 
 def calc_sec_since_release(standard,time_stamp):
 	zero=int(standard[0:2])*3600+int(standard[3:5])*60+int(standard[6:8])+1
@@ -50,44 +50,38 @@ def calc_sec_since_release(standard,time_stamp):
 	sec_since_release=sec-zero
 	return sec_since_release
 
-#to plot 1 min before release
 for i in actual_timestamp_list:
 	s=calc_sec_since_release(released_time,i)
-	if s>=-60:
+	if s>0:
 		sec_since_release_list.append(s)
 
-# remove first 4min
-on_trap_list=on_trap_list[120:]
+min_since_release_list=[]
 
-# to name output file
+for i in sec_since_release_list:
+	m=int(i/60)
+	min_since_release_list.append(m)
+
+
 ind=0
 
 fig=plt.figure()
-
-# to set range xlim, ylim
-plt.xlim(-60,500)
+plt.xlim(0,950)
 plt.ylim(0,16)
-plt.xlabel('time since release (sec)')
-plt.ylabel('flies at trap')
+plt.xlabel('time since release (min)')
+plt.ylabel('flies on trap')
 
 
-#in advance, plot data till 360 sec
-plt.plot(sec_since_release_list[:55], on_trap_list[:55], '-',markersize=6,color="r",label="on trap")
-plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+str(0)+'.png',dpi=600)
-#pdb.set_trace()
+for i in range(len(min_since_release_list[:450])):
+	plt.plot(min_since_release_list[:i], on_trap_list[:i], '-',markersize=6,color="r",label="on trap")
 
-# 360 sec to 760 sec
-for i in range(len(sec_since_release_list[:280])):
-	plt.plot(sec_since_release_list[55:i], on_trap_list[55:i], '-',markersize=6,color="r",label="on trap")
-	plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+str(ind)+'.png',dpi=600)
-	ind+=1
+fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(20,20))
 
-# remove first 4min
-in_trap_list=in_trap_list[120:]
+x1 = np.linspace(0.0, 5.0)
+x2 = np.linspace(0.0, 2.0)
 
-plt.plot(sec_since_release_list[:280], in_trap_list[:280], '-',markersize=6,color="b",label="in trap")
-plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+'RB'+'.png',dpi=600)
+y1 = np.cos(2 * np.pi * x1) * np.exp(-x1)
+y2 = np.cos(2 * np.pi * x2)
 
-
+plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_plots_figures/Cate/trap_'+trap+'_plots_on_only.png')
 
 

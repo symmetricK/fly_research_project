@@ -234,7 +234,6 @@ class TrapcamAnalyzer:
                 cv2.circle(color_image, (fly['x'], fly['y']), 50, [0,0,255], 5)
                 on_trap_count+=1 
             elif fly['type']=='in_trap':
-                #flag=list(fly.values())[5] 
                 cv2.rectangle(color_image, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,0], 5)
                 in_trap_count+=1               
         if on_trap_count!=0:
@@ -746,12 +745,15 @@ class TrapcamAnalyzer:
                 time_for_filename_mask_inon=int('22'+test_filename[-19:-11]+test_filename[-10:-4]) 
                 time_for_filename_color_inon=int('33'+test_filename[-19:-11]+test_filename[-10:-4]) 
                 time_for_filename_original=int('44'+test_filename[-19:-11]+test_filename[-10:-4]) 
-                time_for_filename_four_figures=int('55'+test_filename[-19:-11]+test_filename[-10:-4]) 
+                time_for_filename_four_figures=int('55'+test_filename[-19:-11]+test_filename[-10:-4])
+#                time_for_filename_on_trap=int('99'+test_filename[-19:-11]+test_filename[-10:-4])
 
                 cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_color_all, annotated_output_image) #color_image w/ all detections
                 cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_mask_inon, annotated_fgmask1) # foreground mask w/ in_trap, on_trap detections
                 cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_color_inon, annotated_output_image2) # color image w/ in_trap, on_trap detections
                 cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_original, original_image) # Actually not original, but to create 1 figure from 4 figures
+#                cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_on_trap, annotated_output_image2)
+
 
                 img2=cv2.imread(video_dir + "%04d.jpg" % time_for_filename_color_all) #color image w/ all detections
                 img3=cv2.imread(video_dir + "%04d.jpg" % time_for_filename_mask_inon) #foreground mask w/ in_trap, on_trap detections

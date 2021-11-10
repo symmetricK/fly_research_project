@@ -63,12 +63,40 @@ on_trap_list=on_trap_list[120:]
 ind=0
 
 fig=plt.figure()
+ax=plt.axes()
+#fig,ax=plt.subplots()
 
 # to set range xlim, ylim
 plt.xlim(-60,500)
-plt.ylim(0,16)
-plt.xlabel('time since release (sec)')
-plt.ylabel('flies at trap')
+plt.ylim(-0.5,16)
+
+#x=np.linspace(-60,500)
+#y=np.linspace(-0.5,16)
+
+# set labels
+plt.xlabel('Time Since Release (sec)')
+plt.ylabel('Flies at Trap')
+
+#ax.set_xlabel('time since release (sec)')
+#ax.set_ylabel('flies at trap')
+
+#set dark back ground
+#plt.style.use('dark_background')
+ax.patch.set_facecolor('black')
+fig.patch.set_facecolor('black')
+
+# set thick param and label color
+ax.tick_params(axis='x', colors='white')
+ax.tick_params(axis='y', colors='white')
+ax.yaxis.label.set_color('white')
+ax.xaxis.label.set_color('white')
+
+# hide spines
+ax.spines.right.set_visible(False)
+ax.spines.top.set_visible(False)
+
+ax.spines['left'].set_color('white')
+ax.spines['bottom'].set_color('white') 
 
 
 #in advance, plot data till 360 sec
@@ -77,16 +105,20 @@ plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_20
 #pdb.set_trace()
 
 # 360 sec to 760 sec
-for i in range(len(sec_since_release_list[:280])):
+for i in range(len(sec_since_release_list[:282])):
 	plt.plot(sec_since_release_list[55:i], on_trap_list[55:i], '-',markersize=6,color="r",label="on trap")
 	plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+str(ind)+'.png',dpi=600)
 	ind+=1
 
+
+plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+str(ind)+'.svg',dpi=600)
+
+
 # remove first 4min
 in_trap_list=in_trap_list[120:]
 
-plt.plot(sec_since_release_list[:280], in_trap_list[:280], '-',markersize=6,color="b",label="in trap")
-plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+'RB'+'.png',dpi=600)
+plt.plot(sec_since_release_list[:282], in_trap_list[:282], '-',markersize=6,color="b",label="in trap")
+plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+'RBRB'+'.png',dpi=600)
 
 
 

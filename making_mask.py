@@ -12,7 +12,7 @@ img_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelaps
 data_path=os.path.join(img_dir,'*g')
 files=glob.glob(data_path)
 
-data=[]
+#data=[]
 #for file in files:
 #    img=cv2.imread(file)
 #    data.append(img)

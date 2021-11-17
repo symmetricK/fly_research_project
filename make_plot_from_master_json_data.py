@@ -108,12 +108,39 @@ for time in actual_timestamp_list:
 #	pdb.set_trace()
 	if time==released_time:
 		m=actual_timestamp_list.index(time)
-
-### since 131959,132000 
-
-	elif str(int(time[0:2]+time[3:5]+time[6:8])+1)[0:2]+':'+str(int(time[0:2]+time[3:5]+time[6:8])+1)[2:4]+':'+str(int(time[0:2]+time[3:5]+time[6:8])+1)[4:6]==released_time:
+	elif (int(time[0:2])*3600+int(time[3:5])*60+int(time[6:8]))==(int(released_time[0:2])*3600+int(released_time[3:5])*60+int(released_time[6:8])+1):
 		m=actual_timestamp_list.index(time)
 
+
+'''
+	elif time[6:8]=='00':
+		if time[3:5]=='00':
+			if int(time[0:2])<=10:
+				print('b')
+				time='0'+str(int(time[0:2])-1)+':59:59'
+				m=actual_timestamp_list.index(time)
+				print('c')
+				time=str(int(time[0:2])-1)+':59:59'
+				m=actual_timestamp_list.index(time)
+		else:
+			if int(time[3:5])<=10:
+				print('d')
+				time=time[0:2]+':0'+str(int(time[3:5])-1)+':59'
+				m=actual_timestamp_list.index(time)
+			else:
+				print('e')
+				time=time[0:2]+':'+str(int(time[3:5])-1)+':59'
+				m=actual_timestamp_list.index(time)
+'''
+
+
+#	str(int(time[0:2]+time[3:5]+time[6:8]))[4:6]=='00'
+#
+#	elif str(int(time[0:2]+time[3:5]+time[6:8])+1)[0:2]+':'+str(int(time[0:2]+time[3:5]+time[6:8])+1)[2:4]+':'+str(int(time[0:2]+time[3:5]+time[6:8])-1)[4:6]==released_time:
+#		m=actual_timestamp_list.index(time)
+
+
+#pdb.set_trace()
 cut=input("You want to cut last three minutes data?(y or n): ")
 #shortened list to focus on max after starting
 if cut=='y':

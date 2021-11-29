@@ -11,7 +11,7 @@ import datetime
 
 wind_data=input("Enter wind data text file you would like to convert to a wind data json file (e.g. 2021_10_19): ")
 
-directory="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/"+wind_data+".txt"
+directory="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/wind_"+wind_data+".txt"
 wind_df=pd.read_csv(directory,delimiter=' ',header=None)
 wind_df.columns=("time","direction","wind_speed")
 
@@ -33,12 +33,12 @@ for i in wind_df.iloc[:,0]:
     
 wind_df.iloc[:,0]=time_list
 
-#new_wind_df=wind_df.groupby(['time'], as_index=False).mean()
-new_wind_df=wind_df.groupby(['time']).mean()
-test_json=new_wind_df.to_json
+new_wind_df=wind_df.groupby(['time'], as_index=False).mean()
+#new_wind_df=wind_df.groupby(['time']).mean()
+#test_json=new_wind_df.to_json
 
 
-pdb.set_trace()
+#pdb.set_trace()
 
 new_t_list=new_wind_df['time']
 new_w_list=new_wind_df['wind_speed']
@@ -48,14 +48,22 @@ new_d_list=new_wind_df['direction']
 
 wind_dict={"t":new_t_list,"d":new_d_list,"w":new_w_list}
 
-json_path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/"+wind_data+".json"
+fig=plt.figure()
+ax=plt.axes()
+
+plt.plot(new_t_list, new_w_list, '-',markersize=6,color="r")
+plt.savefig("/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/wind_"+wind_data+".png",dpi=600)
+
+pdb.set_trace()
+
+#json_path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/"+wind_data+".json"
 
 #parsed = json.loads(result)
 
 #json.dumps(parsed, indent=4)  
 
-with open(json_path,'w') as json_file:
-	json.dump(test_json,json_file,indent=1)
+#with open(json_path,'w') as json_file:
+#	json.dump(test_json,json_file,indent=1)
 
 #if not os.path.exists(json_path):
 #    with open(json_path,'w') as json_file:
@@ -68,3 +76,5 @@ with open(json_path,'w') as json_file:
 #			json.dump(wind_dict,json_file,indent=1)
 #	if y_n=="n":
 #		sys.exit()
+
+

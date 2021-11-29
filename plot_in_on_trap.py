@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pdb
 import sys
-
+#modified TW to save EPS
 
 #ask user input
 trap=input("Enter a trap letter to analyze: ")
@@ -51,6 +51,7 @@ def calc_sec_since_release(standard,time_stamp):
 	return sec_since_release
 
 #to plot 1 min before release
+pdb.set_trace()
 for i in actual_timestamp_list:
 	s=calc_sec_since_release(released_time,i)
 	if s>=-60:
@@ -101,13 +102,13 @@ ax.spines['bottom'].set_color('white')
 
 #in advance, plot data till 360 sec
 plt.plot(sec_since_release_list[:55], on_trap_list[:55], '-',markersize=6,color="r",label="on trap")
-plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+str(0)+'.png',dpi=600)
+plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+str(0)+'.svg')
 #pdb.set_trace()
 
 # 360 sec to 760 sec
 for i in range(len(sec_since_release_list[:282])):
 	plt.plot(sec_since_release_list[55:i], on_trap_list[55:i], '-',markersize=6,color="r",label="on trap")
-	plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+str(ind)+'.png',dpi=600)
+	plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/plots_for_2021_10_30_trap_G/trap_'+trap+'_'+str(ind)+'.svg')
 	ind+=1
 
 

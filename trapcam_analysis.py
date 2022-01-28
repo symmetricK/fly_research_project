@@ -210,11 +210,13 @@ class TrapcamAnalyzer:
             color = [0,0,153]
             if fly['type']=='on_trap':
                 #flag=list(fly.values())[5]
-#                cv2.circle(fg_mask, (fly['x'], fly['y']), 50, [255,255,255], 5)
+#                cv2.circle(fg_mask, (fly['x'], fly['y']), 50, [255,255,255], 5) # white circle
+                cv2.circle(fg_mask, (fly['x'], fly['y']), 20, [255,255,255], 5)
                 on_trap_count+=1 
             elif fly['type']=='in_trap':
                 #flag=list(fly.values())[5] 
-#                cv2.rectangle(fg_mask, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,255,255], 5)
+#                cv2.rectangle(fg_mask, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,255,255], 5) 
+                cv2.rectangle(fg_mask, (fly['x']-20, fly['y']+20), (fly['x']+20, fly['y']-20), [255,255,255], 5) 
                 in_trap_count+=1               
         if on_trap_count!=0:
             cv2.putText(fg_mask,"on trap(circle): "+str(on_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 255),2)  
@@ -231,10 +233,10 @@ class TrapcamAnalyzer:
             color = [0,0,153]
             if fly['type']=='on_trap':
                 #flag=list(fly.values())[5]
-                cv2.circle(color_image, (fly['x'], fly['y']), 50, [0,0,255], 5)
+                cv2.circle(color_image, (fly['x'], fly['y']), 20, [0,0,255], 5)
                 on_trap_count+=1 
             elif fly['type']=='in_trap':
-                cv2.rectangle(color_image, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,0], 5)
+                cv2.rectangle(color_image, (fly['x']-20, fly['y']+20), (fly['x']+20, fly['y']-20), [255,0,0], 5)
                 in_trap_count+=1               
         if on_trap_count!=0:
             cv2.putText(color_image,"on trap(circle): "+str(on_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)  

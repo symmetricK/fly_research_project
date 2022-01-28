@@ -1,13 +1,15 @@
-## import json
+## import pandas as pd
+from math import radians
 import matplotlib.pyplot as plt
 import numpy as np
 import pdb
-import pandas as pd
 import time
 import datetime
+import sys
+import json
+import pandas as pd
 
 wind_data=input("Enter wind data text file you would like to make a plot (e.g. 2021_10_19): ")
-release=input("what time did you release flies (e.g. 1420): ")
 
 directory="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/wind_"+wind_data+".txt"
 wind_df=pd.read_csv(directory,delimiter=' ',header=None)
@@ -60,37 +62,58 @@ for i in range(len(wind_df)):
             rad_d_list=[]
             rad_d_list.append(rad)
 
-new_wind_df=wind_df.groupby(['time'], as_index=False).mean()
-new_wind_df['direction']=mean_angle_list
+a_wind_df=wind_df.groupby(['time'], as_index=False).mean()
+a_wind_df['direction']=mean_angle_list
+a_wind_df['wind_speed']=a_wind_df['wind_speed']*0.44704 # convert mph to m/s
 
-new_t_list=new_wind_df['time']
-new_s_list=new_wind_df['wind_speed']
-new_d_list=new_wind_df['direction'] 
-new_n_list=list(np.arange(1,len(new_t_list)+1))
 
-fig=plt.figure(figsize=(20,10))
-ax=plt.axes()
 
-plt.plot(new_n_list, new_s_list, '-',markersize=6,color="r")
-plt.xlabel('Time')
-plt.ylabel('Wind Speed')
+I=15.0 # degree for trap I
+J=195.0 # degree for trap J
 
-ax.set_xticks(new_n_list)
-ax.set_xticklabels(new_t_list,rotation=45)
-x_min=np.min(new_n_list)
-x_max=np.max(new_n_list)
-y_min=np.min(new_s_list)
-y_max=np.max(new_s_list)
+theta1=np.deg2rad([I,I]) # trap I
+theta2=np.deg2rad([J,J]) # trap J
+r=[0,1.0]
 
-ratio=(x_max-x_min)/(y_max-y_min) # to adjust arrow length
+min_len=5 # initial 5min
 
-for i in range(len(new_n_list)):
-    dx=(np.cos(new_d_list[i]))
-    dy=(np.sin(new_d_list[i]))
-    ax.annotate("",xy=(new_n_list[i],new_s_list[i]),
-               xytext=(new_n_list[i]+dx,
-                       new_s_list[i]+3*(dy/ratio)),arrowprops=dict(arrowstyle='-'))
-    if new_t_list[i]==release:
-        ax.axvline(x=i+1,ymax=y_max,ls='--',color='b')
+fig1=plt.figure(figsize=(30,20))
 
-plt.savefig("/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/wind_"+wind_data+".png",dpi=600)
+a=1 #number of rows
+b=5 #number of columns
+c=1 #plot counter
+
+release_time=1420
+
+dir_list=[]
+spd_list=[]
+
+for i in range(len(a_wind_df)):
+    if 1421<=int(a_wind_df['time'][i])<=1425:
+        dir_list.append(a_wind_df['direction'][i])
+        spd_list.append(a_wind_df['wind_speed'][i])
+        
+rad_dir_list=np.deg2rad(90-np.rad2deg(dir_list))
+
+for i in np.arange(min_len):
+    ax1=plt.axes()
+    ax1=plt.subplot(a,b,c, polar=True)
+    ax1.set_theta_zero_location('N')
+    ax1.set_theta_direction('clockwise')
+    ax1.set_yticks([])
+    ax1.plot(theta1,r,'r')
+    ax1.plot(theta2,r,'b')
+    ax1.text(np.radians(I),ax1.get_rmax()+0.15,'trap I (15°)',
+            ha='center',va='center')
+    ax1.text(np.radians(J),ax1.get_rmax()+0.15,'trap J (195°)',
+            ha='center',va='center')
+    ax1.text(np.radians(0),ax1.get_rmax()+0.4,str(release_time+c)[:2]+':'+str(release_time+c)[2:4]+
+             '\n'+str(round(spd_list[i],3))+ 'm/s',
+            ha='center',va='center')
+    wind_d_theta=[rad_dir_list[i],rad_dir_list[i]]
+    ax1.plot(wind_d_theta,[0,spd_list[i]],marker='X',ls='--',color='k')
+    c=c+1
+
+path="/home/flyranch/field_data_and_analysis_scripts/2021lab/refs_for_presentation/"
+
+plt.savefig(path+'wind_d_circular_plot.svg')

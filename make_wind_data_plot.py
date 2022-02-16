@@ -76,7 +76,17 @@ plt.xlabel('Time')
 plt.ylabel('Wind Speed')
 
 ax.set_xticks(new_n_list)
-ax.set_xticklabels(new_t_list,rotation=45)
+#ax.set_xticklabels(new_t_list,rotation=45)
+
+
+test_list=[]
+for i in new_n_list:
+    sec=(i-16)*60
+    test_list.append(sec)
+
+ax.set_xticklabels(test_list,rotation=45)    
+
+
 x_min=np.min(new_n_list)
 x_max=np.max(new_n_list)
 y_min=np.min(new_s_list)

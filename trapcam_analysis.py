@@ -176,31 +176,34 @@ class TrapcamAnalyzer:
         frame_timestamp = int(frame_time_string[0:2]+frame_time_string[2:4]+frame_time_string[4:6])
         return frame_timestamp
 
-    def show_image_with_circles_drawn_around_putative_flies(self, color_image, flies_on_trap, flies_in_trap, not_flies):
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        for fly in flies_on_trap:
-            if fly['perimeter contrast boolean']:
-                color = [0,0,0]
-            else:
-                color = [0,0,153]
-            cv2.circle(color_image, (fly['x'], fly['y']), 50, color, 5)
-            cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, color,2, cv2.LINE_AA)
-            cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-            #cv2.putText(color_image, str(fly['perimeter contrast boolean']),(fly['x']+50, fly['y']+50), font, 1, (0,0,0),2, cv2.LINE_AA)
 
-        for fly in flies_in_trap:
-            if fly['perimeter contrast boolean']:
-                color = [153,0,153]
-            else:
-                color = [0,0,153]
-            cv2.circle(color_image, (fly['x'], fly['y']), 50, color, 5)
-            cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, color,2, cv2.LINE_AA)
-            cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-            #cv2.putText(color_image, str(fly['perimeter contrast boolean']),(fly['x']+50, fly['y']+50), font, 1, [153,0,153],2, cv2.LINE_AA)
-
-        for not_fly in not_flies:
-            cv2.circle(color_image, (not_fly['x'], not_fly['y']), 50, [178,255,102], 5)
-            cv2.putText(color_image, str(not_fly['area']),(not_fly['x']+50, not_fly['y']-50), font, 1, [178,255,102],2, cv2.LINE_AA)
+###
+#    def show_image_with_circles_drawn_around_putative_flies(self, color_image, flies_on_trap, flies_in_trap, not_flies):
+#        font = cv2.FONT_HERSHEY_SIMPLEX
+#        for fly in flies_on_trap:
+#            if fly['perimeter contrast boolean']:
+#                color = [0,0,0]
+#            else:
+#                color = [0,0,153]
+#            cv2.circle(color_image, (fly['x'], fly['y']), 50, color, 5)
+#            cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, color,2, cv2.LINE_AA)
+#            cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
+#            #cv2.putText(color_image, str(fly['perimeter contrast boolean']),(fly['x']+50, fly['y']+50), font, 1, (0,0,0),2, cv2.LINE_AA)
+#
+#        for fly in flies_in_trap:
+#            if fly['perimeter contrast boolean']:
+#                color = [153,0,153]
+#            else:
+#                color = [0,0,153]
+#            cv2.circle(color_image, (fly['x'], fly['y']), 50, color, 5)
+#            cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, color,2, cv2.LINE_AA)
+#            cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
+#            #cv2.putText(color_image, str(fly['perimeter contrast boolean']),(fly['x']+50, fly['y']+50), font, 1, [153,0,153],2, cv2.LINE_AA)
+#
+#        for not_fly in not_flies:
+#            cv2.circle(color_image, (not_fly['x'], not_fly['y']), 50, [178,255,102], 5)
+#            cv2.putText(color_image, str(not_fly['area']),(not_fly['x']+50, not_fly['y']-50), font, 1, [178,255,102],2, cv2.LINE_AA)
+###
 
     def show_fgmask_with_marks_drawn_around_in_trap_on_trap_flies(self,fg_mask,all_flies):
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -260,49 +263,49 @@ class TrapcamAnalyzer:
             color = [0,0,153]
             if fly['type']=='reject_contrast_metric':
                 #flag=list(fly.values())[5]
-                cv2.drawMarker(color_image, (fly['x'], fly['y']),[127,127,127],cv2.MARKER_DIAMOND, 125,6)
-                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)                    
-                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [127,127,127],2, cv2.LINE_AA)
+                cv2.drawMarker(color_image, (fly['x'], fly['y']),[127,127,127],cv2.MARKER_DIAMOND, 50,6) # markersize=60
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+20, fly['y']+20), font, 1, color,2, cv2.LINE_AA)                    
+                cv2.putText(color_image, str(fly['area']),(fly['x']+20, fly['y']-20), font, 1, [127,127,127],2, cv2.LINE_AA)
                 rejected_by_contrast_metric_count+=1 
                 #print(flag)
             elif fly['type']=='reject_perimeter_contrast':
                 #flag=list(fly.values())[5]
-                cv2.drawMarker(color_image, (fly['x'], fly['y']),[255,255,255],cv2.MARKER_DIAMOND, 125,6)
-                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [255,255,255],2, cv2.LINE_AA)
+                cv2.drawMarker(color_image, (fly['x'], fly['y']),[255,255,255],cv2.MARKER_DIAMOND, 50,6)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+20, fly['y']+20), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+20, fly['y']-20), font, 1, [255,255,255],2, cv2.LINE_AA)
                 rejected_by_perimeter_contrast_count+=1 
                 #print(flag)
             elif fly['type']=='reject_low_area_on_trap':
-                cv2.drawMarker(color_image, (fly['x'], fly['y']),[0,255,0],cv2.MARKER_DIAMOND, 125,6)
-                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [0,255,0],2, cv2.LINE_AA)
+                cv2.drawMarker(color_image, (fly['x'], fly['y']),[0,255,0],cv2.MARKER_DIAMOND, 50,6)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+20, fly['y']+20), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+20, fly['y']-20), font, 1, [0,255,0],2, cv2.LINE_AA)
                 #flag=list(fly.values())[5]
                 rejected_by_low_area_on_trap_count+=1 
                 #print(flag)
             elif fly['type']=='reject_high_area_in_trap':
-                cv2.drawMarker(color_image, (fly['x'], fly['y']),[0,255,255],cv2.MARKER_DIAMOND, 125,6)
-                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [0,255,255],2, cv2.LINE_AA)
+                cv2.drawMarker(color_image, (fly['x'], fly['y']),[0,255,255],cv2.MARKER_DIAMOND, 50,6)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+20, fly['y']+20), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+20, fly['y']-20), font, 1, [0,255,255],2, cv2.LINE_AA)
                 #flag=list(fly.values())[5]
                 rejected_by_high_area_in_trap_count+=1 
                 #print(flag)
             elif fly['type']=='on_trap':
                 #flag=list(fly.values())[5]
-                cv2.circle(color_image, (fly['x'], fly['y']), 50, [0,0,255], 5)
-                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [0,0,255],2, cv2.LINE_AA)
+                cv2.circle(color_image, (fly['x'], fly['y']), 20, [0,0,255], 5)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+20, fly['y']+20), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+20, fly['y']-20), font, 1, [0,0,255],2, cv2.LINE_AA)
                 on_trap_count+=1 
                 #print(flag)
             else:#'in_trap'
                 #flag=list(fly.values())[5] 
-                cv2.rectangle(color_image, (fly['x']-50, fly['y']+50), (fly['x']+50, fly['y']-50), [255,0,0], 5)
-                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+50, fly['y']+50), font, 1, color,2, cv2.LINE_AA)
-                cv2.putText(color_image, str(fly['area']),(fly['x']+50, fly['y']-50), font, 1, [255,0,0],2, cv2.LINE_AA)
+                cv2.rectangle(color_image, (fly['x']-20, fly['y']+20), (fly['x']+20, fly['y']-20), [255,0,0], 5)
+                cv2.putText(color_image, str(int(fly['contrast metric'])),(fly['x']+20, fly['y']+20), font, 1, color,2, cv2.LINE_AA)
+                cv2.putText(color_image, str(fly['area']),(fly['x']+20, fly['y']-20), font, 1, [255,0,0],2, cv2.LINE_AA)
                 in_trap_count+=1               
                 #print(flag)
         for not_fly in not_flies:
-            cv2.drawMarker(color_image, (not_fly['x'], not_fly['y']),[255,0,255],cv2.MARKER_DIAMOND, 125,6)
-            cv2.putText(color_image, str(not_fly['area']),(not_fly['x']+50, not_fly['y']-50), font, 1, [255,0,255],2, cv2.LINE_AA)
+            cv2.drawMarker(color_image, (not_fly['x'], not_fly['y']),[255,0,255],cv2.MARKER_DIAMOND, 50,6)
+            cv2.putText(color_image, str(not_fly['area']),(not_fly['x']+20, not_fly['y']-20), font, 1, [255,0,255],2, cv2.LINE_AA)
             not_fly_count+=1 
             #print("not")
 

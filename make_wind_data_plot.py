@@ -79,12 +79,13 @@ ax.set_xticks(new_n_list)
 #ax.set_xticklabels(new_t_list,rotation=45)
 
 
-test_list=[]
+since_sec_list=[]
 for i in new_n_list:
     sec=(i-16)*60
-    test_list.append(sec)
+    since_sec_list.append(sec)
 
-ax.set_xticklabels(test_list,rotation=45)    
+ax.set_xticklabels(since_sec_list,rotation=45) # show sec_since_release on xticks
+
 
 
 x_min=np.min(new_n_list)

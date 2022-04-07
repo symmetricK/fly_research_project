@@ -1037,7 +1037,6 @@ class TrapcamAnalyzer:
         filename_list = ['']*(len(full_filename_list))  
         image_count = 0
 
-
         for filename in full_filename_list:
             time_since_release = self.get_time_since_release_from_filename(name = filename)
             if time_since_release < -60* self.min_prior_to_r:

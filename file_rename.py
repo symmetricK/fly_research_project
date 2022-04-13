@@ -3,56 +3,52 @@ import os
 import glob
 import pdb
 
-before_dir=input("Enter a directory name (without trap_) which has files you'd like to rename: ")
-b_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/trap_"+before_dir
-data_path=os.path.join(b_dir,'*g')
+directry=input("Enter a directory name (without trap_) which has files you'd like to rename: ")
+#directry="2022_03_17_WT"
+
+o_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/trap_"+directry
+data_path=os.path.join(o_dir,'*jpg')
 filelist=glob.glob(data_path)
 sorted_files=sorted(filelist)
+rm_files=sorted_files[1::2]
 
 date=input("Enter what date did you do this experiment (e.g. 20220317 (yyyymmdd)): ")
-files=glob.glob(data_path)
-sorted_files=sorted(files)
+#date="20220317"
 
+### remove the same hh/mm/ss files (to make 1 frame/second)
+for f in sorted_files:
+	for file in rm_files:
+		if f==file:
+			os.remove(file)
+
+
+data_path2=os.path.join(o_dir,'*jpg')
+filelist2=glob.glob(data_path2)
+sorted_files2=sorted(filelist2)
+
+### rename files
 count=1
-
-
-for file in sorted_files:
-	mid=date+"_"
-	dis=len(b_dir)
-	time=file[dis+1:dis+3]+file[dis+4:dis+6]+file[dis+7:dis+9]
-	t=time[:2]+"-"+time[2:4]+"-"+time[4:6]
-	ext=".jpg"
-	pdb.set_trace()
-	test=glob.glob(b_dir+"/"+t+"*"+ext)
-
-	if os.path.exists(b_dir+"/"+time+"*"+ext):
-		if os.path.exists(b_dir+"/"+t+"*"+ext):
-			print(b_dir+"/"+t+"*"+ext)
-			os.remove(b_dir+"/"+t+"*"+ext)
-
-(b_dir+"/"+t+"*"+ext)
-
-
+for file2 in sorted_files2:
+	if count<10:
+		c="000"+str(count)
+	elif 10<=count<100:
+		c="00"+str(count)
+	elif 100<=count<1000:
+		c="0"+str(count)
 	else:
-		if count<10:
-			c="000"+str(count)
-		elif 10<=count<100:
-			c="00"+str(count)
-		elif 100<=count<1000:
-			c="0"+str(count)
-		else:
-			c=str(count)
-		pre="tl_0000_"+c+"_"
+		c=str(count)
 
-		filename=pre+mid+time+ext
-		os.rename(file,b_dir+"/"+filename)
-		count=count+1
+	pre="tl_0000_"+c+"_"
+	mid=date+"_"
+	dis=len(o_dir)
+	time=file2[dis+1:dis+3]+file2[dis+4:dis+6]+file2[dis+7:dis+9]
+	ext=".jpg"
 
-#	pdb.set_trace()
+	filename=pre+mid+time+ext
+	dst=o_dir+"/"+filename
+	os.rename(file2,dst)
+	count=count+1
 
 
 
-###to discard before time= pattern match w/ b_dir 
-
-### decimal = mjust discard
 

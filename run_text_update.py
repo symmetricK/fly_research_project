@@ -32,15 +32,21 @@ while True:
 		
 		fic_position=np.random.choice(np.arange(1,MAX_VALUE))
 
-		file1.write(f_num+"\t"+str(fic_position)+"\t"+str(r_num1)+"\t"+str(r_num2)+"\n")
-		
+		t=format((time.time()),'.6f')
+
+#		file1.write(f_num+"\t"+str(fic_position)+"\t"+str(r_num1)+"\t"+str(r_num2)+"\n")
+		file1.write(str(t)+"\t"+str(fic_position)+"\t"+str(r_num1)+"\t"+str(r_num2)+"\n")		
 		print("Current Time =", current_time)
 		file1.close()
 		count+=1
 #		plt.plot(current_time,r_num1)
 #		plt.savefig(dst_plot)
+		print(str(time.time()))
 	except KeyboardInterrupt:
 		pass
 #	time.sleep(1) #wait for 1 sec
 #	time.sleep(5) #wait for 5 sec
 	time.sleep(0.01) #wait for 0.01 sec
+#	time.sleep(0.04) #25Hz
+
+

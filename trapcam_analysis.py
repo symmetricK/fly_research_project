@@ -13,6 +13,8 @@ from scipy.optimize import curve_fit
 #from pympler.tracker import SummaryTracker
 import subprocess
 import pdb
+from time import strftime
+from datetime import datetime
 
 #tracker = SummaryTracker()
 
@@ -1100,8 +1102,11 @@ class TrapcamAnalyzer:
 
         print ('length of masked image stack: '+str(len(masked_image_stack)))
 
+        now=datetime.now()
+        c_time=now.strftime("%Y%m%d%H%M%S")
+
 #        timestamp = str(int(time.time())) +'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
-        timestamp=filename_list[30][-19:-4]+'_'+filename_list[-1][-10:-4]+'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
+        timestamp=filename_list[30][-19:-4]+'_'+filename_list[-1][-10:-4]+'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)+'_'+c_time
         annotated_frame_dir = self.directory+'/all_traps_analyzed_videos/'+self.trap+'_videos/'+timestamp+'/annotated_frames/'
         subprocess.call(['mkdir', '-p', annotated_frame_dir])
 

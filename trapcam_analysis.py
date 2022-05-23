@@ -74,6 +74,8 @@ class TrapcamAnalyzer:
 
 
     def get_filenames(self, path, contains, does_not_contain=['~', '.pyc']):
+        ### get filenames without mask related files###
+
         cmd = 'ls ' + '"' + path + '"'
         ls = os.popen(cmd).read()
         all_filelist = ls.split('\n')
@@ -118,7 +120,8 @@ class TrapcamAnalyzer:
         print (square_mask_path)
 
         mask = cv2.imread(square_mask_path)
-        gray_mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
+        gray_mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY) ### Convert to white and black color from RGB
+
 #        rescaled_mask = (gray_mask/255) #rescales mask to be 0s and 1s
 #        ret, test_mask = cv2.threshold(gray_mask, 10, 255, cv2.THRESH_BINARY)
 #        rescaled_mask = np.int8(ceil(gray_mask/255)) 
@@ -162,7 +165,7 @@ class TrapcamAnalyzer:
         # thresh_img_smooth = cv2.erode(thresh_img_smooth, kernel, iterations=10) # make contour smaller again
         return thresh_img_smooth, morph_open_iteration_number, morph_ellipse_size
 
-    def get_time_since_release_from_filename (self, name = ''):
+    def get_time_since_release_from_filename (self, name =''):
         frame_time_string = name.split('.')[-2].split('_')[-1]
         frame_hour = int(frame_time_string[0:2])
         frame_min = int(frame_time_string[2:4])
@@ -358,6 +361,11 @@ class TrapcamAnalyzer:
 
     def eliminate_foreground_pixels_brighter_than_bgimg(self, fgbg, test_image):
         fgmask_not_smoothed = fgbg.apply(test_image, None, 0)# the 0 specifies that no learning is occurring
+
+        cv2.imwrite('/home/flyranch/Desktop/test_image.jpg',test_image)
+        cv2.imwrite('/home/flyranch/Desktop/fgmask_not_smoothed_before.jpg',fgmask_not_smoothed)
+
+
         bgimg = fgbg.getBackgroundImage()
         gray_bgimg = cv2.cvtColor(bgimg, cv2.COLOR_RGB2GRAY)
         gray_test_image = cv2.cvtColor(test_image, cv2.COLOR_RGB2GRAY)
@@ -366,6 +374,18 @@ class TrapcamAnalyzer:
         test_image_masked_by_fgmask = cv2.bitwise_and(gray_test_image, gray_test_image, mask=mask).astype(int16)
         difference_img_under_mask = np.subtract(np.array(test_image_masked_by_fgmask), np.array(bg_masked_by_fgmask))
         fgmask_not_smoothed[np.where(difference_img_under_mask > 0)] = 0 # <----- for any regions in which the test image is brighter than the bgimg, mask them out
+        
+
+        cv2.imwrite('/home/flyranch/Desktop/fgmask_not_smoothed_after.jpg',fgmask_not_smoothed)
+        cv2.imwrite('/home/flyranch/Desktop/bgimg.jpg',bgimg)
+        cv2.imwrite('/home/flyranch/Desktop/gray_bgimg.jpg',gray_bgimg)
+        cv2.imwrite('/home/flyranch/Desktop/gray_test_image.jpg',gray_test_image)
+        cv2.imwrite('/home/flyranch/Desktop/mask.jpg',mask)
+        cv2.imwrite('/home/flyranch/Desktop/bg_masked_by_fgmask.jpg',bg_masked_by_fgmask)
+        cv2.imwrite('/home/flyranch/Desktop/test_image_masked_by_fgmask.jpg',test_image_masked_by_fgmask)
+        cv2.imwrite('/home/flyranch/Desktop/difference_img_under_mask.jpg',difference_img_under_mask)
+
+
         return fgmask_not_smoothed
 
     #### eventually want to not use this ####
@@ -487,6 +507,14 @@ class TrapcamAnalyzer:
         #fgmask_notsmoothed = fgbg.apply(test_image, None, 0) # the 0 specifies that no learning is occurring   <--- this yields a 2d matrix of 0s and 255s as the foreground mask
         fgmask_notsmoothed = self.eliminate_foreground_pixels_brighter_than_bgimg(fgbg,test_image)
         ### fgmask1 is smoothed foreground mask
+
+
+        print(index)
+        if index==600:
+            print(actual_timestamp)
+        #    pdb.set_trace()
+
+
         fgmask1, morph_open_iteration_number, morph_ellipse_size = self.smooth_image(fgmask_notsmoothed)
         contours, hierarchy = cv2.findContours(fgmask1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         flies_on_trap = [{} for _ in range(30000)]
@@ -664,16 +692,19 @@ class TrapcamAnalyzer:
                                                     full_image_stack,
                                                     filename_stack,
                                                     video_dir):
+        fgbg=cv2.createBackgroundSubtractorMOG2(history=self.train_num,varThreshold=self.mahalanobis_squared_thresh,detectShadows=False)
+        #fgbg=cv2.createBackgroundSubtractorMOG2(history=self.train_num,varThreshold=self.mahalanobis_squared_thresh,detectShadows=True)
+        ### history = length of history (default=500), if 1, it shows only previous 1 frame affects the current frame
+        ### varThreshold = this value determines whether a pixel is well described by its background model (Default=16), highly value detect new pixels which are extremely different from the background model
+        ### detectShadows = determines whether shadows are given importance in the scene. Detects shadows.(Default=True)
 
-
-        fgbg = cv2.createBackgroundSubtractorMOG2(history =self.train_num, varThreshold = self.mahalanobis_squared_thresh, detectShadows = False)
-        standard_out_array_length = len(full_image_stack) -self.train_num -self.buffer_btw_training_and_test
-        sample_image_zero =  np.zeros_like(full_image_stack[0]) # <---- just using the first image as an "example" to be sure I preallocate the array with the right data type, dimensions etc
+        standard_out_array_length=len(full_image_stack)-self.train_num-self.buffer_btw_training_and_test
+        sample_image_zero=np.zeros_like(full_image_stack[0]) # <---- just using the first image as an "example" to be sure I preallocate the array with the right data type, dimensions etc
         # annotated_output_stack = np.stack([sample_image_zero for _ in range(standard_out_array_length)], axis = 0)
-        time_since_release_list = np.zeros(standard_out_array_length)
-        analyzed_filename_stack = ['']*(standard_out_array_length)
-        all_flies_over_time = [{} for _ in range(standard_out_array_length)]  # <-----
+        time_since_release_list=np.zeros(standard_out_array_length)
+        analyzed_filename_stack=['']*(standard_out_array_length)
 
+        all_flies_over_time = [{} for _ in range(standard_out_array_length)]
         all_contrast_metrics = np.zeros(standard_out_array_length*2000)# <---- vastly over-allocated assuming 2000 flies per analyzed frame; will need to trim zeros using a counter of contrast metrics
         contrast_metric_count = 0
         last_frame_contrast_metric_count =0
@@ -687,7 +718,7 @@ class TrapcamAnalyzer:
 
 
         for index, training_image in enumerate(full_image_stack):
-            if index%250==0:
+            if index%100==0:
                 print('thank you for your patience!')
             if index%5==0:
                 print('.')
@@ -698,20 +729,28 @@ class TrapcamAnalyzer:
             elif index%5==3:
                 print('....')
             elif index%5==4:
-                print('.....'+str(index))
-
-
+                print('.....'+str(index+1))
 
             fgbg.apply(training_image, None, -1) # TRAINING STEP.
-            if index > self.train_num-1: # when current index is less than train_num, the model hasn't been trained on the specified number of frames. After this point, the declaration of history = train_num should make the model "forget" earlier frames so it works as a sliding window
-                test_index = index+self.buffer_btw_training_and_test
+            if index>self.train_num-1: # when current index is less than train_num, the model hasn't been trained on the specified number of frames. After this point, the declaration of history = train_num should make the model "forget" earlier frames so it works as a sliding window
+                test_index=index+self.buffer_btw_training_and_test
                 try:
-                    test_image = full_image_stack[test_index]
-                    test_filename = filename_stack[test_index]
+                    test_image=full_image_stack[test_index]
+                    test_filename=filename_stack[test_index]
                 except:
                     break
                 ## KH ADDED ANNOTATED_FGMASK1 7.27.21
-                original_image, annotated_fgmask1,annotated_output_image, annotated_output_image2, time_since_release, dict_to_add_to_all_flies_over_time, frame_contrast_metrics, frame_contrast_metric_count, frame_fly_contour_areas, morph_open_iteration_number, morph_ellipse_size, smoothed_foreground_mask= self.testing_step_of_backsub_MOG2(index, fgbg, test_image, self.get_time_since_release_from_filename(name = test_filename),self.get_timestamp(name = test_filename))
+                original_image, annotated_fgmask1,annotated_output_image\
+                ,annotated_output_image2,time_since_release\
+                ,dict_to_add_to_all_flies_over_time,frame_contrast_metrics\
+                ,frame_contrast_metric_count,frame_fly_contour_areas\
+                ,morph_open_iteration_number,morph_ellipse_size,smoothed_foreground_mask\
+                =self.testing_step_of_backsub_MOG2(index,fgbg,test_image,
+                    self.get_time_since_release_from_filename(name=test_filename),
+                    self.get_timestamp(name=test_filename))
+                
+        #####        pdb.set_trace()
+
                 time_since_release_list [index -self.train_num] = time_since_release
                 analyzed_filename_stack [index -self.train_num] = test_filename
                 all_flies_over_time     [index -self.train_num] = dict_to_add_to_all_flies_over_time
@@ -777,6 +816,7 @@ class TrapcamAnalyzer:
                 concat_img2=cv2.vconcat([img3,img4])
                 concat_img3=cv2.hconcat([concat_img1,concat_img2]) #4 figures to 1 figure
                 cv2.imwrite(video_dir + "%04d.jpg" % time_for_filename_four_figures, concat_img3)
+
 
         all_contrast_metrics = all_contrast_metrics[0:contrast_metric_count-1] #trimming trailing zeros
         all_fly_contour_areas = all_fly_contour_areas[0:fly_contour_area_count-1]# trimming trailing zeros
@@ -1017,26 +1057,12 @@ class TrapcamAnalyzer:
             json.dump(parameter_dictionary,f, indent = 1)
 
 
-#    def make_full_mask(self,sample_image):
-#        '''
-#        returns a mask where the values are 1came
-#        sample_image is row, col, color
-#        mask has dimensions row,col
-#        '''
-#        pdb.set_trace()
-#        [nrows,ncols,colors]=np.shape(sample_image)
-#        mask=np.int8(np.zeros((nrows,ncols)))
-#        mask[100:-100,100:-100]=1
-#        mask[200:-200,200:-200]=1        
-#        return mask
-
-
 # --------------------------------------------------------------------------------------------------------
     def run(self):
         timelapse_directory = self.directory +'/trapcam_timelapse/'+self.trap
-        square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
-        full_filename_list = self.get_filenames(path = timelapse_directory, contains = "tl", does_not_contain = ['th']) #  full list of image filenames in the folder
-        filename_list = ['']*(len(full_filename_list))  
+        square_mask = self.load_mask(square_mask_path=timelapse_directory+'/mask.jpg')
+        full_filename_list = self.get_filenames(path=timelapse_directory, contains = "tl", does_not_contain = ['th']) #  full list of image filenames in the folder
+        filename_list = ['']*(len(full_filename_list)) 
         image_count = 0
 
         for filename in full_filename_list:
@@ -1051,54 +1077,23 @@ class TrapcamAnalyzer:
         filename_list = filename_list[0:image_count]
         del(full_filename_list)
 
-#        selected_image=self.load_color_image(filename_list[40])
-#        sample_image=np.zeros_like(selected_image)
         sample_image =  np.zeros_like(self.load_color_image(filename_list[40]))
-#        sample_image =  np.zeros_like(self.load_color_image(filename_list[10]))
-#        if self.USE_FULL_MASK:
-#            square_mask=self.make_full_mask(sample_image)
-#        else:
-#        square_mask = self.load_mask(square_mask_path = timelapse_directory+'/mask.jpg')
-
-#        del(full_filename_list)
-
         nrow, ncol, colors=np.shape(sample_image)
-#        if image_count>0:
-#            nrow, ncol, colors=np.shape(sample_image)
-#            stack_imgs=[np.zeros(shape=(nrow,ncol,colors), dtype=np.int8) for _ in range(image_count)]
-#            tst_array=np.stack(stack_imgs,axis=0)
-#        stack_imgs=[np.zeros(shape=(nrow,ncol,colors), dtype=np.int8) for _ in range(image_count)]
-
-        print('creating masked image stack')
-#        masked_image_stack = np.stack([sample_image for _ in range(image_count)], axis = 0)
-#        masked_image=[sample_image for _ in range(image_count)]
-#        masked_image_stack=np.stack(masked_image,axis=0)
-#        nrow, ncol, colors=np.shape(sample_image)
-#        masked_image_stack= np.ndarray(shape=((image_count+1),nrow,ncol,colors))
-
         masked_image_stack=np.zeros((image_count,nrow, ncol, colors),dtype=np.uint8)
+        print('masked image stack created')
 
-        print('created')
-        image_num = 0
-#        masked_image_stack_list=[]
+        image_num=0
 
         for filename in filename_list:
-            img = self.load_color_image(filename)
+            img=self.load_color_image(filename)
             if img is None:
                 print ('img is None!')
                 continue
             else:
-                masked_image_stack[image_num] = cv2.bitwise_and(img,img,mask = square_mask)
-#                masked_image=cv2.bitwise_and(img,img,mask = square_mask)
-#                masked_image_stack_list.append(masked_image)
+                masked_image_stack[image_num]=cv2.bitwise_and(img,img,mask=square_mask) ## mask set the region we want to focus on
                 image_num +=1
                 print("working w/: "+filename)
         del(img)
-#        pdb.set_trace()
-#        print('convert masked_image_stack_list to masked_image_stack_array')
-#        masked_image_stack_array=np.stack(masked_image_stack_list,axis=0)
-
-        
 
         print ('length of masked image stack: '+str(len(masked_image_stack)))
 
@@ -1110,10 +1105,12 @@ class TrapcamAnalyzer:
         annotated_frame_dir = self.directory+'/all_traps_analyzed_videos/'+self.trap+'_videos/'+timestamp+'/annotated_frames/'
         subprocess.call(['mkdir', '-p', annotated_frame_dir])
 
-        all_flies_over_time, time_since_release_list, analyzed_filename_stack, all_contrast_metrics, all_fly_contour_areas, contrast_metric_list_of_lists, fly_contour_area_list_of_lists, morph_open_iteration_number, morph_ellipse_size =self.find_contours_using_pretrained_backsub_MOG2(full_image_stack = masked_image_stack,
-                                                                            filename_stack = filename_list,
-                                                                            video_dir = annotated_frame_dir)
-
+        all_flies_over_time,time_since_release_list,analyzed_filename_stack,all_contrast_metrics,all_fly_contour_areas,\
+        contrast_metric_list_of_lists,fly_contour_area_list_of_lists,morph_open_iteration_number,morph_ellipse_size=\
+        self.find_contours_using_pretrained_backsub_MOG2(full_image_stack=masked_image_stack,
+                                                                            filename_stack=filename_list,
+                                                                            video_dir=annotated_frame_dir)
+        #####pdb.set_trace()
         ########### NOW TO STEP THROUGH FRAMES IN ANNOTATED_OUTPUTSTACK
         del(masked_image_stack) # <--- if I'm properly managing references to masked_image_stack, this shouldn't really be necessary
 

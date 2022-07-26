@@ -26,6 +26,7 @@ data_path2=os.path.join(o_dir,'*jpg')
 filelist2=glob.glob(data_path2)
 sorted_files2=sorted(filelist2)
 
+
 ### rename files
 count=1
 for file2 in sorted_files2:
@@ -41,10 +42,12 @@ for file2 in sorted_files2:
 	pre="tl_0000_"+c+"_"
 	mid=date+"_"
 	dis=len(o_dir)
-	time=file2[dis+1:dis+3]+file2[dis+4:dis+6]+file2[dis+7:dis+9]
+	time=str(0)+file2[dis+14:dis+19] ###for 20220725 exp
+#	time=file2[dis+1:dis+3]+file2[dis+4:dis+6]+file2[dis+7:dis+9]
 	ext=".jpg"
 
 	filename=pre+mid+time+ext
+#	pdb.set_trace()
 	dst=o_dir+"/"+filename
 	os.rename(file2,dst)
 	count=count+1

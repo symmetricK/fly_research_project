@@ -7,7 +7,7 @@ import shutil
 import pdb
 
 
-image_dir = input("Enter a experiment directory you'd like to make a mask: ")
+image_dir = input("Enter a directory name (without trap_) you'd like to create a mask: ")
 img_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/trap_"+image_dir
 data_path=os.path.join(img_dir,'*g')
 files=glob.glob(data_path)
@@ -52,5 +52,8 @@ img2[:,int(x1):ncols]=1
 
 filename2=img_dir+"/mask_check.jpg"
 cv2.imwrite(filename2,img2)
+
+
+#pdb.set_trace()
 
 print("please, check mask_check.jpg in trap_"+image_dir+" folder in trapcam_timelapse directory")

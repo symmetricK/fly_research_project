@@ -327,7 +327,7 @@ class TrapcamAnalyzer:
         if in_trap_count!=0:
             cv2.putText(color_image,"in trap(square): "+str(in_trap_count),(150,1740),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 0),2)
         if not_fly_count!=0:
-            cv2.putText(color_image,"not fly: "+str(not_fly_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
+            cv2.putText(color_image,"excluded by contour size: "+str(not_fly_count),(150,1780),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 255),2)
         cv2.putText(color_image,"total: "+str(rejected_by_contrast_metric_count+rejected_by_perimeter_contrast_count+rejected_by_low_area_on_trap_count+
             rejected_by_high_area_in_trap_count+on_trap_count+in_trap_count+not_fly_count),(150,1820),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 0),2)
 
@@ -361,9 +361,17 @@ class TrapcamAnalyzer:
 
     def eliminate_foreground_pixels_brighter_than_bgimg(self, fgbg, test_image):
         fgmask_not_smoothed = fgbg.apply(test_image, None, 0)# the 0 specifies that no learning is occurring
-
-        cv2.imwrite('/home/flyranch/Desktop/test_image.jpg',test_image)
-        cv2.imwrite('/home/flyranch/Desktop/fgmask_not_smoothed_before.jpg',fgmask_not_smoothed)
+        ### for just analysis
+        t=format((time.time()),'.6f')
+        #################
+        #################
+        #################
+        #pdb.set_trace()
+        ################
+        ################
+        ################
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'test_image.jpg',test_image)
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'fgmask_not_smoothed_before.jpg',fgmask_not_smoothed)
 
 
         bgimg = fgbg.getBackgroundImage()
@@ -376,15 +384,14 @@ class TrapcamAnalyzer:
         fgmask_not_smoothed[np.where(difference_img_under_mask > 0)] = 0 # <----- for any regions in which the test image is brighter than the bgimg, mask them out
         
 
-        cv2.imwrite('/home/flyranch/Desktop/fgmask_not_smoothed_after.jpg',fgmask_not_smoothed)
-        cv2.imwrite('/home/flyranch/Desktop/bgimg.jpg',bgimg)
-        cv2.imwrite('/home/flyranch/Desktop/gray_bgimg.jpg',gray_bgimg)
-        cv2.imwrite('/home/flyranch/Desktop/gray_test_image.jpg',gray_test_image)
-        cv2.imwrite('/home/flyranch/Desktop/mask.jpg',mask)
-        cv2.imwrite('/home/flyranch/Desktop/bg_masked_by_fgmask.jpg',bg_masked_by_fgmask)
-        cv2.imwrite('/home/flyranch/Desktop/test_image_masked_by_fgmask.jpg',test_image_masked_by_fgmask)
-        cv2.imwrite('/home/flyranch/Desktop/difference_img_under_mask.jpg',difference_img_under_mask)
-
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'fgmask_not_smoothed_after.jpg',fgmask_not_smoothed)
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'bgimg.jpg',bgimg)
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'gray_bgimg.jpg',gray_bgimg)
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'gray_test_image.jpg',gray_test_image)
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'mask.jpg',mask)
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'bg_masked_by_fgmask.jpg',bg_masked_by_fgmask)
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'test_image_masked_by_fgmask.jpg',test_image_masked_by_fgmask)
+    #    cv2.imwrite('/home/flyranch/Desktop/analysis_video/2021_10_30_E/'+t+'difference_img_under_mask.jpg',difference_img_under_mask)
 
         return fgmask_not_smoothed
 
@@ -509,7 +516,7 @@ class TrapcamAnalyzer:
         ### fgmask1 is smoothed foreground mask
 
 
-        print(index)
+        #print(index)
         if index==600:
             print(actual_timestamp)
         #    pdb.set_trace()
@@ -1101,7 +1108,7 @@ class TrapcamAnalyzer:
         c_time=now.strftime("%Y%m%d%H%M%S")
 
 #        timestamp = str(int(time.time())) +'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
-        timestamp=filename_list[30][-19:-4]+'_'+filename_list[-1][-10:-4]+'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)+'_'+c_time
+        timestamp=filename_list[self.train_num+1][-19:-4]+'_'+filename_list[-1][-10:-4]+'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)+'_'+c_time
         annotated_frame_dir = self.directory+'/all_traps_analyzed_videos/'+self.trap+'_videos/'+timestamp+'/annotated_frames/'
         subprocess.call(['mkdir', '-p', annotated_frame_dir])
 

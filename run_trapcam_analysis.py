@@ -11,7 +11,7 @@ dir='2021lab'
 print ('')
 while True:
     analyze_trap_list = []
-    letter = input("Enter a trap letter to analyze (e.g. 2022_03_17_WT):" )
+    letter = input("Enter a trap name to analyze (e.g. 2022_03_17_WT):" )
     analyze_trap_list.append('trap_'+letter)
     while True:
 ###        letter = input("Enter another trap letter to analyze, or enter 'go' to start batch analysis: ")
@@ -42,6 +42,8 @@ if thresh_or_final =='threshold':
 if thresh_or_final == 'final':
     calculate_final = True
 
+date=input("Enter what date did you do this experiment (e.g. 20220725): ")
+
 for trap in analyze_trap_list:
-    analyzer = t.TrapcamAnalyzer(dir, trap, calculate_threshold, calculate_final)
+    analyzer = t.TrapcamAnalyzer(dir, trap, date, calculate_threshold, calculate_final)
     analyzer.run()

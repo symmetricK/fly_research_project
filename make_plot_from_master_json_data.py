@@ -3,12 +3,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pdb
 import sys
+import os
+
+
+
+def time_converter(timestamp):
+	### convert time stamp to seconds
+	sec=int(timestamp[:2])*3600+int(timestamp[3:5])*60+int(timestamp[6:8])
+	return sec
+
 
 #ask user input
-trap=input("Enter a trap letter to analyze: ")
+trap=input("Enter a trap name you would like to make plots without (trap_): ")
+date=input("what date did you release flies (e.g. 20220725): ")
 
-
-f=open('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_json_files/trap_'+trap+'/master_trap_'+trap+'.json')
+f=open('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_json_files/'+date+'/trap_'+trap+'/master_trap_'+trap+'.json')
 data=json.load(f)
 
 
@@ -76,7 +85,8 @@ not_fly_acc_list=make_accumulation_list(not_fly_list)
 combined_in_on_trap_list=[x+y for (x,y) in zip(on_trap_list,in_trap_list)]
 combined_acc_in_on_trap_list=[x+y for (x,y) in zip(on_trap_acc_list,in_trap_acc_list)]
 
-n_fly=input("You want to see not fly data on the plot? (y or n): ")
+#n_fly=input("You want to see excluded by contour data on the plot? (y or n): ")
+n_fly='n'
 x1 = np.linspace(0.0, 5.0)
 x2 = np.linspace(0.0, 2.0)
 
@@ -89,6 +99,7 @@ if n_fly=="y":
 	fig.suptitle('Plots of Fly Data per Frame with Not Fly Data: trap_'+trap,size=30)
 if n_fly=="n":
 	fig.suptitle('Plots of Fly Data per Frame: trap_'+trap,size=30)
+
 
 
 #ax1.plot(sec_since_release_list, on_trap_list, '-o',Markersize=6,color="r",label="on trap")
@@ -109,6 +120,8 @@ for time in actual_timestamp_list:
 	if time==released_time:
 		m=actual_timestamp_list.index(time)
 	elif (int(time[0:2])*3600+int(time[3:5])*60+int(time[6:8]))==(int(released_time[0:2])*3600+int(released_time[3:5])*60+int(released_time[6:8])+1):
+		m=actual_timestamp_list.index(time)
+	elif (int(time[0:2])*3600+int(time[3:5])*60+int(time[6:8]))==(int(released_time[0:2])*3600+int(released_time[3:5])*60+int(released_time[6:8])-1):
 		m=actual_timestamp_list.index(time)
 
 
@@ -141,7 +154,8 @@ for time in actual_timestamp_list:
 
 
 #pdb.set_trace()
-cut=input("You want to cut last three minutes data?(y or n): ")
+#cut=input("You want to cut last three minutes data?(y or n): ")
+cut='n'
 #shortened list to focus on max after starting
 if cut=='y':
 	shortened_actual_timestamp_list=actual_timestamp_list[m:-1-90]
@@ -154,6 +168,12 @@ else:
 	shortened_in_trap_list=in_trap_list[m:len(in_trap_list)]
 	shortened_combined_in_on_trap_list=combined_in_on_trap_list[m:len(combined_in_on_trap_list)]
 
+nonzero_ind=[idx for idx, val in enumerate(shortened_on_trap_list) if val != 0]
+travel_time=time_converter(shortened_actual_timestamp_list[nonzero_ind[0]])-time_converter(shortened_actual_timestamp_list[0])
+First='frame '+shortened_actual_timestamp_list[nonzero_ind[0]][0:2]+shortened_actual_timestamp_list[nonzero_ind[0]][3:5]+shortened_actual_timestamp_list[nonzero_ind[0]][6:8]+' has the first on trap flies: travel time is '+str(travel_time)+' sec'
+#print('frame '+shortened_actual_timestamp_list[nonzero_ind[0]][0:2]+shortened_actual_timestamp_list[nonzero_ind[0]][3:5]+shortened_actual_timestamp_list[nonzero_ind[0]][6:8]+' has the first on trap flies: travel time is '+str(travel_time))
+print(First)
+Peak=''
 for i in range(len(shortened_actual_timestamp_list)):
 	if np.max(shortened_on_trap_list)==shortened_on_trap_list[i]:
 		if len(on_trap_max_list)==0:
@@ -162,6 +182,7 @@ for i in range(len(shortened_actual_timestamp_list)):
 		else:
 			ax1.plot(shortened_actual_timestamp_list[i],shortened_on_trap_list[i],'o',markersize=10,color="r")
 			print('frame '+shortened_actual_timestamp_list[i][0:2]+shortened_actual_timestamp_list[i][3:5]+shortened_actual_timestamp_list[i][6:8]+' has the most flies on trap: '+str(int(shortened_on_trap_list[i])))		
+		Peak='frame '+shortened_actual_timestamp_list[i][0:2]+shortened_actual_timestamp_list[i][3:5]+shortened_actual_timestamp_list[i][6:8]+' has the most flies on trap: '+str(int(shortened_on_trap_list[i]))
 		on_trap_max_list.append(shortened_actual_timestamp_list[i])	
 	if np.max(shortened_in_trap_list)==shortened_in_trap_list[i]:
 		if len(in_trap_max_list)==0:
@@ -260,7 +281,17 @@ ax2.set_xlabel('seconds since released',size=24)
 ax2.set_ylabel('total number of flies',size=24)
 ax2.legend(loc="upper left",fontsize=14)
 
+path='/home/flyranch/field_data_and_analysis_scripts/2021lab/analyzed_plot_figures/'
+ex_path=path+date
+
+# Check whether the specified path exists or not
+isExist = os.path.exists(ex_path)
+
+if not isExist:  
+  # Create a new directory because it does not exist 
+    os.mkdir(ex_path)
+
 if n_fly=="y":
-	plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_plots_figures/trap_'+trap+'_with_not_fly_plots.jpg')
+	plt.savefig(ex_path+'/trap_'+trap+'_with_not_fly_plots.jpg')
 if n_fly=="n":
-	plt.savefig('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_plots_figures/trap_'+trap+'_plots.jpg')
+	plt.savefig(ex_path+'/trap_'+trap+'_plots.jpg')

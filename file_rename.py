@@ -5,17 +5,15 @@ import pdb
 
 directry=input("Enter a directory name (without trap_) which has files you'd like to rename: ")
 #directry="2022_03_17_WT"
+date=input("Enter what date did you do this experiment (e.g. 20220317 (yyyymmdd)): ")
 
-o_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/trap_"+directry
+o_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/"+date+"/trap_"+directry
 data_path=os.path.join(o_dir,'*jpg')
 filelist=glob.glob(data_path)
 sorted_files=sorted(filelist)
 rm_files=sorted_files[1::2]
 
-date=input("Enter what date did you do this experiment (e.g. 20220317 (yyyymmdd)): ")
-#date="20220317"
-
-### remove the same hh/mm/ss files (to make 1 frame/second)
+### remove (the same hh/mm/ss) files (to make 1 frame/second)
 for f in sorted_files:
 	for file in rm_files:
 		if f==file:

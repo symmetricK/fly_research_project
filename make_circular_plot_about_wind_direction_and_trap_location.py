@@ -9,7 +9,7 @@ import sys
 import json
 import pandas as pd
 
-wind_data=input("Enter wind data text file you would like to make a plot (e.g. 2021_10_19): ")
+wind_data=input("Enter wind data text file you would like to make a circular plot (e.g. 2021_10_19): ")
 
 directory="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/wind_"+wind_data+".txt"
 wind_df=pd.read_csv(directory,delimiter=' ',header=None)
@@ -68,11 +68,11 @@ a_wind_df['wind_speed']=a_wind_df['wind_speed']*0.44704 # convert mph to m/s
 
 
 
-I=15.0 # degree for trap I
-J=195.0 # degree for trap J
+#I=15.0 # degree for trap I
+#J=195.0 # degree for trap J
 
-theta1=np.deg2rad([I,I]) # trap I
-theta2=np.deg2rad([J,J]) # trap J
+#theta1=np.deg2rad([I,I]) # trap I
+#theta2=np.deg2rad([J,J]) # trap J
 r=[0,1.0]
 
 min_len=5 # initial 5min
@@ -83,7 +83,7 @@ a=1 #number of rows
 b=5 #number of columns
 c=1 #plot counter
 
-release_time=1420
+release_time=input("what time did you release flies (e.g. 1420): ")
 
 dir_list=[]
 spd_list=[]
@@ -114,6 +114,6 @@ for i in np.arange(min_len):
     ax1.plot(wind_d_theta,[0,spd_list[i]],marker='X',ls='--',color='k')
     c=c+1
 
-path="/home/flyranch/field_data_and_analysis_scripts/2021lab/refs_for_presentation/"
+path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_plot_figures/"
 
-plt.savefig(path+'wind_d_circular_plot.svg')
+plt.savefig(path+wind_data+'_wind_d_circular_plot.svg')

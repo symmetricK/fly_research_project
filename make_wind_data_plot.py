@@ -6,10 +6,15 @@ import pandas as pd
 import time
 import datetime
 
+
+##### wind speed-time plot with wind direction #####
+
+
 wind_data=input("Enter wind data text file you would like to make a plot (e.g. 2021_10_19): ")
 release=input("what time did you release flies (e.g. 1420): ")
+data_path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/wind_"
 
-directory="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/wind_"+wind_data+".txt"
+directory=data_path+wind_data+".txt"
 wind_df=pd.read_csv(directory,delimiter=' ',header=None)
 wind_df.columns=("time","direction","wind_speed")
 
@@ -64,7 +69,7 @@ new_wind_df=wind_df.groupby(['time'], as_index=False).mean()
 new_wind_df['direction']=mean_angle_list
 
 new_t_list=new_wind_df['time']
-new_s_list=new_wind_df['wind_speed']
+new_s_list=new_wind_df['wind_speed']*0.44704 # convert mph to m/s
 new_d_list=new_wind_df['direction'] 
 new_n_list=list(np.arange(1,len(new_t_list)+1))
 
@@ -72,22 +77,11 @@ fig=plt.figure(figsize=(20,10))
 ax=plt.axes()
 
 plt.plot(new_n_list, new_s_list, '-',markersize=6,color="r")
+plt.title('Time-Speed with Wind Direction')
 plt.xlabel('Time')
-plt.ylabel('Wind Speed')
-
+plt.ylabel('Wind Speed (m/s)')
 ax.set_xticks(new_n_list)
-#ax.set_xticklabels(new_t_list,rotation=45)
-
-
-since_sec_list=[]
-for i in new_n_list:
-    sec=(i-16)*60
-    since_sec_list.append(sec)
-
-ax.set_xticklabels(since_sec_list,rotation=45) # show sec_since_release on xticks
-
-
-
+ax.set_xticklabels(new_t_list,rotation=45)
 x_min=np.min(new_n_list)
 x_max=np.max(new_n_list)
 y_min=np.min(new_s_list)
@@ -104,4 +98,8 @@ for i in range(len(new_n_list)):
     if new_t_list[i]==release:
         ax.axvline(x=i+1,ymax=y_max,ls='--',color='b')
 
-plt.savefig("/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/wind_"+wind_data+".png",dpi=600)
+
+path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_plot_figures/"
+
+plt.savefig(path+wind_data+'_wind_time_plot.svg')
+

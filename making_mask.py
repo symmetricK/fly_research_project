@@ -8,7 +8,8 @@ import pdb
 
 
 image_dir = input("Enter a directory name (without trap_) you'd like to create a mask: ")
-img_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/trap_"+image_dir
+date=input("Enter what date did you do this experiment (e.g. 20220725): ")
+img_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/"+date+"/trap_"+image_dir
 data_path=os.path.join(img_dir,'*g')
 files=glob.glob(data_path)
 
@@ -56,4 +57,4 @@ cv2.imwrite(filename2,img2)
 
 #pdb.set_trace()
 
-print("please, check mask_check.jpg in trap_"+image_dir+" folder in trapcam_timelapse directory")
+print("please, check mask_check.jpg in trap_"+image_dir+" folder in trapcam_timelapse/"+date+" directory")

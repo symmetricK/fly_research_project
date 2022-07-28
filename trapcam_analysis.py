@@ -19,10 +19,11 @@ from datetime import datetime
 #tracker = SummaryTracker()
 
 class TrapcamAnalyzer:
-    def __init__(self, directory, trap='trap_A', 
+    def __init__(self, directory, trap='trap_A', date='date',
     	calculate_threshold=False, calculate_final=True):  # <---- instances of this class will specify the directory, most likely using directory = sys.argv[1]
         self.directory = directory
         self.USE_FULL_MASK=False
+        self.date=date
         self.trap = trap
         #print(threshold)
         #self.calculate_threshold=calculate_threshold
@@ -990,7 +991,7 @@ class TrapcamAnalyzer:
 
 
             print('creating a directory if not exists...')
-            path=self.directory+'/all_traps_final_analysis_json_files/'+self.trap
+            path=self.directory+'/all_traps_final_analysis_json_files/'+self.date+'/'+self.trap
             if not os.path.exists(path):
                 os.makedirs(path)
 
@@ -1066,7 +1067,7 @@ class TrapcamAnalyzer:
 
 # --------------------------------------------------------------------------------------------------------
     def run(self):
-        timelapse_directory = self.directory +'/trapcam_timelapse/'+self.trap
+        timelapse_directory = self.directory +'/trapcam_timelapse/'+self.date+'/'+self.trap
         square_mask = self.load_mask(square_mask_path=timelapse_directory+'/mask.jpg')
         full_filename_list = self.get_filenames(path=timelapse_directory, contains = "tl", does_not_contain = ['th']) #  full list of image filenames in the folder
         filename_list = ['']*(len(full_filename_list)) 
@@ -1109,7 +1110,7 @@ class TrapcamAnalyzer:
 
 #        timestamp = str(int(time.time())) +'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)
         timestamp=filename_list[self.train_num+1][-19:-4]+'_'+filename_list[-1][-10:-4]+'_mahal'+str(self.mahalanobis_squared_thresh) +'_trainnum'+str(self.train_num)+'_'+c_time
-        annotated_frame_dir = self.directory+'/all_traps_analyzed_videos/'+self.trap+'_videos/'+timestamp+'/annotated_frames/'
+        annotated_frame_dir = self.directory+'/all_traps_analyzed_videos/'+self.date+'/'+self.trap+'_videos/'+timestamp+'/annotated_frames/'
         subprocess.call(['mkdir', '-p', annotated_frame_dir])
 
         all_flies_over_time,time_since_release_list,analyzed_filename_stack,all_contrast_metrics,all_fly_contour_areas,\
@@ -1126,7 +1127,7 @@ class TrapcamAnalyzer:
         with open(self.directory+'/all_contrast_metrics/'+self.trap+'.json', mode = 'w') as f:
             json.dump(contrast_metric_dictionary,f, indent = 1)
 
-        annotated_frames_plus_graphs_dir = self.directory+'/all_traps_analyzed_videos/'+self.trap+'_videos/'+timestamp+'/annotated_frames_plus_graphs'
+        annotated_frames_plus_graphs_dir = self.directory+'/all_traps_analyzed_videos/'+self.date+'/'+self.trap+'_videos/'+timestamp+'/annotated_frames_plus_graphs'
         subprocess.call(['mkdir', annotated_frames_plus_graphs_dir])
 
         output_directory = self.step_through_annotated_output_stack(all_flies_over_time,

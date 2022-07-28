@@ -60,7 +60,7 @@ def merge_dict(dict3,dict4):
 	return dict6
 
 
-trap=input("Enter a trap letter you'd like to make a master json file: ")
+trap=input("Enter a trap name you'd like to make a master json file without(trap_): ")
 
 directory='/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_json_files/trap_'+trap
 

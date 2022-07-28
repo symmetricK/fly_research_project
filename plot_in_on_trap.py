@@ -6,7 +6,7 @@ import sys
 #modified TW to save EPS
 
 #ask user input
-trap=input("Enter a trap letter to analyze: ")
+trap=input("Enter a trap name to analyze without(trap_): ")
 
 
 f=open('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_json_files/trap_'+trap+'/master_trap_'+trap+'.json')
@@ -51,7 +51,7 @@ def calc_sec_since_release(standard,time_stamp):
 	return sec_since_release
 
 #to plot 1 min before release
-pdb.set_trace()
+#pdb.set_trace()
 for i in actual_timestamp_list:
 	s=calc_sec_since_release(released_time,i)
 	if s>=-60:

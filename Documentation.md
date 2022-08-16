@@ -12,23 +12,23 @@ Just in case, keep raw data!
 	Raw data were copied from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
 
 #### Step 2. copy raw data into trapcam_timelapse directory
-Run **python3 copy_raw_data.py**
+1. Run **python3 copy_raw_data.py**
 
-Enetr release date (e.g. 20220317 (yyyymmdd)), then, automatically subdirectory would be created in trapcam_timelapse directory
-To complete, it takes a while
+2. Enetr release date (e.g. 20220317 (yyyymmdd)), then, automatically subdirectory would be created in trapcam_timelapse directory
+..* To complete, it takes a while
 
 	Raw data were copied from Field_Trap_Exps directory into trapcam_directory
 	At the same time, anemometer (wind) data text file was renamed and copied into "/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files"
 
 
 #### Step 3. rename image files
-Run **python3 file_rename.py**
+1. Run **python3 file_rename.py**
 
-Enter experiment date (e.g. 20220317 (yyyymmdd))
+2. Enter experiment date (e.g. 20220317 (yyyymmdd))
 
-Enter "y" or "n"
+3. Enter "y" or "n"
 
-If you choose "y", the even-numbered image files in each Pi cam file will be removed
+..* If you choose "y", the even-numbered image files in each Pi cam file will be removed
 	Each image file name and subdirectory name in trapcam_timelapse directory were changed
 
 #### Step 4. create mask image in Pi cam image directory (e.g. trap_Pi6_20220725090000)

@@ -49,7 +49,9 @@ You can go step by step
 
 
 	> mask_check.jpg and mask.jpg were created in trapcam_timelapse directory
+	 
 	> If the mask image is not good, you should try this step again
+	
 	> While running 'create_mask.py', you can quit by Ctrl+C on the terminal
 
 
@@ -58,7 +60,7 @@ You can go step by step
 2. Add information about the traps you want to analyze into **field_parameters.json** as well as exisiting data
 3. Add release time (e.g. 10:55:42 (hh:mm:ss)) into **field_parameters.json**
 
-	+ These json files are located in "2021lab" directory
+	> These json files are located in "2021lab" directory
 
 #### Step 6. do analysis 
 1. Run **run_trapcam_analysis.py**
@@ -83,11 +85,13 @@ You can go step by step
 4. Enter release time (e.g. 105542 (hhmmss)) @ See release note
 
  	> Plots for one trap related to on-trap flies and in-trap flies per frame were created in 'analyzed plot figures directory' 
- 	> You can see the specific frame info. on the terminal, so you should note them. 
+ 	
+	> You can see the specific frame info. on the terminal, so you should note them. 
  	      (e.g. frame 105604 has the first on trap fly: travel time is 22 sec
 	            frame 105854 has the most flies on trap: 30
 	            frame 111833 has the most flies in trap: 17)
- 	> Possibly, these specific frame info. were incorrect. You can double-check analyzed video images.
+ 	
+	> Possibly, these specific frame info. were incorrect. You can double-check analyzed video images.
  
 #### Step 9. create plots for all traps
 1. Run **python3 make_plot_for_all.py**
@@ -97,6 +101,7 @@ You can go step by step
 5. Enter another trap number located in upwind (e.g. 5) 
 
 	> Plot for all 8 traps related to on trap flies was created
+	
 	> assumed 8 traps were set in a clockwise direction
  
 #### Step 10. create wind data plot
@@ -106,6 +111,7 @@ You can go step by step
    * "seconds" are not required
 
 	> Plot for wind data from anemometer was created in wind_plot_figures directory
+	
 	> On the plot, vertical blue dot line shows release time, and black bar shows wind direction at that time
  
  

@@ -30,6 +30,7 @@ Just in case, keep raw data!
 3. Enter "y" or "n"
 
 ..* If you choose "y", the even-numbered image files in each Pi cam file will be removed
+
 	Each image file name and subdirectory name in trapcam_timelapse directory were changed
 
 #### Step 4. create mask image in Pi cam image directory (e.g. trap_Pi6_20220725090000)

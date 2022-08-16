@@ -1,94 +1,131 @@
 import numpy as np
-import cv2
-import matplotlib.pyplot as plt
-import os
-import glob
-import shutil
+import cv2 
 import pdb
+import sys
+import glob
+import os
 
 
-cropping=False
+image_dir=input("Enter a trap name (without trap_) you'd like to create a mask: ")
+date=input("Enter what date did you do this experiment (e.g. 20220725): ")
+print("Double click to make 4 points for mask on the image")
+path="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/"+date+"/trap_"+image_dir
+data_path=os.path.join(path,'*g')
+filelist=glob.glob(data_path)
+sorted_files=sorted(filelist)
 
-x_start,y_start,x_end,y_end=0,0,0,0
-
-
-image_dir = input("Enter a experiment directory you'd like to make a mask: ")
-img_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/trap_"+image_dir
-data_path=os.path.join(img_dir,'*g')
-files=glob.glob(data_path)
-
-
-
-img=cv2.imread(files[0])
-ori_image=img.copy()
-
-def mouse_crop(event, x, y, flags, param):
-    # grab references to the global variables
-    global x_start, y_start, x_end, y_end, cropping
-    # if the left mouse button was DOWN, start RECORDING
-    # (x, y) coordinates and indicate that cropping is being
-    if event==cv2.EVENT_LBUTTONDOWN:
-        x_start, y_start, x_end, y_end = x, y, x, y
-        cropping=True
-    # Mouse is Moving
-    elif event==cv2.EVENT_MOUSEMOVE:
-        if cropping==True:
-            x_end, y_end=x, y
-    # if the left mouse button was released
-    elif event==cv2.EVENT_LBUTTONUP:
-        # record the ending (x, y) coordinates
-        x_end, y_end=x, y
-        cropping=False # cropping is finished
-        refPoint=[(x_start, y_start), (x_end, y_end)]
-        if len(refPoint)==2: #when two points were found
-            roi=ori_image[refPoint[0][1]:refPoint[1][1], refPoint[0][0]:refPoint[1][0]]
-            cv2.imshow("Cropped", roi)
-
-cv2.namedWindow("image",cv2.WINDOW_NORMAL)
-cv2.setMouseCallback("image",mouse_crop)
+img=cv2.imread(sorted_files[-500]) ### perhaps, it needs to change to run properly 
 
 
-while True:
-    i=img.copy()
-    if not cropping:
-        cv2.imshow("image",img)
-    elif cropping:
-        cv2.rectangle(i, (x_start, y_start), (x_end, y_end), (255, 0, 0), 2)
-        cv2.imshow("image", i)
-    cv2.waitKey(1)
-# close all open windows
+# Resize image
+scale_percent=50 
+width=int(img.shape[1]*scale_percent / 100)
+height=int(img.shape[0]*scale_percent / 100)
+dim=(width, height)
+image=cv2.resize(img,dim)
+
+
+global x_lst,y_lst
+x_lst=[]
+y_lst=[]
+
+def draw_circle(event,x,y,flags,param):
+    global mouseX,mouseY
+
+    if event == cv2.EVENT_LBUTTONDBLCLK:
+        cv2.circle(image,(x,y),10,(255,0,0))
+        mouseX,mouseY = x,y
+
+
+cv2.namedWindow('image')
+cv2.setMouseCallback('image',draw_circle)
+
+
+while(1):
+    cv2.imshow('image',image)
+    k = cv2.waitKey(20) & 0xFF
+    if k == 27:
+        break
+    elif k == ord('a'):
+        print(mouseX)
+        print(mouseY)
+        if (len(x_lst)<4):
+            x_lst.append(int(mouseX))
+            y_lst.append(int(mouseY))
+        elif (len(x_lst)>=4):
+            print(x_lst)
+            print(y_lst)
+            print("You saved 4 points already")
+            yes_no=input("Do you want to use these 4 points to make mask? (y or n): ")
+            if yes_no=='y':
+                x_MAX=int(max(x_lst)*(100/scale_percent))
+                x_MIN=int(min(x_lst)*(100/scale_percent))
+                y_MAX=int(max(y_lst)*(100/scale_percent))
+                y_MIN=int(min(y_lst)*(100/scale_percent))
+
+                [nrows,ncols,colors]=np.shape(img)
+                mask=np.int8(np.zeros((nrows,ncols)))
+                mask[int(y_MIN):int(y_MAX),int(x_MIN):int(x_MAX)]=1
+                file=path+"/mask.jpg"
+                cv2.imwrite(file,mask)
+                print("mask.jpg created")
+
+                #pdb.set_trace()
+                img[0:y_MIN,:]=1
+                img[y_MAX:img.shape[0],:]=1
+                img[:,0:x_MIN]=1
+                img[:,x_MAX:img.shape[1]]=1
+
+                filename=path+"/mask_check.jpg"
+                cv2.imwrite(filename,img)
+                print("please, check mask_check.jpg in "+path+" directory")
+                sys.exit()
+            elif yes_no=='n':
+                x_lst=[]
+                y_lst=[]
+                print("Try again")
+            else:
+                x_lst=[]
+                y_lst=[]
+                print("Try again")
+
+
+    elif k == ord('l'):
+        print(x_lst)
+        print(y_lst)
+        if len(x_lst)==4:
+            y_n=input("Do you want to use these 4 points to make mask? (y or n): ")
+            if y_n=='y':
+                x_MAX=int(max(x_lst)*(100/scale_percent))
+                x_MIN=int(min(x_lst)*(100/scale_percent))
+                y_MAX=int(max(y_lst)*(100/scale_percent))
+                y_MIN=int(min(y_lst)*(100/scale_percent))
+
+                [nrows,ncols,colors]=np.shape(img)
+                mask=np.int8(np.zeros((nrows,ncols)))
+                mask[int(y_MIN):int(y_MAX),int(x_MIN):int(x_MAX)]=1
+                file=path+"/mask.jpg"
+                cv2.imwrite(file,mask)
+                print("mask.jpg created")
+
+                #pdb.set_trace()
+                img[0:y_MIN,:]=1
+                img[y_MAX:img.shape[0],:]=1
+                img[:,0:x_MIN]=1
+                img[:,x_MAX:img.shape[1]]=1
+
+                filename=path+"/mask_check.jpg"
+                cv2.imwrite(filename,img)
+                print("please, check mask_check.jpg in "+path+" directory")
+                sys.exit()
+            elif y_n=='n':
+                x_lst=[]
+                y_lst=[]
+                print("Try again")
+            else:
+                x_lst=[]
+                y_lst=[]
+                print("Try again")
+
+
 cv2.destroyAllWindows()
-
-
-
-pdb.set_trace()
-
-[nrows,ncols,colors]=np.shape(img)
-mask=np.int8(np.zeros((nrows,ncols)))
-
-print("Decide the region of mask you want to focus on,")
-
-x0=input("x0:")
-x1=input("x1:")
-y0=input("y0:")
-y1=input("y1:")
-#pdb.set_trace()
-mask[int(y0):int(y1),int(x0):int(x1)]=1
-filename=img_dir+"/mask.jpg"
-cv2.imwrite(filename,mask)
-
-print("mask.jpg created")
-
-
-img2=cv2.imread(files[1])
-
-img2[0:int(y0),:]=1
-img2[int(y1):nrows,:]=1
-img2[:,0:int(x0)]=1
-img2[:,int(x1):ncols]=1
-
-
-filename2=img_dir+"/mask_check.jpg"
-cv2.imwrite(filename2,img2)
-
-print("please, check mask_check.jpg in trap_"+image_dir+" folder in trapcam_timelapse directory")

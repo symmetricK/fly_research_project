@@ -68,19 +68,11 @@ a_wind_df['wind_speed']=a_wind_df['wind_speed']*0.44704 # convert mph to m/s
 
 
 
-#I=15.0 # degree for trap I
-#J=195.0 # degree for trap J
 
-#theta1=np.deg2rad([I,I]) # trap I
-#theta2=np.deg2rad([J,J]) # trap J
-r=[0,1.0]
+min_len=10 # initial 5min
 
-min_len=5 # initial 5min
-
-fig1=plt.figure(figsize=(30,20))
-
-a=1 #number of rows
-b=5 #number of columns
+a=2 #number of rows
+b=min_len/a #number of columns
 c=1 #plot counter
 
 release_time=input("what time did you release flies (e.g. 1420): ")
@@ -89,11 +81,20 @@ dir_list=[]
 spd_list=[]
 
 for i in range(len(a_wind_df)):
-    if 1421<=int(a_wind_df['time'][i])<=1425:
+    if (int(release_time)+1)<=int(a_wind_df['time'][i])<=(int(release_time)+min_len):
         dir_list.append(a_wind_df['direction'][i])
         spd_list.append(a_wind_df['wind_speed'][i])
+
+I=15.0 # degree for trap I
+J=195.0 # degree for trap J
+
+theta1=np.deg2rad([I,I]) # trap I
+theta2=np.deg2rad([J,J]) # trap J
+r=[0,np.max(spd_list)+1]
         
 rad_dir_list=np.deg2rad(90-np.rad2deg(dir_list))
+
+fig1=plt.figure(figsize=(30,20))
 
 for i in np.arange(min_len):
     ax1=plt.axes()
@@ -103,15 +104,17 @@ for i in np.arange(min_len):
     ax1.set_yticks([])
     ax1.plot(theta1,r,'r')
     ax1.plot(theta2,r,'b')
-    ax1.text(np.radians(I),ax1.get_rmax()+0.15,'trap I (15°)',
-            ha='center',va='center')
-    ax1.text(np.radians(J),ax1.get_rmax()+0.15,'trap J (195°)',
-            ha='center',va='center')
-    ax1.text(np.radians(0),ax1.get_rmax()+0.4,str(release_time+c)[:2]+':'+str(release_time+c)[2:4]+
-             '\n'+str(round(spd_list[i],3))+ 'm/s',
-            ha='center',va='center')
+    #ax1.text(np.radians(I),ax1.get_rmax()+0.15,'trap I (15°)',
+    #        ha='center',va='center')
+    #ax1.text(np.radians(J),ax1.get_rmax()+0.15,'trap J (195°)',
+    #        ha='center',va='center')
+    #ax1.text(np.radians(0),ax1.get_rmax()+0.4,str(int(release_time)+c)[:2]+':'+str(int(release_time)+c)[2:4]+
+    #        '\n'+str(round(spd_list[i],3))+ 'm/s',
+    #        ha='center',va='center')
     wind_d_theta=[rad_dir_list[i],rad_dir_list[i]]
     ax1.plot(wind_d_theta,[0,spd_list[i]],marker='X',ls='--',color='k')
+    print(spd_list[i])
+    print(r)
     c=c+1
 
 path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_plot_figures/"

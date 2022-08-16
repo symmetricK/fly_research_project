@@ -43,7 +43,7 @@ cv2.imwrite(filename,mask)
 print("mask.jpg created")
 
 
-img2=cv2.imread(files[1])
+img2=cv2.imread(files[-500])
 
 img2[0:int(y0),:]=1
 img2[int(y1):nrows,:]=1

@@ -12,7 +12,7 @@ import datetime
 
 wind_data=input("Enter wind data text file you would like to make a plot (e.g. 2021_10_19): ")
 release=input("what time did you release flies (e.g. 1420): ")
-data_path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/wind_"
+data_path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/anemometer_"
 
 directory=data_path+wind_data+".txt"
 wind_df=pd.read_csv(directory,delimiter=' ',header=None)
@@ -95,7 +95,7 @@ for i in range(len(new_n_list)):
     ax.annotate("",xy=(new_n_list[i],new_s_list[i]),
                xytext=(new_n_list[i]+dx,
                        new_s_list[i]+3*(dy/ratio)),arrowprops=dict(arrowstyle='-'))
-    if new_t_list[i]==release:
+    if new_t_list[i]==release[:4]:
         ax.axvline(x=i+1,ymax=y_max,ls='--',color='b')
 
 

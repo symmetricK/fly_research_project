@@ -1,55 +1,56 @@
-import numpy as np
 import os
 import glob
 import pdb
 
-directry=input("Enter a directory name (without trap_) which has files you'd like to rename: ")
-#directry="2022_03_17_WT"
+
 date=input("Enter what date did you do this experiment (e.g. 20220317 (yyyymmdd)): ")
+y_n=input("Do you want to remove the even-numbered images?(y or n): ")
 
-o_dir="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/"+date+"/trap_"+directry
-data_path=os.path.join(o_dir,'*jpg')
-filelist=glob.glob(data_path)
-sorted_files=sorted(filelist)
-rm_files=sorted_files[1::2]
+path='/home/flyranch/field_data_and_analysis_scripts/2021lab/'
+src_path=path+'trapcam_timelapse/'+date+'/'
 
-### remove (the same hh/mm/ss) files (to make 1 frame/second)
-for f in sorted_files:
-	for file in rm_files:
-		if f==file:
-			os.remove(file)
-
-
-data_path2=os.path.join(o_dir,'*jpg')
-filelist2=glob.glob(data_path2)
-sorted_files2=sorted(filelist2)
+for it in os.scandir(src_path):
+    if it.is_dir():
+    	### rename image files
+    	data_path=os.path.join(it,'*jpg')
+    	filelist=glob.glob(data_path)
+    	sorted_files=sorted(filelist)
 
 
-### rename files
-count=1
-for file2 in sorted_files2:
-	if count<10:
-		c="000"+str(count)
-	elif 10<=count<100:
-		c="00"+str(count)
-	elif 100<=count<1000:
-		c="0"+str(count)
-	else:
-		c=str(count)
+    	count=1
+    	for file in sorted_files:
+    		if count<10:
+    			c="000"+str(count)
+    		elif 10<=count<100:
+    			c="00"+str(count)
+    		elif 100<=count<1000:
+    			c="0"+str(count)
+    		else:
+    			c=str(count)
+    		pre="tl_0000_"+c+"_"
+    		mid=date+"_"
+    		dis=len(it.path)
+    		time=file[dis+14:dis+20] #for 20220804 exp
+    		ext=".jpg"
+    		filename=pre+mid+time+ext
+    		dst=it.path+"/"+filename
+    		os.rename(file,dst)
+    		count=count+1
 
-	pre="tl_0000_"+c+"_"
-	mid=date+"_"
-	dis=len(o_dir)
-	time=str(0)+file2[dis+14:dis+19] ###for 20220725 exp
-#	time=file2[dis+1:dis+3]+file2[dis+4:dis+6]+file2[dis+7:dis+9]
-	ext=".jpg"
-
-	filename=pre+mid+time+ext
-#	pdb.set_trace()
-	dst=o_dir+"/"+filename
-	os.rename(file2,dst)
-	count=count+1
-
+    	### remove the even-numbered image files
+    	rm_files=sorted_files[1::2]
+    	if y_n=='y':
+    		for f in sorted_files:
+    			for rm_file in rm_files:
+    				#pdb.set_trace()
+    				if f==rm_file:
+    					try:
+	    					os.remove(f)
+	    				except:
+	    					pass
 
 
-
+    	### rename subdirectory
+    	src_dir=it.path+'/'
+    	dst_dir=it.path[:-18]+'trap_'+it.path[-18:]+'/'
+    	os.rename(src_dir,dst_dir)

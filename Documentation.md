@@ -24,9 +24,7 @@ Just in case, keep raw data!
 
 #### Step 3. rename image files
 1. Run **python3 file_rename.py**
-
 2. Enter experiment date (e.g. 20220317 (yyyymmdd))
-
 3. Enter "y" or "n"
    * If you choose "y", the even-numbered image files in each Pi cam file will be removed
 

@@ -18,6 +18,7 @@ Just in case, keep raw data!
 ..* To complete, it takes a while
 
 	Raw data were copied from Field_Trap_Exps directory into trapcam_directory
+	
 	At the same time, anemometer (wind) data text file was renamed and copied into "/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files"
 
 

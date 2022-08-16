@@ -38,11 +38,11 @@ You can go step by step
    * A test image should be pop up
       1. To make a mask image, you need to decide 4 points for vertex on the image
       2. To save 1 vertex x, y position, double click on the image
-         * Now, you can see blue circle on the image
-      3. To store the vertex data, press "a" (keyboard)
-      4. To save other 3 vertex data,  do double click on the image and press "a" three times
-      5. If you are OK with these 4 vertex for a mask image, press "l"
-      6. And, press "y" on the terminal
+      3. Now, you can see blue circle on the image
+      4. To store the vertex data, press "a" (keyboard)
+      5. To save other 3 vertex data,  do double click on the image and press "a" three times
+      6. If you are OK with these 4 vertex for a mask image, press "l"
+      7. And, press "y" on the terminal
 
 	+ mask_check.jpg and mask.jpg were created in trapcam_timelapse directory
 	+ If the mask image is not good, you should try this step again

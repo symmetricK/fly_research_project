@@ -25,7 +25,7 @@ To complete, it takes a while
 Run **python3 file_rename.py**
 Enter experiment date (e.g. 20220317 (yyyymmdd))
 Enter "y" or "n"
-	If you choose "y", the even-numbered image files in each Pi cam file will be removed
+If you choose "y", the even-numbered image files in each Pi cam file will be removed
 	Each image file name and subdirectory name in trapcam_timelapse directory were changed
 
 #### Step 4. create mask image in Pi cam image directory (e.g. trap_Pi6_20220725090000)
@@ -59,7 +59,7 @@ Add release time (e.g. 10:55:42 (hh:mm:ss)) into "field_parameters.json"
 Run **run_trapcam_analysis.py**
 Enter a trap name to analyze (e.g. 2022_03_17_WT)
 Enter experiment date (e.g. 20220725 (yyyymmdd))
-	To complete, it takes a while
+To complete, it takes a while
 	Annotated_frames were created in all_traps_analyzed_videos directory
 
 

@@ -87,9 +87,9 @@ You can go step by step
  	> Plots for one trap related to on-trap flies and in-trap flies per frame were created in 'analyzed plot figures directory' 
  	
 	> You can see the specific frame info. on the terminal, so you should note them. 
- 	      (e.g. frame 105604 has the first on trap fly: travel time is 22 sec
-	            frame 105854 has the most flies on trap: 30
-	            frame 111833 has the most flies in trap: 17)
+ 	>      (e.g. frame 105604 has the first on trap fly: travel time is 22 sec
+	>            frame 105854 has the most flies on trap: 30
+	>            frame 111833 has the most flies in trap: 17)
  	
 	> Possibly, these specific frame info. were incorrect. You can double-check analyzed video images.
  

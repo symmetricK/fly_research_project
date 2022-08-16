@@ -12,7 +12,7 @@ You can go step by step
 ####  Step 1. copy raw data from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
 1. Just in case, keep raw data!
 
-	+ Raw data were copied from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
+	> Raw data were copied from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
 
 #### Step 2. copy raw data into trapcam_timelapse directory
 1. Run **python3 copy_raw_data.py**
@@ -55,7 +55,6 @@ You can go step by step
 
 #### Step 5. add trap data to json files
 1. Add information about the traps you want to analyze into **all_traps_gaussian_analysis_params.json** as well as exisiting data
-*
 2. Add information about the traps you want to analyze into **field_parameters.json** as well as exisiting data
 3. Add release time (e.g. 10:55:42 (hh:mm:ss)) into **field_parameters.json**
 

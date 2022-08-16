@@ -2,9 +2,12 @@
 ##### Author: Kei Horikawa
 ##### File name: Documentaton.md
 
+
+
 Here, I note how to deal with some python scripts to analyze frames from our experiment. 
 
 You can go step by step
+
 
 ####  Step 1. copy raw data from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
 1. Just in case, keep raw data!
@@ -43,6 +46,7 @@ You can go step by step
       5. To save other 3 vertex data,  do double click on the image and press "a" three times
       6. If you are OK with these 4 vertex for a mask image, press "l"
       7. And, press "y" on the terminal
+
 
 	+ mask_check.jpg and mask.jpg were created in trapcam_timelapse directory
 	+ If the mask image is not good, you should try this step again

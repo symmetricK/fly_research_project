@@ -12,7 +12,7 @@ You can go step by step
 *Raw data were copied from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
 
 ### Step 2. copy raw data into trapcam_timelapse directory
-Run 'python3 copy_raw_data.py'
+Run **python3 copy_raw_data.py**
 
 Enetr release date (e.g. 20220317 (yyyymmdd)), then, automatically subdirectory would be created in trapcam_timelapse directory
 	To complete, it takes a while

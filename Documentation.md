@@ -105,7 +105,7 @@ You can go step by step
 
 	> Plot for all 8 traps related to on trap flies was created
 	
-	> assumed 8 traps were set in a clockwise direction
+	> Assumed 8 traps were set in a clockwise direction
  
 #### Step 10. create wind data plot
 1. Run **python3 make_wind_data_plot.py**

@@ -23,8 +23,11 @@ To complete, it takes a while
 
 #### Step 3. rename image files
 Run **python3 file_rename.py**
+
 Enter experiment date (e.g. 20220317 (yyyymmdd))
+
 Enter "y" or "n"
+
 If you choose "y", the even-numbered image files in each Pi cam file will be removed
 	Each image file name and subdirectory name in trapcam_timelapse directory were changed
 

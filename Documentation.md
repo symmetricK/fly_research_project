@@ -33,18 +33,18 @@ Just in case, keep raw data!
 	Each image file name and subdirectory name in trapcam_timelapse directory were changed
 
 #### Step 4. create mask image in Pi cam image directory (e.g. trap_Pi6_20220725090000)
-Run **python3 create_mask.py**
-Enter a trap name which you'd like to make a mask (e.g. Pi1_20220804101000)
-Enter release date (e.g. 20220804 (yyyymmdd))
+1. Run **python3 create_mask.py**
+2. Enter a trap name which you'd like to make a mask (e.g. Pi1_20220804101000)
+3. Enter release date (e.g. 20220804 (yyyymmdd))
 
-A test image should be pop up
-To make a mask image, you need to decide 4 points for vertex on the image
-To save 1 vertex x, y position, double click on the image
-Now, you can see blue circle on the image
-To store the vertex data, press "a" (keyboard)
-To save other 3 vertex data,  do double click on the image and press "a" three times
-If you are OK with these 4 vertex for a mask image, press "l"
-And, press "y" on the terminal
+   * A test image should be pop up
+      1. To make a mask image, you need to decide 4 points for vertex on the image
+      2. To save 1 vertex x, y position, double click on the image
+         * Now, you can see blue circle on the image
+      3. To store the vertex data, press "a" (keyboard)
+      4. To save other 3 vertex data,  do double click on the image and press "a" three times
+      5. If you are OK with these 4 vertex for a mask image, press "l"
+      6. And, press "y" on the terminal
 
 	mask_check.jpg and mask.jpg were created in trapcam_timelapse directory
 	If the mask image is not good, you should try this step again

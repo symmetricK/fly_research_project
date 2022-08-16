@@ -7,7 +7,7 @@ Here, I note how to deal with some python scripts to analyze frames from our exp
 You can go step by step
 
 ####  Step 1. copy raw data from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
-Just in case, keep raw data!
+1. Just in case, keep raw data!
 
 	+ Raw data were copied from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
 

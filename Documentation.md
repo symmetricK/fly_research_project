@@ -22,7 +22,7 @@ Enetr release date (e.g. 20220317 (yyyymmdd)), then, automatically subdirectory 
 
 
 #### Step 3. rename image files
-Run 'python3 file_rename.py'
+Run **python3 file_rename.py**
 Enter experiment date (e.g. 20220317 (yyyymmdd))
 Enter "y" or "n"
 	If you choose "y", the even-numbered image files in each Pi cam file will be removed
@@ -30,7 +30,7 @@ Enter "y" or "n"
 *Each image file name and subdirectory name in trapcam_timelapse directory were changed
 
 #### Step 4. create mask image in Pi cam image directory (e.g. trap_Pi6_20220725090000)
-Run 'python3 create_mask.py'
+Run **python3 create_mask.py**
 Enter a trap name which you'd like to make a mask (e.g. Pi1_20220804101000)
 Enter release date (e.g. 20220804 (yyyymmdd))
 
@@ -57,7 +57,7 @@ Add release time (e.g. 10:55:42 (hh:mm:ss)) into "field_parameters.json"
 *These json files are located in "2021lab" directory
 
 #### Step 6. do analysis 
-Run 'run_trapcam_analysis.py'
+Run **run_trapcam_analysis.py**
 Enter a trap name to analyze (e.g. 2022_03_17_WT)
 Enter experiment date (e.g. 20220725 (yyyymmdd))
 	To complete, it takes a while
@@ -65,14 +65,14 @@ Enter experiment date (e.g. 20220725 (yyyymmdd))
 
 
 #### Step 7. make master json file
-Run 'python3 make_master_json.py'
+Run **python3 make_master_json.py**
 Enter a trap name which you'd like to make a master json file (e.g. Pi1_20220804101000)
 Enter release date (e.g. 20220725 (yyyymmdd))
 
 * master json file was created in all_traps_final_analysis_json_files directory
 
 #### Step 8. create plots for one trap
-Run 'python3 make_plot_for_one_trap.py'
+Run **python3 make_plot_for_one_trap.py**
 Enter a trap name which you'd like to create plots (e.g. 2021_10_30_C)
 Enter experiment date (e.g. 20220725 (yyyymmdd))
 Enter release time (e.g. 105542 (hhmmss)) @ See release note
@@ -85,7 +85,7 @@ Enter release time (e.g. 105542 (hhmmss)) @ See release note
  * Possibly, these specific frame info. were incorrect. You can double-check analyzed video images.
  
 #### Step 9. create plots for all traps
-Run 'python3 make_plot_for_all.py'
+Run **python3 make_plot_for_all.py**
 Enter experiment date (e.g. 20220725 (yyyymmdd))
 Enter release time (e.g. 105542 (hhmmss))
 Enter a trap number located in upwind (e.g. 4) 
@@ -95,7 +95,7 @@ Enter another trap number located in upwind (e.g. 5)
 * assumed 8 traps were set in a clockwise direction
  
 #### Step 10. create wind data plot
-Run 'python3 make_wind_data_plot.py'
+Run **python3 make_wind_data_plot.py**
 Enter release date (e.g. 2022_08_04 (YYYY_MM_DD))
 Enter release time (e.g. 1055 (hhmm)) @ "seconds" are not required
 

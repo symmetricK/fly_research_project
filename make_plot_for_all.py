@@ -65,7 +65,27 @@ a=input("Enter a trap number located in upwind (e.g. 4) :")
 b=input("Enter another trap number located in upwind (e.g. 5) :")
 
 w_dict=make_upwind_downwind_group(int(a),int(b))
-print(w_dict)
+#print(w_dict)
+
+
+colors=['']*8
+
+for key,val in w_dict.items():
+	if key=='upwind++':
+		colors[val[0][0]-1]='r'
+		colors[val[0][1]-1]='r'
+	elif key=='upwind+':
+		colors[val[0][0]-1]='m'
+		colors[val[0][1]-1]='m'
+	elif key=='downwind+':
+		colors[val[0][0]-1]='c'
+		colors[val[0][1]-1]='c'
+	elif key=='downwind++':
+		colors[val[0][0]-1]='b'
+		colors[val[0][1]-1]='b'
+
+#print(colors)
+c=0
 
 fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(20,20))
 fig.suptitle(date+' All Trap Data for Ontrap',size=30)
@@ -74,7 +94,7 @@ x2 = np.linspace(0.0, 2.0)
 y1 = np.cos(2 * np.pi * x1) * np.exp(-x1)
 y2 = np.cos(2 * np.pi * x2)
 
-
+#pdb.set_trace()
 
 for file in list_of_files:
 	f=open(file)
@@ -120,7 +140,7 @@ for file in list_of_files:
 	on_trap_acc_list=make_accumulation_list(on_trap_list)
 	in_trap_acc_list=make_accumulation_list(in_trap_list)
 
-	colors=['r','m','c','b']
+
 
 	
 	#ax1.plot(sec_since_release_list, on_trap_list, '-',markersize=6,label='trap_'+trap_name)
@@ -134,17 +154,29 @@ for file in list_of_files:
 	X_=np.linspace(np.array(sec_since_release_list).min(), np.array(sec_since_release_list).max(), 500)
 	#Y_=cubic_interploation_model(X_)
 	Y_=X_Y_Spline(X_)
-	ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label='trap_'+t_name)
+
+	if colors[c]=='r':
+		wind_dir='upwind++'
+	elif colors[c]=='m':
+		wind_dir='upwind+'
+	elif colors[c]=='c':
+		wind_dir='downwind+'
+	elif colors[c]=='b':
+		wind_dir='downwind++'
+
+	#ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')',color=colors[c])
+	ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')')
 	ax1.legend(loc="upper right",fontsize=14)
 	ax1.set_xlabel('seconds since released',size=24)
 	ax1.set_ylabel('number of flies in a frame',size=24)
 
-	ax2.plot(sec_since_release_list,on_trap_acc_list,'-',markersize=6,linewidth=2,label='trap_'+t_name)
+	ax2.plot(sec_since_release_list,on_trap_acc_list,'-',markersize=6,linewidth=4,label=t_name+'('+wind_dir+')',color=colors[c])
+	ax2.annotate(t_name,(sec_since_release_list[-1]+50,on_trap_acc_list[-1]+50))
 	ax2.legend(loc="upper left",fontsize=14)
 	ax2.set_xlabel('seconds since released',size=24)
 	ax2.set_ylabel('total number of flies',size=24)
 
-
+	c+=1
 
 
 data_path='/home/flyranch/field_data_and_analysis_scripts/2021lab/analyzed_plot_figures/'

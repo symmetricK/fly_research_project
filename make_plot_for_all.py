@@ -66,7 +66,7 @@ b=input("Enter another trap number located in upwind (e.g. 5) :")
 
 w_dict=make_upwind_downwind_group(int(a),int(b))
 #print(w_dict)
-
+w_lst=list(w_dict.values())
 
 colors=['']*8
 
@@ -164,17 +164,48 @@ for file in list_of_files:
 	elif colors[c]=='b':
 		wind_dir='downwind++'
 
-	#ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')',color=colors[c])
-	ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')')
-	ax1.legend(loc="upper right",fontsize=14)
-	ax1.set_xlabel('seconds since released',size=24)
-	ax1.set_ylabel('number of flies in a frame',size=24)
 
-	ax2.plot(sec_since_release_list,on_trap_acc_list,'-',markersize=6,linewidth=4,label=t_name+'('+wind_dir+')',color=colors[c])
-	ax2.annotate(t_name,(sec_since_release_list[-1]+50,on_trap_acc_list[-1]+50))
-	ax2.legend(loc="upper left",fontsize=14)
-	ax2.set_xlabel('seconds since released',size=24)
-	ax2.set_ylabel('total number of flies',size=24)
+	for i in range(len(w_lst)):
+		if w_lst[i][0][0]==int(t_name[-1]):
+			ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')',color=colors[c])
+			#ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')')
+			ax1.legend(loc="upper right",fontsize=14)
+			ax1.set_xlabel('seconds since released',size=24)
+			ax1.set_ylabel('number of flies in a frame',size=24)
+
+			ax2.plot(sec_since_release_list,on_trap_acc_list,'-',markersize=6,linewidth=4,label=t_name+'('+wind_dir+')',color=colors[c])
+			ax2.annotate(t_name,(sec_since_release_list[-1]+50,on_trap_acc_list[-1]+50))
+			ax2.legend(loc="upper left",fontsize=14)
+			ax2.set_xlabel('seconds since released',size=24)
+			ax2.set_ylabel('total number of flies',size=24)
+
+
+		elif w_lst[i][0][1]==int(t_name[-1]):
+			ax1.plot(X_,Y_,'--',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')',color=colors[c])
+			#ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')')
+			ax1.legend(loc="upper right",fontsize=14)
+			ax1.set_xlabel('seconds since released',size=24)
+			ax1.set_ylabel('number of flies in a frame',size=24)
+
+
+			ax2.plot(sec_since_release_list,on_trap_acc_list,'--',markersize=6,linewidth=4,label=t_name+'('+wind_dir+')',color=colors[c])
+			ax2.annotate(t_name,(sec_since_release_list[-1]+50,on_trap_acc_list[-1]+50))
+			ax2.legend(loc="upper left",fontsize=14)
+			ax2.set_xlabel('seconds since released',size=24)
+			ax2.set_ylabel('total number of flies',size=24)
+
+
+	#ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')',color=colors[c])
+	#ax1.plot(X_,Y_,'-',markersize=6,linewidth=2,label=t_name+'('+wind_dir+')')
+	#ax1.legend(loc="upper right",fontsize=14)
+	#ax1.set_xlabel('seconds since released',size=24)
+	#ax1.set_ylabel('number of flies in a frame',size=24)
+
+	#ax2.plot(sec_since_release_list,on_trap_acc_list,'-',markersize=6,linewidth=4,label=t_name+'('+wind_dir+')',color=colors[c])
+	#ax2.annotate(t_name,(sec_since_release_list[-1]+50,on_trap_acc_list[-1]+50))
+	#ax2.legend(loc="upper left",fontsize=14)
+	#ax2.set_xlabel('seconds since released',size=24)
+	#ax2.set_ylabel('total number of flies',size=24)
 
 	c+=1
 

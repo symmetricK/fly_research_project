@@ -5,13 +5,15 @@ import pdb
 import pandas as pd
 import time
 import datetime
+import os
 
 
 ##### wind speed-time plot with wind direction #####
 
 
-wind_data=input("Enter wind data text file you would like to make a plot (e.g. 2021_10_19): ")
-release=input("what time did you release flies (e.g. 1420): ")
+date=input("what date did you release flies (e.g. 20220804): ")
+wind_data=date[:4]+"_"+date[4:6]+"_"+date[6:]
+release=input("what time did you release flies (e.g. 142040): ")
 data_path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_data_files/anemometer_"
 
 directory=data_path+wind_data+".txt"
@@ -77,7 +79,7 @@ fig=plt.figure(figsize=(20,10))
 ax=plt.axes()
 
 plt.plot(new_n_list, new_s_list, '-',markersize=6,color="r")
-plt.title('Time-Speed with Wind Direction')
+plt.title(date+' Time-Speed with Wind Direction')
 plt.xlabel('Time')
 plt.ylabel('Wind Speed (m/s)')
 ax.set_xticks(new_n_list)
@@ -99,7 +101,15 @@ for i in range(len(new_n_list)):
         ax.axvline(x=i+1,ymax=y_max,ls='--',color='b')
 
 
-path="/home/flyranch/field_data_and_analysis_scripts/2021lab/wind_plot_figures/"
+save_path='/home/flyranch/field_data_and_analysis_scripts/2021lab/analyzed_plot_figures/'
+ex_path=save_path+date
 
-plt.savefig(path+wind_data+'_wind_time_plot.svg')
+# Check whether the specified path exists or not
+isExist = os.path.exists(ex_path)
+
+if not isExist:  
+  # Create a new directory because it does not exist 
+    os.mkdir(ex_path)
+
+plt.savefig(ex_path+'/'+date+'_wind_time_plot.svg')
 

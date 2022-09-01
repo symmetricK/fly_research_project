@@ -220,6 +220,6 @@ if not isExist:
   # Create a new directory because it does not exist 
     os.mkdir(ex_path)
 
+plt.savefig(ex_path+'/'+date+'_all_on_trap_data_plot.jpg')
 
 
-plt.savefig(ex_path+'/all_on_trap_data_plot.jpg')

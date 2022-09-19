@@ -9,12 +9,14 @@ import os
 image_dir=input("Enter a trap name (without trap_) you'd like to create a mask: ")
 date=input("Enter what date did you do this experiment (e.g. 20220725): ")
 print("Double click to make 4 points for mask on the image")
+print("To store vertex data, press [a] on the image")
+print("After storing 4 vertex data, press [l]. Then, see the terminal")
 path="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/"+date+"/trap_"+image_dir
 data_path=os.path.join(path,'*g')
 filelist=glob.glob(data_path)
 sorted_files=sorted(filelist)
 
-img=cv2.imread(sorted_files[-500]) ### perhaps, it needs to change to run properly 
+img=cv2.imread(sorted_files[-1000]) ### perhaps, it needs to change to run properly 
 
 
 # Resize image

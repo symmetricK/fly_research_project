@@ -255,11 +255,6 @@ set_df2=trimmed_df[(4<=trimmed_df.time)&(trimmed_df.time<8)]
 set_df3=trimmed_df[(8<=trimmed_df.time)&(trimmed_df.time<12)]
 set_df4=trimmed_df[trimmed_df.time>=12]
 
-#m_angle_lst=[] ### for mean angle
-#v_str_lst=[]   ### for vector strength
-#m_spd_lst=[]   ### for mean wind speed
-#ws_lst=[] ### for mean vector wind speed 
-
 a1,z1=parm_calculator(set_df1)
 a2,z2=parm_calculator(set_df2)
 a3,z3=parm_calculator(set_df3)

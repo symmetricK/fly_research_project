@@ -9,10 +9,10 @@ Here, I note how to deal with some python scripts to analyze frames from our exp
 You can go step by step
 
 
-####  Step 1. copy raw data (e.g. "Field_Trap_Exps/2022-08-04") from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
+####  Step 1. copy raw data (e.g. "Field_Trap_Exps/2022-08-04") from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/Field_Trap_Exps" directory
 1. Just in case, keep raw data!
 
-	> Raw data were copied from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/" directory
+	> Raw data were copied from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/Field_Trap_Exps" directory
 
 #### Step 2. copy raw data into trapcam_timelapse directory
 1. Run **python3 copy_raw_data.py**
@@ -101,21 +101,34 @@ You can go step by step
 2. Enter experiment date (e.g. 20220725 (yyyymmdd))
 3. Enter release time (e.g. 105542 (hhmmss))
 4. Enter a trap number located in upwind (e.g. 4) 
-5. Enter another trap number located in upwind (e.g. 5) 
+5. Enter another trap number located in upwind (e.g. 5)
+	* To see wind direction, you can do Step 10 and 11 
 
 	> Plot for all 8 traps related to on trap flies was created
 	
-	> Assumed 8 traps were set in a clockwise direction
+	> Assumption: 8 traps were set in a clockwise direction
  
 #### Step 10. create wind data plot
 1. Run **python3 make_wind_data_plot.py**
-2. Enter release date (e.g. 2022_08_04 (YYYY_MM_DD))
-3. Enter release time (e.g. 1055 (hhmm)) 
-   * "seconds" are not required
+2. Enter release date (e.g. 20220804 (YYYYMMDD))
+3. Enter release time (e.g. 105508 (hhmmss)) 
 
 	> Plot for wind data from anemometer was created in wind_plot_figures directory
 	
-	> On the plot, vertical blue dot line shows release time, and black bar shows wind direction at that time
+	> On the plot, vertical blue dot line shows release time, and black bar indicates the wind direction at each time
+
+#### Step 11. create wind polar plot
+1. Run **python3 wind_circ.py**
+2. Enter release date (e.g. 20220804 (YYYYMMDD))
+3. Enter release time (e.g. 105534 (hhmmss)) 
+   * "seconds" are not required
+
+	> Assumption: anemometer has over 15 minutes of wind data 
+	
+	> On the polar plot, the blue line indicates the vector average wind direction at each period, and 4 listed numbers at each trap show the accumulated number of flies on the trap at specific times
+
+
+
  
  
  

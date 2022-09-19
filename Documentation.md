@@ -121,7 +121,6 @@ You can go step by step
 1. Run **python3 wind_circ.py**
 2. Enter release date (e.g. 20220804 (YYYYMMDD))
 3. Enter release time (e.g. 105534 (hhmmss)) 
-   * "seconds" are not required
 
 	> Assumption: anemometer has over 15 minutes of wind data 
 	

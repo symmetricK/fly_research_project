@@ -104,7 +104,7 @@ you can run all python scripts in "/home/flyranch/field_data_and_analysis_script
 3. Enter release time (e.g. 105542 (hhmmss))
 4. Enter a trap number located in upwind (e.g. 4) 
 5. Enter another trap number located in upwind (e.g. 5)
-	* To see wind direction, you can do Step 10 and 11 
+	* To see wind direction, you can do Step 10 or 11 
 
 	> Plot for all 8 traps related to on trap flies was created
 	

@@ -8,6 +8,8 @@ Here, I note how to deal with some python scripts to analyze frames from our exp
 
 You can go step by step
 
+you can run all python scripts in "/home/flyranch/field_data_and_analysis_scripts" diectory
+
 
 ####  Step 1. copy raw data (e.g. "Field_Trap_Exps/2022-08-04") from external drive into "/home/flyranch/field_data_and_analysis_scripts/2021lab/Field_Trap_Exps" directory
 1. Just in case, keep raw data!

@@ -1,4 +1,5 @@
 import json
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pdb
@@ -86,6 +87,8 @@ for key,val in w_dict.items():
 
 #print(colors)
 c=0
+
+matplotlib.rcParams['pdf.fonttype'] = 42
 
 fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(20,20))
 fig.suptitle(date+' All Trap Data for Ontrap',size=30)
@@ -221,5 +224,5 @@ if not isExist:
     os.mkdir(ex_path)
 
 plt.savefig(ex_path+'/'+date+'_all_on_trap_data_plot.jpg')
-
+plt.savefig(ex_path+'/'+date+'_all_on_trap_data_plot.pdf',transparent=True)
 

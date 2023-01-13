@@ -63,7 +63,7 @@ You can go step by step
 	> These json files are located in "2021lab" directory
 
 #### Step 6. do analysis 
-1. Run **run_trapcam_analysis.py**
+1. Run **python3 run_trapcam_analysis.py**
 2. Enter a trap name to analyze (e.g. 2022_03_17_WT)
 3. Enter experiment date (e.g. 20220725 (yyyymmdd))
    * To complete, it takes a while

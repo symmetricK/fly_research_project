@@ -1,4 +1,5 @@
 import json
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pdb
@@ -87,6 +88,9 @@ combined_acc_in_on_trap_list=[x+y for (x,y) in zip(on_trap_acc_list,in_trap_acc_
 
 #n_fly=input("You want to see excluded by contour data on the plot? (y or n): ")
 n_fly='n'
+
+matplotlib.rcParams['pdf.fonttype'] = 42
+
 x1 = np.linspace(0.0, 5.0)
 x2 = np.linspace(0.0, 2.0)
 
@@ -295,3 +299,4 @@ if n_fly=="y":
 	plt.savefig(ex_path+'/trap_'+trap+'_with_not_fly_plots.jpg')
 if n_fly=="n":
 	plt.savefig(ex_path+'/trap_'+trap+'_plots.jpg')
+	plt.savefig(ex_path+'/trap_'+trap+'_plots.pdf',transparent=True)

@@ -1,4 +1,4 @@
-## import json
+import json
 import matplotlib.pyplot as plt
 import numpy as np
 import pdb
@@ -6,6 +6,7 @@ import pandas as pd
 import time
 import datetime
 import os
+import matplotlib
 
 
 ##### wind speed-time plot with wind direction #####
@@ -75,6 +76,8 @@ new_s_list=new_wind_df['wind_speed']*0.44704 # convert mph to m/s
 new_d_list=new_wind_df['direction'] 
 new_n_list=list(np.arange(1,len(new_t_list)+1))
 
+matplotlib.rcParams['pdf.fonttype'] = 42
+
 fig=plt.figure(figsize=(20,10))
 ax=plt.axes()
 
@@ -112,4 +115,4 @@ if not isExist:
     os.mkdir(ex_path)
 
 plt.savefig(ex_path+'/'+date+'_wind_time_plot.svg')
-
+plt.savefig(ex_path+'/'+date+'_wind_time_plot.pdf',transparent=True)

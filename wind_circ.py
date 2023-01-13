@@ -1,5 +1,6 @@
 import pandas as pd
 from math import radians
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pdb
@@ -279,6 +280,7 @@ ws_lst=[z1,z2,z3,z4]
 #print(m_spd_lst)
 #print(ws_lst)
 
+matplotlib.rcParams['pdf.fonttype'] = 42
 
 fig=plt.figure(figsize=(35,30))
 fig.suptitle(date+" Average Vector Wind Speed and Accumulated Number of Flies on Trap at Specific Times",fontsize=40)
@@ -343,3 +345,4 @@ if not isExist:
     os.mkdir(ex_path)
 
 plt.savefig(ex_path+'/'+date+'_circ_wind_and_acc_ontrap_plot.jpg')
+plt.savefig(ex_path+'/'+date+'_circ_wind_and_acc_ontrap_plot.pdf',transparent=True)

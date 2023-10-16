@@ -4,7 +4,7 @@ import pdb
 
 
 date=input("Enter what date did you do this experiment (e.g. 20220317 (yyyymmdd)): ")
-y_n=input("Do you want to remove the even-numbered images?(y or n): ")
+#y_n=input("Do you want to remove the even-numbered images?(y or n): ")
 
 path='/home/flyranch/field_data_and_analysis_scripts/2021lab/'
 src_path=path+'trapcam_timelapse/'+date+'/'
@@ -38,16 +38,16 @@ for it in os.scandir(src_path):
     		count=count+1
 
     	### remove the even-numbered image files
-    	rm_files=sorted_files[1::2]
-    	if y_n=='y':
-    		for f in sorted_files:
-    			for rm_file in rm_files:
-    				#pdb.set_trace()
-    				if f==rm_file:
-    					try:
-	    					os.remove(f)
-	    				except:
-	    					pass
+    	#rm_files=sorted_files[1::2]
+    	#if y_n=='y':
+    	#	for f in sorted_files:
+    	#		for rm_file in rm_files:
+    	#			#pdb.set_trace()
+    	#			if f==rm_file:
+    	#				try:
+	    #					os.remove(f)
+	    #				except:
+	    #					pass
 
 
     	### rename subdirectory

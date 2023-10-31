@@ -242,9 +242,10 @@ class TrapcamAnalyzer:
             color = [0,0,153]
             if fly['type']=='on_trap':
                 #flag=list(fly.values())[5]
-                cv2.circle(color_image, (fly['x'], fly['y']), 20, [0,0,255], 5)
+                cv2.circle(color_image, (fly['x'], fly['y']), 40, [0,0,255], 5)
                 on_trap_count+=1 
             elif fly['type']=='in_trap':
+
                 cv2.rectangle(color_image, (fly['x']-20, fly['y']+20), (fly['x']+20, fly['y']-20), [255,0,0], 5)
                 in_trap_count+=1               
         if on_trap_count!=0:

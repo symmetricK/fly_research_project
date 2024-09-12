@@ -6,21 +6,25 @@ import glob
 import os
 
 
-image_dir=input("Enter a trap name (without trap_) you'd like to create a mask: ")
+image_dir=input("Enter a trap name (without trap_) you'd like to create a mask (e.g. Pi1_20240708081731): ")
 date=input("Enter what date did you do this experiment (e.g. 20220725): ")
 print("Double click to make 4 points for mask on the image")
 print("To store vertex data, press [a] on the image")
 print("After storing 4 vertex data, press [l]. Then, see the terminal")
-path="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/"+date+"/trap_"+image_dir
+#path="/home/flyranch/field_data_and_analysis_scripts/2021lab/trapcam_timelapse/"+date+"/trap_"+image_dir
+#path='/media/flyranch/data21/field_release/trapcam_timelapse/'+date+"/trap_"+image_dir
+path='/media/flyranch/14TB_Backup/field_release/trapcam_timelapse/'+date+"/trap_"+image_dir
 data_path=os.path.join(path,'*g')
 filelist=glob.glob(data_path)
 sorted_files=sorted(filelist)
 
-img=cv2.imread(sorted_files[int(len(sorted_files)/2)]) ### perhaps, it needs to change to run properly 
+#img=cv2.imread(sorted_files[int(len(sorted_files)/2)]) ### perhaps, it needs to change to run properly 
+
+img=cv2.imread(sorted_files[-1500])
 #print(int(len(sorted_files)/2))
 
 # Resize image
-scale_percent=25 
+scale_percent=50 # 50 for 2304*1296, 25 for 4608*2592
 width=int(img.shape[1]*scale_percent / 100)
 height=int(img.shape[0]*scale_percent / 100)
 dim=(width, height)

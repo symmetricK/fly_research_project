@@ -18,9 +18,9 @@ data_path=os.path.join(path,'*g')
 filelist=glob.glob(data_path)
 sorted_files=sorted(filelist)
 
-#img=cv2.imread(sorted_files[int(len(sorted_files)/2)]) ### perhaps, it needs to change to run properly 
+img=cv2.imread(sorted_files[int(len(sorted_files)/2)]) ### perhaps, it needs to change to run properly 
 
-img=cv2.imread(sorted_files[-1500])
+#img=cv2.imread(sorted_files[-1500])
 #print(int(len(sorted_files)/2))
 
 # Resize image

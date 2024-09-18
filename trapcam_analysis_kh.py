@@ -21,18 +21,18 @@ from datetime import datetime
 class TrapcamAnalyzer:
     def __init__(self, directory, trap='trap_A', date='date',
     	calculate_threshold=False, calculate_final=True):  # <---- instances of this class will specify the directory, most likely using directory = sys.argv[1]
-        self.directory = directory
+        self.directory=directory
         self.USE_FULL_MASK=False
         self.date=date
-        self.trap = trap
+        self.trap=trap
         #print(threshold)
         #self.calculate_threshold=calculate_threshold
         self.calculate_threshold = False
         self.calculate_final = calculate_final
         # initialize expectations here; can update the value of each self.variable later
-        with open(self.directory+'/all_traps_gaussian_analysis_params.json') as f:
+        with open(self.directory+'/all_traps_gaussian_analysis_params_kh.json') as f:
             self.analysis_parameters_json = json.load(f)
-        with open(self.directory+'/field_parameters.json') as f:
+        with open(self.directory+'/field_parameters_kh.json') as f:
             self.field_parameters = json.load(f)
 
         self.train_num                    = self.analysis_parameters_json[trap]['analysis parameters']["number of frames for bg model training"]
@@ -44,7 +44,7 @@ class TrapcamAnalyzer:
         self.maximum_on_trap_contour_size = self.analysis_parameters_json[trap]['analysis parameters']['maximum_on_trap_contour_size']
         self.min_prior_to_r               = self.analysis_parameters_json[trap]['analysis parameters']["analyze_how_many_minutes_prior_to_release"]
         self.min_post_r                   = self.analysis_parameters_json[trap]['analysis parameters']["analyze_how_many_minutes_post_release"]
-        self.release_time                 = self.field_parameters["time_of_fly_release"]
+        self.release_time                 = self.field_parameters["time_of_fly_release"][date]
         self.camera_offset                = self.analysis_parameters_json[trap]['analysis parameters']["camera time advanced by __ sec"]
         self.trimodal_expected            = tuple(self.analysis_parameters_json[trap]['analysis parameters']['trimodal expected'])
         self.save_video                   = self.analysis_parameters_json[trap]['analysis parameters']["save frames as video"]
@@ -841,6 +841,7 @@ class TrapcamAnalyzer:
         ax_handle.xaxis.set_ticks_position('bottom')
         plt.tight_layout()
 
+
     def step_through_annotated_output_stack(self,
                                             all_flies_over_time,
                                             all_contrast_metrics,
@@ -848,17 +849,8 @@ class TrapcamAnalyzer:
                                             all_fly_contour_areas,
                                             fly_contour_area_list_of_lists,
                                             timestamp,
-                                            output_dir,
                                             video_dir,
                                             analyzed_filename_stack):
-
-        font = cv2.FONT_HERSHEY_SIMPLEX
-
-        number_ive_empirically_determined =2
-#        all_flies_over_time       =  all_flies_over_time     [0:-1*number_ive_empirically_determined]
-        #time_since_release_list   =  time_since_release_list [0:-1*number_ive_empirically_determined]
-#        analyzed_filename_stack   =  analyzed_filename_stack [0:-1*number_ive_empirically_determined] # these 4 lines are obviously shameful
-
         flies_on_trap_over_time = np.zeros(len(all_flies_over_time))
         flies_in_trap_over_time = np.zeros(len(all_flies_over_time))
         not_flies_over_time = np.zeros(len(all_flies_over_time))
@@ -874,120 +866,8 @@ class TrapcamAnalyzer:
             except:
                 continue
 
-#        window_size = 10
-        window_size = 5
-
-        low_pass_flies_on_trap = np.zeros(len(flies_on_trap_over_time)-window_size)
-        low_pass_flies_in_trap = np.zeros(len(flies_on_trap_over_time)-window_size)
-        for i in range (window_size, len(flies_on_trap_over_time)):
-            low_pass_flies_on_trap[i-window_size] = (np.mean(flies_on_trap_over_time[i-window_size:i]))
-            low_pass_flies_in_trap[i-window_size] = (np.mean(flies_in_trap_over_time[i-window_size:i]))
-
-
-        annotated_frame_filenames = self.get_filenames(path = video_dir, contains = ".jpg", does_not_contain = [])
-        print ('now reading in annotated frames and merging them with other graphics')
-        for frame_pos, name in enumerate(annotated_frame_filenames):
-            display_image = cv2.imread(name)
-
-            plt.close('all') # < ---- dealing with the memory issues of having too many windows open at once
-            try:
-                filename = analyzed_filename_stack[frame_pos]
-                #time_since_release = time_since_release_list[frame_pos]
-                time_since_release = seconds_since_release_over_time[frame_pos]
-            except:
-                break
-
-
-#            display_image_resized = cv2.resize(display_image, (1296,972)) #halves image dimensions just for display purposes
-#            display_image_resized = display_image_resized[:,200:-240].copy()
-
-            
-            ## KH,TW TO SEE THE FULL TRAP PIC  7.20.21
-
-#            display_image_resized = display_image[:,500:-325].copy()
-            display_image_resized = display_image.copy()
-        #### now plotting the graph of flies over time
-#            fig = plt.figure(figsize=(10,9), facecolor="white")
-            fig = plt.figure(figsize=(16,16), facecolor="white")
-            ax2 = fig.add_subplot(212)
-
-            # proposed_contrast_metric = self.fit_data_to_trimodal(all_contrast_metrics,
-            #                                         trimodal_expected,
-            #                                         ax_handle = ax2,
-            #                                         plot_histogram = True) # <---- THIS SHOULD REEEALLY ONLY HAPPEN ONCE, NOT IN THIS LOOP
-            # plt.xlabel('contrast metric (per-pixel fg-bg; avg per contour)')
-            # plt.ylabel('count')
-
-            current_frame_contrast_metrics = contrast_metric_list_of_lists[frame_pos]
-            current_frame_fly_contour_areas = fly_contour_area_list_of_lists[frame_pos]
-            self.plot_2d_scatter(all_contrast_metrics,
-                            all_fly_contour_areas,
-                            current_frame_contrast_metrics,
-                            current_frame_fly_contour_areas,
-                            ax_handle = ax2)
-            plt.xlabel('contrast metric (per-pixel fg-bg; avg per contour)')
-            plt.ylabel('contour area (pixels^2)')
-
-            ax = fig.add_subplot(211)
-            ax.scatter(seconds_since_release_over_time, flies_in_trap_over_time, color = [0.6,0,0.6])
-            ax.plot(seconds_since_release_over_time[window_size:], low_pass_flies_in_trap, color = [0.6,0,0.6], lw = 2, label = 'in trap')
-            ax.scatter(seconds_since_release_over_time, flies_on_trap_over_time, color = 'black')
-            ax.plot(seconds_since_release_over_time[window_size:], low_pass_flies_on_trap, color = 'black', lw =2, label = 'on trap')
-            legend = ax.legend(loc='upper left', shadow=False) #, fontsize='x-large')
-            ax.axvline(x = time_since_release, color = [1.0,0.35,0], lw =2)
-            plt.xlabel('seconds since release')
-            plt.ylabel('flies in frame')
-            self.format_matplotlib_ax_object (ax_handle = ax)
-            fig.canvas.draw()
-            graph = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
-            graph  = graph.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-            graph = cv2.cvtColor(graph,cv2.COLOR_RGB2BGR)
-
-            h1, w1 = graph.shape[:2]
-            h2, w2 = display_image_resized.shape[:2]
-#            h2, w2 = display_image.shape[:2]
-            #create empty matrix
-            height = max(h1,h2)
-            vis = np.zeros((height, 30+w1+w2,3), np.uint8)
-            #vis = np.zeros((h1+h2, max(w1, w2),3), np.uint8)
-            #combine 2 images
-
-#            pdb.set_trace()
-#            vis[150:150+h1, 30:30+w1,:3] = graph
-            vis[:50+h1, 30:30+w1,:3] = graph
-            vis[:h2, 30+w1:30+w1+w2,:3] = display_image_resized
-#            vis[:h2, 30+w1:30+w1+w2,:3] = display_image
-            timestr = filename.split('_')[-1].split('.')[0]
-            seconds = str(int(divmod(time_since_release,60)[1]))
-            if len(seconds) == 1:
-                seconds = '0'+seconds
-            textstr = 'timestamp: '+timestr[0:2]+':'+timestr[2:4]+':'+timestr[4:6]+'; time since release: '+ str(int(divmod(time_since_release,60)[0]))+':'+ seconds
-
-            cv2.putText(vis, textstr, (30+w1+60,50), font, 1, (255,255,255),2, cv2.LINE_AA)
-
-            idstr = '~%d flies released at %s ' %(self.field_parameters["estimated_number_of_flies_released"], self.field_parameters['time_of_fly_release'])
-            cv2.putText(vis, idstr, (35,50), font, 1, (255,255,255),2, cv2.LINE_AA)
-            
-            idstr2 = self.trap.split('_')[0]+' ' +self.trap.split('_')[1]+'; %d flies caught' %(self.field_parameters['trap counts'][self.trap])
-            cv2.putText(vis,idstr2, (35,90), font, 1, (255,0,0),2, cv2.LINE_AA)
-
-            #now saving into stack
-            cv2.imwrite(output_dir + "/%d.jpg" % frame_pos, vis)
-
-        sample_video_str = output_dir+'/'+self.trap + '_analyzed_%d_min_post_release' %(self.min_post_r)+'.mp4'
-        output_dir_jpgs = output_dir+"/%d.jpg"
-        ##
-        ## KH,TW NEED TO FIX 7.19.21 - COMMENTED OUT NOT WORKING
-        ##
-        #if self.save_video:
-            #subprocess.call(["ffmpeg", "-framerate", "3", "-i", output_dir_jpgs, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "23", sample_video_str])
-
-
-
-
         if self.calculate_final == True:
             print ('calculating final')
-#            pdb.set_trace()
             current_trap_dictionary = {self.trap:{'flies on trap over time:': flies_on_trap_over_time.tolist(),
                                             'flies in trap over time:': flies_in_trap_over_time.tolist(),
                                             'not flies over time:'    : not_flies_over_time.tolist(),
@@ -1014,60 +894,25 @@ class TrapcamAnalyzer:
             if not os.path.exists(json_path):
                 with open(json_path,'w') as json_file:
                     json.dump(current_trap_dictionary,json_file,indent=1)
+#            return current_trap_dictionary
 
-                                            
-#            with open(self.directory+'/all_traps_final_analysis_output.json') as f:
-#                growing_json = json.load(f)
-
-
-
-            #add current trap dictionary to growing_json
-#            if self.trap in growing_json.keys():
-#                combined_trap_dictinary={**growing_json,**current_trap_dictionary} # about time since release would be wrong. if crushing issue is solved, it would be removed.
-#                growing_json.update(combined_trap_dictinary)
-#                print(self.trap+" already exists in growing_json")
-#            if self.trap not in growing_json.keys():
-#                growing_json.update(current_trap_dictionary) #CAREFUL; THIS WILL OVERWRITE ANY KEYS THAT ALREADY EXIST IN THE JSON
-#                print(self.trap+" does not exist in growing_json")
-#            with open(self.directory+'/all_traps_final_analysis_output.json', mode = 'w') as f:
-#                json.dump(growing_json,f, indent = 1)
-
-
-            fig = plt.figure(figsize=(10,5), facecolor="white")
-            ax = fig.add_subplot(111)
-            ax.scatter(seconds_since_release_over_time, flies_in_trap_over_time, color = [0.6,0,0.6])
-            ax.plot(seconds_since_release_over_time[window_size:], low_pass_flies_in_trap, color = [0.6,0,0.6], lw = 2, label = 'in trap')
-            ax.scatter(seconds_since_release_over_time, flies_on_trap_over_time, color = 'black')
-            ax.plot(seconds_since_release_over_time[window_size:], low_pass_flies_on_trap, color = 'black', lw =2, label = 'on trap')
-            legend = ax.legend(loc='upper left', shadow=False) #, fontsize='x-large')
-            plt.xlabel('seconds since release')
-            plt.ylabel('flies in frame')
-            self.format_matplotlib_ax_object(ax_handle = ax)
-            time_string = str(time.time()).split('.')[0] # this is not very human-readable, but helps prevent overwriting
-            namestr = self.directory+'/arrival_dynamics_figs/'+self.trap+'_flies_over_time_'+time_string+'.svg'
-
-            plt.savefig(namestr, bbox_inches='tight')
-            pngnamestr = self.directory+'/arrival_dynamics_figs/'+self.trap+'_flies_over_time_'+time_string+'.png'
-            plt.savefig(pngnamestr, bbox_inches='tight')
-        return output_dir
-
-    def save_all_analysis_parameters(self,
-                                    morph_open_iteration_number,
-                                    morph_ellipse_size,
-                                    mahalanobis_squared_thresh,
-                                    output_directory):
-        parameter_dictionary = {'minimum_on_trap_contour_size':self.minimum_on_trap_contour_size,
-                                'maximum_on_trap_contour_size':self.maximum_on_trap_contour_size,
-                                'minimum_in_trap_contour_size':self.minimum_in_trap_contour_size,
-                                'maximum_in_trap_contour_size':self.maximum_in_trap_contour_size,
-                                'ontrap_intrap_threshold': self.ontrap_intrap_threshold,
-                                'smoothing_morph_opening_iterations':morph_open_iteration_number,
-                                'smoothing_morph_ellipse_size': morph_ellipse_size,
-                                'mahalanobis_squared_thresh': mahalanobis_squared_thresh,
-                                'buffer_btw_training_and_test':self.buffer_btw_training_and_test,
-                                'number_of_frames_on_which_background_is_trained':self.train_num}
-        with open(output_directory+'/analysis_parameters.json', mode = 'w') as f:
-            json.dump(parameter_dictionary,f, indent = 1)
+#    def save_all_analysis_parameters(self,
+#                                    morph_open_iteration_number,
+#                                    morph_ellipse_size,
+#                                    mahalanobis_squared_thresh,
+#                                    output_directory):
+#        parameter_dictionary = {'minimum_on_trap_contour_size':self.minimum_on_trap_contour_size,
+#                                'maximum_on_trap_contour_size':self.maximum_on_trap_contour_size,
+#                                'minimum_in_trap_contour_size':self.minimum_in_trap_contour_size,
+#                                'maximum_in_trap_contour_size':self.maximum_in_trap_contour_size,
+#                                'ontrap_intrap_threshold': self.ontrap_intrap_threshold,
+#                                'smoothing_morph_opening_iterations':morph_open_iteration_number,
+#                                'smoothing_morph_ellipse_size': morph_ellipse_size,
+#                                'mahalanobis_squared_thresh': mahalanobis_squared_thresh,
+#                                'buffer_btw_training_and_test':self.buffer_btw_training_and_test,
+#                                'number_of_frames_on_which_background_is_trained':self.train_num}
+#        with open(output_directory+'/analysis_parameters.json', mode = 'w') as f:
+#            json.dump(parameter_dictionary,f, indent = 1)
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -1132,8 +977,9 @@ class TrapcamAnalyzer:
         with open(self.directory+'/all_contrast_metrics/'+self.trap+'.json', mode = 'w') as f:
             json.dump(contrast_metric_dictionary,f, indent = 1)
 
-        annotated_frames_plus_graphs_dir = self.directory+'/all_traps_analyzed_videos/'+self.date+'/'+self.trap+'_videos/'+timestamp+'/annotated_frames_plus_graphs'
-        subprocess.call(['mkdir', annotated_frames_plus_graphs_dir])
+
+#        annotated_frames_plus_graphs_dir = self.directory+'/all_traps_analyzed_videos/'+self.date+'/'+self.trap+'_videos/'+timestamp+'/annotated_frames_plus_graphs'
+#        subprocess.call(['mkdir', annotated_frames_plus_graphs_dir])
 
         output_directory = self.step_through_annotated_output_stack(all_flies_over_time,
                                                 all_contrast_metrics,
@@ -1141,7 +987,6 @@ class TrapcamAnalyzer:
                                                 all_fly_contour_areas,
                                                 fly_contour_area_list_of_lists,
                                                 timestamp,
-                                                annotated_frames_plus_graphs_dir,
                                                 annotated_frame_dir,
                                                 analyzed_filename_stack)
 
@@ -1158,9 +1003,9 @@ class TrapcamAnalyzer:
         #             with open(self.directory+'/all_traps_gaussian_analysis_params.json', mode = 'w') as f:
         #                 json.dump(growing_json,f, indent = 4)
 
-        self.save_all_analysis_parameters(morph_open_iteration_number= morph_open_iteration_number,
-                                        morph_ellipse_size = morph_ellipse_size,
-                                        mahalanobis_squared_thresh = self.mahalanobis_squared_thresh,
-                                        output_directory = output_directory)
+#        self.save_all_analysis_parameters(morph_open_iteration_number= morph_open_iteration_number,
+#                                        morph_ellipse_size = morph_ellipse_size,
+#                                        mahalanobis_squared_thresh = self.mahalanobis_squared_thresh,
+#                                        output_directory = output_directory)
 
         cv2.destroyAllWindows()

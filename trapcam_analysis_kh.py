@@ -990,6 +990,16 @@ class TrapcamAnalyzer:
                                                 annotated_frame_dir,
                                                 analyzed_filename_stack)
 
+        video_name=self.directory+'/all_traps_analyzed_videos/'+self.date+'/'+self.trap+'_videos/'+timestamp+'/'+self.trap+".avi"
+        images=[img for img in os.listdir(annotated_frame_dir) if img.startswith("11")]
+        frame=cv2.imread(os.path.join(annotated_frame_dir,images[0]))
+        height,width,layer=frame.shape
+
+        video=cv2.VideoWriter(video_name,0,10,(width,height))
+
+        for image in images:
+            video.write(cv2.imread(os.path.join(annotated_frame_dir,image)))
+
         # if calculate_threshold:
         #     proposed_contrast_metric = self.fit_data_to_trimodal(all_contrast_metrics, trimodal_expected, ax_handle = None, plot_histogram = False)
         #
@@ -1009,3 +1019,5 @@ class TrapcamAnalyzer:
 #                                        output_directory = output_directory)
 
         cv2.destroyAllWindows()
+
+        video.release()

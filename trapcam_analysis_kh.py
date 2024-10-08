@@ -34,20 +34,22 @@ class TrapcamAnalyzer:
             self.analysis_parameters_json = json.load(f)
         with open(self.directory+'/field_parameters_kh.json') as f:
             self.field_parameters = json.load(f)
+        with open(self.directory+'/trap_coefficient_parameters.json') as f:
+            self.coefficient_parameters = json.load(f)
 
-        self.train_num                    = self.analysis_parameters_json[trap]['analysis parameters']["number of frames for bg model training"]
-        self.mahalanobis_squared_thresh   = self.analysis_parameters_json[trap]['analysis parameters']['mahalanobis squared threshold']
-        self.buffer_btw_training_and_test = self.analysis_parameters_json[trap]['analysis parameters']['frames between training and test'] # if too high, shadows get bad
-        self.minimum_in_trap_contour_size = self.analysis_parameters_json[trap]['analysis parameters']['minimum_in_trap_contour_size']
-        self.maximum_in_trap_contour_size = self.analysis_parameters_json[trap]['analysis parameters']['maximum_in_trap_contour_size']
-        self.minimum_on_trap_contour_size = self.analysis_parameters_json[trap]['analysis parameters']['minimum_on_trap_contour_size']
-        self.maximum_on_trap_contour_size = self.analysis_parameters_json[trap]['analysis parameters']['maximum_on_trap_contour_size']
-        self.min_prior_to_r               = self.analysis_parameters_json[trap]['analysis parameters']["analyze_how_many_minutes_prior_to_release"]
-        self.min_post_r                   = self.analysis_parameters_json[trap]['analysis parameters']["analyze_how_many_minutes_post_release"]
+        self.train_num                    = self.analysis_parameters_json['trap_ex']['analysis parameters']["number of frames for bg model training"]
+        self.mahalanobis_squared_thresh   = self.analysis_parameters_json['trap_ex']['analysis parameters']['mahalanobis squared threshold']
+        self.buffer_btw_training_and_test = self.analysis_parameters_json['trap_ex']['analysis parameters']['frames between training and test'] # if too high, shadows get bad
+        self.minimum_in_trap_contour_size = self.analysis_parameters_json['trap_ex']['analysis parameters']['minimum_in_trap_contour_size']*(self.coefficient_parameters['coefficient'][date][trap[5:]])**2
+        self.maximum_in_trap_contour_size = self.analysis_parameters_json['trap_ex']['analysis parameters']['maximum_in_trap_contour_size']*(self.coefficient_parameters['coefficient'][date][trap[5:]])**2
+        self.minimum_on_trap_contour_size = self.analysis_parameters_json['trap_ex']['analysis parameters']['minimum_on_trap_contour_size']*(self.coefficient_parameters['coefficient'][date][trap[5:]])**2
+        self.maximum_on_trap_contour_size = self.analysis_parameters_json['trap_ex']['analysis parameters']['maximum_on_trap_contour_size']*(self.coefficient_parameters['coefficient'][date][trap[5:]])**2
+        self.min_prior_to_r               = self.analysis_parameters_json['trap_ex']['analysis parameters']["analyze_how_many_minutes_prior_to_release"]
+        self.min_post_r                   = self.analysis_parameters_json['trap_ex']['analysis parameters']["analyze_how_many_minutes_post_release"]
         self.release_time                 = self.field_parameters["time_of_fly_release"][date]
-        self.camera_offset                = self.analysis_parameters_json[trap]['analysis parameters']["camera time advanced by __ sec"]
-        self.trimodal_expected            = tuple(self.analysis_parameters_json[trap]['analysis parameters']['trimodal expected'])
-        self.save_video                   = self.analysis_parameters_json[trap]['analysis parameters']["save frames as video"]
+        self.camera_offset                = self.analysis_parameters_json['trap_ex']['analysis parameters']["camera time advanced by __ sec"]
+        self.trimodal_expected            = tuple(self.analysis_parameters_json['trap_ex']['analysis parameters']['trimodal expected'])
+        self.save_video                   = self.analysis_parameters_json['trap_ex']['analysis parameters']["save frames as video"]
 
         #things that aren't yet in the analysis parameter files because I'm still finagling them:
         self.minimum_contrast_metric = 1
@@ -57,19 +59,19 @@ class TrapcamAnalyzer:
 
         if self.calculate_final == True:
             try:
-                self.ontrap_intrap_threshold = self.analysis_parameters_json[trap]['analysis parameters']["fixed in-trap on-trap threshold"]
+                self.ontrap_intrap_threshold = self.analysis_parameters_json['trap_ex']['analysis parameters']["fixed in-trap on-trap threshold"]
             except:
 ###                use_provisional_value =input('Looks like you have not yet fixed the in-trap/on-trap threshold; use provisional threshold? (y/n)')
                 use_provisional_value='y'
                 if use_provisional_value:
-                    self.ontrap_intrap_threshold = self.analysis_parameters_json[trap]['analysis parameters']["threshold to differentiate in- and on- trap"]
+                    self.ontrap_intrap_threshold = self.analysis_parameters_json['trap_ex']['analysis parameters']["threshold to differentiate in- and on- trap"]
                 else:
                     print ('OK, skipping '+ self.trap+' for now')
                     print ('')
                     ### NEED TO FIND A WAY TO HANDLE THIS CASE
 
         else:
-            self.ontrap_intrap_threshold = self.analysis_parameters_json[trap]['analysis parameters']["threshold to differentiate in- and on- trap"]
+            self.ontrap_intrap_threshold = self.analysis_parameters_json['trap_ex']['analysis parameters']["threshold to differentiate in- and on- trap"]
 
         plt.rcParams.update({'font.size': 14}) # <--- there is probably a better place to specify this so it's more flexible, but this'll work for now
 

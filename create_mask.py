@@ -4,6 +4,7 @@ import pdb
 import sys
 import glob
 import os
+import pdb
 
 
 image_dir=input("Enter a trap name (without trap_) you'd like to create a mask (e.g. Pi1_20240708081731): ")
@@ -17,6 +18,8 @@ path='/media/flyranch/14TB_Backup/field_release/trapcam_timelapse/'+date+"/trap_
 data_path=os.path.join(path,'*g')
 filelist=glob.glob(data_path)
 sorted_files=sorted(filelist)
+
+#pdb.set_trace()
 
 img=cv2.imread(sorted_files[int(len(sorted_files)/2)]) ### perhaps, it needs to change to run properly 
 

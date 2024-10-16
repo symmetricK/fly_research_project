@@ -521,8 +521,8 @@ class TrapcamAnalyzer:
 
 
         #print(index)
-        if index==600:
-            print(actual_timestamp)
+        #if index==600:
+        #    print(actual_timestamp)
         #    pdb.set_trace()
 
 

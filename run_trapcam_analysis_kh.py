@@ -2,7 +2,8 @@ from __future__ import print_function
 import sys
 import trapcam_analysis_kh as t
 
-dir='2021lab'
+#dir='2021lab'
+dir='/media/flyranch/14TB_Backup/field_release'
 print ('')
 while True:
     analyze_trap_list = []

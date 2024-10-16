@@ -62,7 +62,9 @@ def merge_dict(dict3,dict4):
 
 trap=input("Enter a trap name you'd like to make a master json file without(trap_): ")
 date=input("Enter what date did you do this experiment (e.g. 20220725): ")
-path='/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_json_files/'
+#date='20231012'
+#path='/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_json_files/'
+path="/media/flyranch/14TB_Backup/field_release/all_traps_final_analysis_json_files/"
 directory=path+date+'/trap_'+trap
 
 

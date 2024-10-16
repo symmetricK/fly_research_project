@@ -18,11 +18,15 @@ def time_converter(timestamp):
 trap=input("Enter a trap name you would like to make plots without (trap_): ")
 date=input("what date did you release flies (e.g. 20220725): ")
 
-f=open('/home/flyranch/field_data_and_analysis_scripts/2021lab/all_traps_final_analysis_json_files/'+date+'/trap_'+trap+'/master_trap_'+trap+'.json')
+#date='20231012'
+
+path='/media/flyranch/14TB_Backup/field_release/'
+f=open(path+'all_traps_final_analysis_json_files/'+date+'/trap_'+trap+'/master_trap_'+trap+'.json')
 data=json.load(f)
 
 
 release=input("What time flies were released? (e.g. 093425) :")
+#release='135550'
 if (len(release)==6 and type(int(release))==int):
 	pass
 else:
@@ -60,7 +64,7 @@ f.close()
 
 
 def calc_sec_since_release(standard,time_stamp):
-	zero=int(standard[0:2])*3600+int(standard[3:5])*60+int(standard[6:8])+1
+	zero=int(standard[0:2])*3600+int(standard[3:5])*60+int(standard[6:8])
 	sec=int(time_stamp[0:2])*3600+int(time_stamp[3:5])*60+int(time_stamp[6:8])
 	sec_since_release=sec-zero
 	return sec_since_release
@@ -120,14 +124,18 @@ in_trap_max_list=[]
 combined_max_list=[]
 
 for time in actual_timestamp_list:
-#	pdb.set_trace()
+	#pdb.set_trace()
 	if time==released_time:
 		m=actual_timestamp_list.index(time)
-	elif (int(time[0:2])*3600+int(time[3:5])*60+int(time[6:8]))==(int(released_time[0:2])*3600+int(released_time[3:5])*60+int(released_time[6:8])+1):
-		m=actual_timestamp_list.index(time)
-	elif (int(time[0:2])*3600+int(time[3:5])*60+int(time[6:8]))==(int(released_time[0:2])*3600+int(released_time[3:5])*60+int(released_time[6:8])-1):
-		m=actual_timestamp_list.index(time)
 
+'''
+	else:
+		if (int(time[0:2])*3600+int(time[3:5])*60+int(time[6:8]))==(int(released_time[0:2])*3600+int(released_time[3:5])*60+int(released_time[6:8])+1):
+			m=actual_timestamp_list.index(time)
+			print('aa')
+		elif (int(time[0:2])*3600+int(time[3:5])*60+int(time[6:8]))==(int(released_time[0:2])*3600+int(released_time[3:5])*60+int(released_time[6:8])-1):
+			m=actual_timestamp_list.index(time)
+'''
 
 '''
 	elif time[6:8]=='00':
@@ -159,24 +167,26 @@ for time in actual_timestamp_list:
 
 #pdb.set_trace()
 #cut=input("You want to cut last three minutes data?(y or n): ")
-cut='n'
+#cut='n'
 #shortened list to focus on max after starting
-if cut=='y':
-	shortened_actual_timestamp_list=actual_timestamp_list[m:-1-90]
-	shortened_on_trap_list=on_trap_list[m:-1-90]
-	shortened_in_trap_list=in_trap_list[m:-1-90]
-	shortened_combined_in_on_trap_list=combined_in_on_trap_list[m:-1-90]
-else:
-	shortened_actual_timestamp_list=actual_timestamp_list[m:len(actual_timestamp_list)]
-	shortened_on_trap_list=on_trap_list[m:len(on_trap_list)]
-	shortened_in_trap_list=in_trap_list[m:len(in_trap_list)]
-	shortened_combined_in_on_trap_list=combined_in_on_trap_list[m:len(combined_in_on_trap_list)]
+#if cut=='y':
+#	shortened_actual_timestamp_list=actual_timestamp_list[m:-1-90]
+#	shortened_on_trap_list=on_trap_list[m:-1-90]
+#	shortened_in_trap_list=in_trap_list[m:-1-90]
+#	shortened_combined_in_on_trap_list=combined_in_on_trap_list[m:-1-90]
+#else:
+shortened_actual_timestamp_list=actual_timestamp_list[m:len(actual_timestamp_list)]
+shortened_on_trap_list=on_trap_list[m:len(on_trap_list)]
+shortened_in_trap_list=in_trap_list[m:len(in_trap_list)]
+shortened_combined_in_on_trap_list=combined_in_on_trap_list[m:len(combined_in_on_trap_list)]
+
 
 nonzero_ind=[idx for idx, val in enumerate(shortened_on_trap_list) if val != 0]
 travel_time=time_converter(shortened_actual_timestamp_list[nonzero_ind[0]])-time_converter(shortened_actual_timestamp_list[0])
 First='frame '+shortened_actual_timestamp_list[nonzero_ind[0]][0:2]+shortened_actual_timestamp_list[nonzero_ind[0]][3:5]+shortened_actual_timestamp_list[nonzero_ind[0]][6:8]+' has the first on trap fly: travel time is '+str(travel_time)+' sec'
 #print('frame '+shortened_actual_timestamp_list[nonzero_ind[0]][0:2]+shortened_actual_timestamp_list[nonzero_ind[0]][3:5]+shortened_actual_timestamp_list[nonzero_ind[0]][6:8]+' has the first on trap flies: travel time is '+str(travel_time))
 print(First)
+
 Peak=''
 for i in range(len(shortened_actual_timestamp_list)):
 	if np.max(shortened_on_trap_list)==shortened_on_trap_list[i]:
@@ -216,10 +226,10 @@ for i in max_list:
 			ax1.annotate('max',xy=(actual_timestamp_list[actual_timestamp_list.index(j)],np.max(combined_in_on_trap_list)-10),bbox=dict(boxstyle="round",fc="0.8"))
 			ax1.axvline(actual_timestamp_list[actual_timestamp_list.index(j)],ymax=np.max(combined_in_on_trap_list),ls='--')
 
-if cut=='y':
-	max_list.extend((actual_timestamp_list[0],actual_timestamp_list[m],actual_timestamp_list[-1],actual_timestamp_list[-1-90]))
-elif cut=='n':
-	max_list.extend((actual_timestamp_list[0],actual_timestamp_list[m],actual_timestamp_list[-1]))
+#if cut=='y':
+#	max_list.extend((actual_timestamp_list[0],actual_timestamp_list[m],actual_timestamp_list[-1],actual_timestamp_list[-1-90]))
+#elif cut=='n':
+max_list.extend((actual_timestamp_list[0],actual_timestamp_list[m],actual_timestamp_list[-1]))
 
 max_list=list(set(max_list))
 
@@ -227,9 +237,9 @@ max_list=list(set(max_list))
 ax1.annotate('released',xy=(actual_timestamp_list[m],np.max(combined_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
 ax1.axvline(actual_timestamp_list[m],ymax=np.max(combined_in_on_trap_list),ls='--')
 
-if cut=='y':
-	ax1.annotate('end',xy=(actual_timestamp_list[-1-90],np.max(combined_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
-	ax1.axvline(actual_timestamp_list[-1-90],ymax=np.max(combined_in_on_trap_list),ls='--')
+#if cut=='y':
+#	ax1.annotate('end',xy=(actual_timestamp_list[-1-90],np.max(combined_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
+#	ax1.axvline(actual_timestamp_list[-1-90],ymax=np.max(combined_in_on_trap_list),ls='--')
 
 ax1.set_xticks(max_list)
 ax1.set_xticklabels(max_list,rotation=45,size=10)
@@ -255,8 +265,8 @@ sec_max_list=[]
 max_list.remove(actual_timestamp_list[0])
 max_list.remove(actual_timestamp_list[m])
 max_list.remove(actual_timestamp_list[-1])
-if cut=='y':
-	max_list.remove(actual_timestamp_list[-1-90])
+#if cut=='y':
+#	max_list.remove(actual_timestamp_list[-1-90])
 for i in max_list:
 	sec_max_list.append(sec_since_release_list[actual_timestamp_list.index(i)])
 
@@ -267,9 +277,9 @@ for i in sec_max_list:
 ax2.annotate('released',xy=(sec_since_release_list[m],np.max(combined_acc_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
 ax2.axvline(sec_since_release_list[m],ymax=np.max(combined_acc_in_on_trap_list,),ls='--')
 
-if cut=='y':
-	ax2.annotate('end',xy=(sec_since_release_list[-1-90],np.max(combined_acc_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
-	ax2.axvline(sec_since_release_list[-1-90],ymax=np.max(combined_acc_in_on_trap_list),ls='--')
+#if cut=='y':
+#	ax2.annotate('end',xy=(sec_since_release_list[-1-90],np.max(combined_acc_in_on_trap_list)),bbox=dict(boxstyle="round",fc="0.8"))
+#	ax2.axvline(sec_since_release_list[-1-90],ymax=np.max(combined_acc_in_on_trap_list),ls='--')
 
 ax2.plot(sec_since_release_list, on_trap_acc_list, '-',markersize=6,color="r",label="on trap")
 ax2.plot(sec_since_release_list, in_trap_acc_list, '-',markersize=6,color="b",label="in trap")
@@ -285,18 +295,49 @@ ax2.set_xlabel('seconds since released',size=24)
 ax2.set_ylabel('total number of flies',size=24)
 ax2.legend(loc="upper left",fontsize=14)
 
-path='/home/flyranch/field_data_and_analysis_scripts/2021lab/analyzed_plot_figures/'
-ex_path=path+date
+out_path=path+'analyzed_plot_figures/'
+ex_path=out_path+date
 
 # Check whether the specified path exists or not
 isExist = os.path.exists(ex_path)
 
 if not isExist:  
   # Create a new directory because it does not exist 
-    os.mkdir(ex_path)
+    os.makedirs(ex_path)
 
 if n_fly=="y":
 	plt.savefig(ex_path+'/trap_'+trap+'_with_not_fly_plots.jpg')
 if n_fly=="n":
 	plt.savefig(ex_path+'/trap_'+trap+'_plots.jpg')
 	plt.savefig(ex_path+'/trap_'+trap+'_plots.pdf',transparent=True)
+
+
+
+
+### to update first_arrival_time.json
+
+filename="/media/flyranch/14TB_Backup/field_release/first_arrival_time.json"
+
+
+first_frame=shortened_actual_timestamp_list[nonzero_ind[0]][0:2]+shortened_actual_timestamp_list[nonzero_ind[0]][3:5]+shortened_actual_timestamp_list[nonzero_ind[0]][6:8]
+X={trap:travel_time}
+Y={trap:first_frame}
+
+#pdb.set_trace()
+
+with open(filename,'r+') as f:
+	file_data=json.load(f)
+	#pdb.set_trace()
+	#file_data["first_arrival_time"].append(X)
+	#file_data["first_arrival_frame"].append(Y)
+	#pdb.set_trace()
+	#json.dump(file_data,f,indent=4)
+	f.close()
+file_data["first_arrival_time"].update(X)
+file_data["first_arrival_frame"].update(Y)
+
+with open(filename,'w') as f:
+			json.dump(file_data,f,indent=4)
+
+#pdb.set_trace()
+#print(file_data)

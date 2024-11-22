@@ -143,7 +143,8 @@ for name in sorted_Trap_name_lst:
 
     
 sorted_heat_df=pd.DataFrame(sorted_Heat_lst,index=sorted_Trap_name_lst)
-hm=sns.heatmap(data=sorted_heat_df,cbar_kws={"label":"Flies on Trap"}) 
+hm=sns.heatmap(data=sorted_heat_df,linewidths=0.0,rasterized=True,
+    cbar_kws={"label":"Flies on Trap"}) 
 
 ax.set_xticks(np.arange(0,len(sorted_Heat_lst[0])+1,60))
 ax.set_xticklabels(np.arange(-3,int(((len(sorted_Heat_lst[0])/60)-3+1)),1),rotation=0) ###3 mins before release + 30mins after release
